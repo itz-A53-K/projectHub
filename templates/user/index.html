@@ -9,6 +9,39 @@
 .card-body .card-text{
     font-size: 1.2rem;
 }
+
+
+.carouselControl-prev ,.carouselControl-next{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3%;
+    padding: 0;
+    color: black;
+    text-align: center;
+    background: rgb(126, 92, 92);
+    opacity: .5;
+    transition: opacity .15s ease;
+
+    margin: 10% 5px;
+    border: 2px solid rgb(255, 255, 255);
+    border-radius: 7px;
+}
+.carouselControl-next{
+    right:0;
+}
+
+
+.carousel-indicators {
+    margin:0;
+    bottom:-1px;
+    background-color: black;
+}
+
 {%endblock%}
 
 
@@ -71,11 +104,11 @@
                 <img src="{% static 'user/img/projecthub.jpg'%}" class="d-block w-100" alt="...">
               </div>
             </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <button class="carouselControl-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
               <span class="carousel-control-prev-icon" aria-hidden="true"></span>
               <span class="visually-hidden">Previous</span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <button class="carouselControl-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
               <span class="carousel-control-next-icon" aria-hidden="true"></span>
               <span class="visually-hidden">Next</span>
             </button>
