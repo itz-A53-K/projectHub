@@ -14,7 +14,7 @@
       <form id="loginForm" action="" method="post" name="logForm">
         {% csrf_token %}
         <div class="field input-field">
-          <input type="email" placeholder="Email" class="input" id="uid" name="uname" required />
+          <input type="email" placeholder="Email" class="input" id="uidLog" name="email" required />
         </div>
           <input type="hidden" name="formType" value="login"/>
         <div class="field input-field">
@@ -23,8 +23,12 @@
         </div>
 
         <div class="field input-field">
-          <input type="text" id="mainCaptcha" readonly="readonly"
-            style="text-align: center; font-size: 20px; color: white" />
+          <div id="captchaDiv" class="captchaDiv" style=""> 
+            <span id="mainCaptcha" style="" ></span>
+          </div>
+
+          {% comment %} <input type="text" id="mainCaptcha" readonly="readonly" {% endcomment %}
+             {% comment %} /> {% endcomment %}
           <!-- <img style="width: 10px; height: 10px;" src="./assets/refresh.png" /> -->
         </div>
 
@@ -63,7 +67,7 @@
           </div> {% endcomment %}
 
           <div class="field input-field">
-            <input type="email" placeholder="Email" class="input" id="email" name="email" required />
+            <input type="email" placeholder="Email" class="input" id="email" name="email_reg" required />
           </div>
           <input type="hidden" name="formType" value="registration"/>
           {% comment %} <div class="field input-field">
@@ -78,9 +82,9 @@
             <input type="password" placeholder="Create Password" class="password" name="password" required />
             <i class="bx bx-hide eye-icon"></i>
           </div>
-          <div class="field input-field">
+          {% comment %} <div class="field input-field">
             <input type="password" placeholder="Confirm Password" class="password" required />
-          </div>
+          </div> {% endcomment %}
         </form>
         <div class="field button-field">
           <button id="regBtn">Send OTP</button>
@@ -108,6 +112,7 @@
   </div>
 </section>
 <script type="text/javascript">
+  let originalCaptcha;
   generateCaptcha();
   function generateCaptcha() {
     let alpha = new Array(
@@ -123,18 +128,52 @@
       d = alpha[Math.floor(Math.random() * alpha.length)];
     }
     let code = a + " " + b + " " + " " + c + " " + d;
-    document.getElementById("mainCaptcha").value = code;
+    {% comment %} document.getElementById("mainCaptcha").value = code; {% endcomment %}
+    document.getElementById("mainCaptcha").textContent = code;
+    originalCaptcha = code;
 
     let background = new Array("captcha1", "captcha2", "captcha3");
     let back = background[Math.floor(Math.random() * background.length)];
-    document.getElementById("mainCaptcha").style.backgroundImage =
+    document.getElementById("captchaDiv").style.backgroundImage =
       "url('../static/user/img/" + back + ".jpg')";
   }
 
-  function CheckValidCaptcha() { }
+  function CheckValidCaptcha() { 
+    const userInput = document.getElementById('captcha');
+    let captchaInput = userInput.value;
+    {% comment %} captchaInput = removeSpaces(captchaInput); {% endcomment %}
+    originalCaptcha = removeSpaces(originalCaptcha);
+
+    console.log(captchaInput+" "+originalCaptcha);
+
+
+    if(captchaInput == originalCaptcha) {
+      if(ValidateEmail(document.getElementById("uidLog"))) {
+        logMe();
+      } else {
+        confirm("Enter a valid email address.");
+      }
+    } else {
+      confirm("Captcha is Invalid, dost?");
+    }
+
+  }
 
   function removeSpaces(string) {
     return string.split(" ").join("");
+  }
+
+  function ValidateEmail(input) {
+    var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if (input.value.match(validRegex)) {
+      {% comment %} alert("Valid email address!");
+      document.form1.text1.focus(); {% endcomment %}
+      return true;
+    } else {
+      {% comment %} alert("Invalid email address!");
+      document.form1.text1.focus(); {% endcomment %}
+      return false;
+    }
   }
 </script>
 <script>
@@ -152,7 +191,7 @@
   const pwShowHide = document.querySelectorAll(".eye-icon");
   const links = document.querySelectorAll(".link");
 
-  logBtn.addEventListener("click", logMe);
+  logBtn.addEventListener("click", CheckValidCaptcha);
 
   pwShowHide.forEach((eyeIcon) => {
     eyeIcon.addEventListener("click", () => {
@@ -179,31 +218,36 @@
   });
 
   regBtn.addEventListener("click", () => {
-    let email = document.getElementById("email").value;
-    otp = Math.floor(100000 + Math.random() * 900000);
-    console.log(otp);
-
-    {% comment %} const xhr = new XMLHttpRequest();
-
-    xhr.open("GET", API + "?email=" + email + "&otp=" + otp, true);
-
-    xhr.onload = function () {
-      if (this.status === 200) {
-        console.log(this.responseText);
-        let jsonObj = JSON.parse(this.responseText);
-        if (jsonObj.success === true) {
-          document.getElementById("otp-status").innerHTML = "OTP sent on email";
+    if(ValidateEmail(document.getElementById("email"))) {
+      let email = document.getElementById("email").value;
+      otp = Math.floor(100000 + Math.random() * 900000);
+      console.log(otp);
+  
+      {% comment %} const xhr = new XMLHttpRequest();
+  
+      xhr.open("GET", API + "?email=" + email + "&otp=" + otp, true);
+  
+      xhr.onload = function () {
+        if (this.status === 200) {
+          console.log(this.responseText);
+          let jsonObj = JSON.parse(this.responseText);
+          if (jsonObj.success === true) {
+            document.getElementById("otp-status").innerHTML = "OTP sent on email";
+          } else {
+            document.getElementById("otp-status").innerHTML =
+              "OTP sent failed, try again";
+          }
         } else {
-          document.getElementById("otp-status").innerHTML =
-            "OTP sent failed, try again";
+          console.log("Error");
         }
-      } else {
-        console.log("Error");
-      }
-    };
-    xhr.send(); {% endcomment %}
-    document.getElementById("m-reg").style.display = "none";
-    document.getElementById("reg-otp").style.display = "block";
+      };
+      xhr.send(); {% endcomment %}
+      document.getElementById("m-reg").style.display = "none";
+      document.getElementById("reg-otp").style.display = "block";
+    } else {
+      confirm("Enter a valid email address?");
+    }
+    
   });
 
   otpBtn.addEventListener("click", () => {
