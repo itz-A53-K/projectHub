@@ -3,6 +3,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
+    user-select: none;
   }
   :root {
     --main-color: white;
@@ -16,6 +17,7 @@
     background-color: var(--main-color);
     column-gap: 30px;
   }
+  
   .form {
     position: absolute;
     max-width: 430px;
