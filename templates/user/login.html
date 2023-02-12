@@ -11,12 +11,12 @@
   <div class="form login">
     <div class="form-content">
       <h2 class="heading">Login</h2>
-      <form id="loginForm" action="/login/" method="post" name="logForm">
+      <form id="loginForm" action="" method="post" name="logForm">
         {% csrf_token %}
         <div class="field input-field">
           <input type="email" placeholder="Email" class="input" id="uid" name="uname" required />
         </div>
-
+          <input type="hidden" name="formType" value="login"/>
         <div class="field input-field">
           <input type="password" placeholder="Password" class="password" id="pass" name="upass" required />
           <i class="bx bx-hide eye-icon"></i>
@@ -52,26 +52,27 @@
     <div class="form-content">
       <h2 class="heading">Signup</h2>
       <div id="m-reg">
-        <form id="regForm" action="<Registration LINK>" name="regForm">
+        <form id="regForm" method="post" action="" method="post" name="regForm">
+          {% csrf_token %}
           <div class="field input-field">
             <input type="text" placeholder="Name" class="input" name="name" required />
           </div>
 
-          <div class="field input-field">
+          {% comment %} <div class="field input-field">
             <input type="number" placeholder="Phone No" class="input" name="phone" required />
-          </div>
+          </div> {% endcomment %}
 
           <div class="field input-field">
             <input type="email" placeholder="Email" class="input" id="email" name="email" required />
           </div>
-
-          <div class="field input-field">
+          <input type="hidden" name="formType" value="registration"/>
+          {% comment %} <div class="field input-field">
             <input type="address" placeholder="Address" class="input" name="address" required />
-          </div>
+          </div> {% endcomment %}
 
-          <div class="field input-field">
+          {% comment %} <div class="field input-field">
             <input type="text" placeholder="Pincode" class="input" name="pincode" required />
-          </div>
+          </div> {% endcomment %}
 
           <div class="field input-field">
             <input type="password" placeholder="Create Password" class="password" name="password" required />
@@ -137,10 +138,6 @@
   }
 </script>
 <script>
-  let loggedin = "<?php echo $_SESSION['logged'];?>";
-  if (loggedin !== "" && loggedin === "true") {
-    window.location = "index.php";
-  }
 
   const API = "./api/send-mail.php";
 
@@ -184,8 +181,9 @@
   regBtn.addEventListener("click", () => {
     let email = document.getElementById("email").value;
     otp = Math.floor(100000 + Math.random() * 900000);
+    console.log(otp);
 
-    const xhr = new XMLHttpRequest();
+    {% comment %} const xhr = new XMLHttpRequest();
 
     xhr.open("GET", API + "?email=" + email + "&otp=" + otp, true);
 
@@ -203,7 +201,7 @@
         console.log("Error");
       }
     };
-    xhr.send();
+    xhr.send(); {% endcomment %}
     document.getElementById("m-reg").style.display = "none";
     document.getElementById("reg-otp").style.display = "block";
   });
@@ -219,11 +217,11 @@
   });
 
   function regMe() {
-    document.getElementById('loginForm').submit();
+    document.getElementById('regForm').submit();
   }
 
   function logMe() {
-    document.getElementById('regForm').submit();
+    document.getElementById('loginForm').submit();
   }
 
   {% comment %} function regMe() {

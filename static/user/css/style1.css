@@ -1,9 +1,9 @@
-/* * {
+ * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
-  } */
+  }
   :root {
     --main-color: white;
   }
@@ -16,6 +16,7 @@
     background-color: var(--main-color);
     column-gap: 30px;
   }
+  
   .form {
     position: absolute;
     max-width: 430px;
