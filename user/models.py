@@ -34,8 +34,8 @@ class Project(models.Model):
     
     proj_id = models.BigAutoField(primary_key=True)
     title = models.CharField(max_length=100)
-    shortDesc = models.CharField(max_length=500, blank=True)
-    fullDesc= models.TextField(blank=True)
+    short_Desc = models.CharField(max_length=500, blank=True)
+    full_Desc= models.TextField(blank=True)
 
     category = models.CharField(max_length=100, choices=CATEGORY)
     
@@ -43,8 +43,8 @@ class Project(models.Model):
 
     price= models.FloatField(default="Free")
     discounted_price = models.FloatField(default="Free", blank=True)
-    pub_date = models.DateTimeField(auto_now_add=True)
-    mod_date = models.DateField(auto_now=True)
+    publish_date = models.DateTimeField(auto_now_add=True)
+    last_modified_date = models.DateTimeField(auto_now=True)
 
     images= models.CharField(max_length=500, null=True,blank=True)
 
