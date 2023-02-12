@@ -9,7 +9,7 @@
   <div class="form login">
     <div class="form-content">
       <h2 class="heading">Login</h2>
-      <form id="loginForm" action="<Login LINK>" name="logForm">
+      <form id="loginForm" action="<Login LINK>" name="logForm" method>
         <div class="field input-field">
           <input
             type="email"
@@ -335,11 +335,11 @@
   });
 
   function regMe() {
-    document.getElementById('loginForm').submit();
+    document.getElementById('regForm').submit();
   }
 
   function logMe() {
-    document.getElementById('regForm').submit();
+    document.getElementById('loginForm').submit();
   }
 
   {% comment %} function regMe() {
