@@ -12,17 +12,12 @@
         <div class="form-content">
             <h2 class="heading">Login</h2>
             {% if messages %}
-              
-                  {% for message in messages %}
-                  <div {% if message.tags %} class="alert alert-dismissible fade show alert-{{ message.tags }}"{% endif %} role="alert">
-                    <strong></strong> {{ message}} .
+              {% for message in messages %}
+                <div {% if message.tags %} class="alert alert-dismissible fade show alert-{{ message.tags }}"{% endif %} role="alert">
+                    <strong></strong> {{ message}}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                  </div>
-                  
-                  </div>
-                  
-                  {% endfor %}
-             
+                </div>
+              {% endfor %}
             {% endif %}
             
             <form id="loginForm" action="/login/" method="post" name="logForm" onsubmit="return validateCaptcha()">

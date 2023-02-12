@@ -1,7 +1,7 @@
 from django.shortcuts import render,HttpResponse, redirect
 
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
 def home(request):
@@ -10,24 +10,25 @@ def home(request):
 def projView(request):
     return render(request, 'user/projView.html')
 
-def login(request):
-    if request.method == "POST":
+def handleLogin(request):
+    if request.method == "POST" :
+       
         form = request.POST.get('formType')
         if form == "login" :
             email = request.POST.get('email','')
             password = request.POST.get('upass','')
             print(email,password)
-            user = authenticate(username=email,password =password)
+            user = authenticate(request, username=email, password=password)
 
             if user is not None:
-                # login(user)
+                login(request, user)
                 messages.success(request, "You have loggedin successfully")
                 return redirect('/')
                 
             else:
                 # print('Invalid username')
-                messages.warning(request, "Error! Invalid username or password")
-       
+                messages.error(request, "Error! Invalid username or password")
+
         elif form =="registration" :
             # Database Insertion Here
             email_reg = request.POST.get('email_reg')
@@ -41,11 +42,22 @@ def login(request):
                 user.first_name= f_name
                 user.last_name= l_name
                 user.save()
-                messages.success(request,"Your account has been successfully created")
+                messages.success(request,"Your account has been successfully created.")
                 return redirect('/')
             except:
-                messages.warning(request,"Email already exists")
-            
-            
-    return render(request, 'user/login.html')
+                messages.error(request,"Error! Email already exists.")
 
+    if request.user.is_authenticated:
+        return redirect('/')
+    else:  
+        return render(request, 'user/login.html')
+
+
+def handleLogout(request):
+  
+    if request.user.is_authenticated:
+        logout(request)
+        messages.success(request,"You have logged out successfully.")
+        return redirect('/')
+    else:
+        return redirect('/')
