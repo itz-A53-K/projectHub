@@ -8,6 +8,9 @@ def projView(request):
     return render(request, 'user/projView.html')
 
 def login(request):
+    if request.method=="POST":
+        form = request.POST.get('logForm')
+        print(form)
     return render(request, 'user/login.html')
 
 def signup(request):

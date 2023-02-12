@@ -12,9 +12,16 @@
 
 
 {%block body%}
+{%load static %}
 {% comment %} short time offer {% endcomment %}
 
-{%load static %}
+<div class="container-fluid p-0" style="height: 35vh">
+  <img
+    src="{% static 'user/img/projecthub.jpg'%}"
+    alt=""
+    srcset=""
+    class="object-fit-fill h-100 w-100" />
+</div>
 <div class="container-lg my-5 d-flex flex-column align-items-center">
   <h2 class="afterLine mt-3">OUR SERVICES</h2>
 
