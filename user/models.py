@@ -52,6 +52,10 @@ class Project(models.Model):
 
     sourcecode_link= models.CharField(max_length=500,null=True, blank=True)
 
+    # Need to create a table named "ProjectScreenshot", Where 4 columns are required to be included. 1. ID, 2. projectId, 3. imageLinks, 4. projectTitle
+
+    # If you wish you can change the project description to project blog
+
     def __str__(self):
         return self.title
     
