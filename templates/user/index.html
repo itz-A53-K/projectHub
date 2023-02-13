@@ -13,15 +13,24 @@
 
 {%block body%}
 {%load static %}
+
 {% comment %} short time offer {% endcomment %}
 
-<div class="container-fluid p-0" style="height: 35vh">
+<div class="container-fluid p-0" style="height: 35vh; {% comment %} margin-top:64px {% endcomment %}">
   <img
     src="{% static 'user/img/projecthub.jpg'%}"
     alt=""
     srcset=""
     class="object-fit-fill h-100 w-100" />
 </div>
+{% if messages %}
+  {% for message in messages %}
+    <div {% if message.tags %} class="alert  my-1 border-{{ message.tags }} alert-dismissible fade show alert-{{ message.tags }}"{% endif %} role="alert">
+        <strong></strong> <b>{{ message}}</b>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+{% endif %}
 <div class="container-lg my-5 d-flex flex-column align-items-center">
   <h2 class="afterLine mt-3">OUR SERVICES</h2>
 
