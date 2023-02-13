@@ -1,0 +1,48 @@
+{% extends 'user/basic.html' %}
+{%block title%}Project-Hub {%endblock%}
+
+
+{%block body%}
+<section class="mar-top">
+    <div class="container ">
+
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            
+            {% for i in proj %}
+                <div class="col">
+                    <a href="{% url 'projView' %}" style="text-decoration:none; color:black">
+                        
+                        <div class="card my-2" style="width: 38rem; min-height:50vh">
+                            <img src="/media/{{i.default_image}}" class="card-img-top" alt="..." style="height:28vh">
+                            <div class="card-body" style="height:22vh">
+                                <h5 class="card-title">{{i.title}} {% if i.short_Desc %}<span> ( {{i.short_Desc}} )</span>{% endif %}</h5>
+                                <p class="card-text" style="">{{i.full_Desc|slice:200}} ...</p>
+                                <p class="card-text " style="">
+                                    
+                                    {% if  i.free %}
+                                        <span class="fw-semibold fs-5">Free</span>
+                                        <span class="text-decoration-line-through"> {{i.price}}</span>
+                                    {% elif i.discounted_price %}
+                                        <span class="fw-semibold fs-5">₹ {{i.discounted_price}}0</span> 
+                                        <span class="text-decoration-line-through"> {{i.price}}0</span>
+                                    {%else%}
+                                        <span class="fw-semibold fs-5"> ₹ {{i.price}}0</span>
+                                    {%endif%}
+
+                                </p>
+                                
+                            </div>
+                            <div class="card-footer text-muted">
+                                <a href="/projects/" class="btn btn-info my-1 mx-3">Add to cart</a>
+                                <a href="/projects/" class="btn btnDesign1 my-1">Start Viewing</a>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</section>
+
+{%endblock%}

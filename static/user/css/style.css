@@ -19,3 +19,22 @@
   );
   transition: 0.2s ease-in;
 }
+
+.mar-top{
+  margin-top: 12vh;
+}
+
+.btnDesign1{
+  font-size: 1rem;
+  font-weight:500;
+  transition: .1s ease-in; 
+  color: #c86b6b;
+  border: 2px solid #c86b6b;
+}
+
+.btnDesign1:hover{
+  font-size: 1rem;
+  background: linear-gradient(100deg,#c86b6b,rgb(227 145 226),#e0c6e8);
+  border: 2px solid #c86b6b;
+}
+

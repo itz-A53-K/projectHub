@@ -1,11 +1,20 @@
 from django.shortcuts import render,HttpResponse, redirect
-
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
+from user.models import Project
+
 def home(request):
-    return render(request, 'user/index.html')
+
+    topProjs= Project.objects.all()[:4]
+    params={'topProjs':topProjs}
+    return render(request, 'user/index.html', params)
+
+def projects(request):
+    proj= Project.objects.all()[:4]
+    params={'proj': proj}
+    return render(request, 'user/projects.html', params)
 
 def projView(request):
     return render(request, 'user/projView.html')

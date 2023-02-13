@@ -8,6 +8,10 @@
 .card-body .card-text{
     font-size: 1.2rem;
 }
+
+
+
+
 {%endblock%}
 
 
@@ -50,7 +54,7 @@
           </svg>
           <h5 class="card-title">Who we are?</h5>
           <p class="card-text text-center mx-4">
-            We are the developer's, We create and deliver websites according to
+            We are the developers, We create and deliver websites according to
             your need..
           </p>
         </div>
@@ -78,40 +82,33 @@
     </div>
   </div>
 </div>
-<div class="container-lg my-5 d-flex align-items-center">
-    <h2 class="afterLine mt-3">A broad selection of projects</h2>
+<div class="container-fluid my-5" style="background: #f5f5f5;; border-radius: 10px; ">
+  <div class="container-lg my-5 d-flex align-items-center justify-content-between p-2" style="">
+    <div style="width:24vw" class="me-5" >
+      <h2 class="afterLine my-4" >A broad selection of projects</h2>
+      <p class="mx-2 "style="font-size:1.2rem;">Choose from a lot of pre prepared projects with new additions published continuously. </p>
+      <a href="/projects/" class="btn btnDesign1 my-2">Explore all >></a>
+    </div>
     
-    <div class="container">
-        
-        <div id="carouselExampleIndicators" class="carousel slide">
-            <div class="carousel-indicators">
-              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-              <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-            </div>
-            <div class="carousel-inner">
-              <div class="carousel-item active">
-                <img src="{% static 'user/img/projecthub.jpg'%}" class="d-block w-100" alt="...">
-              </div>
-              <div class="carousel-item">
-                <img src="{% static 'user/img/projecthub.jpg'%}" class="d-block w-100" alt="...">
-              </div>
-              <div class="carousel-item">
-                <img src="{% static 'user/img/projecthub.jpg'%}" class="d-block w-100" alt="...">
-              </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Next</span>
-            </button>
+    <div class="container my-4 p-3 d-flex flex-column align-items-center " style="height:40rem; width: fit-content; overflow-y:scroll;">
+  
+      {% for i in topProjs %}
+      <a href="{% url 'projView' %}" style="text-decoration:none; color:black">
+        <div class="card my-3" style="width: 38rem;">
+          <img src="/media/{{i.default_image}}" class="card-img-top" alt="..." style="height:22vh">
+          <div class="card-body">
+            <h5 class="card-title">{{i.title}} {% if i.short_Desc %}<span> ( {{i.short_Desc}} )</span>{% endif %}</h5>
+            <p class="card-text" style="height:7vh">{{i.full_Desc|slice:130}} ...</p>
+            
           </div>
+        </div>
+      </a>
+      
+      {% endfor %}
         
     </div>
     
+  </div>
 </div>
 
 {%endblock%}
