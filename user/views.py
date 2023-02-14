@@ -81,7 +81,6 @@ def handleAddToCart(request, proj_id):
             proj = Project.objects.get(proj_id= proj_id)
             user_id= request.user.id
             price = request.POST.get("price")
-            print(user_id)
             cart= Cart.objects.create(project = proj,user_id = user_id, price =price)
             cart.save()
             messages.success(request, "1 Item added to cart successfully.")

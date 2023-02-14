@@ -31,7 +31,7 @@
                                     
                                     {% if  i.free %}
                                         <span class="fw-semibold fs-5">Free</span>
-                                        <span class="text-decoration-line-through"> {{i.price}}</span>
+                                        <span class="text-decoration-line-through"> {{i.price}}0</span>
                                     {% elif i.discounted_price %}
                                         <span class="fw-semibold fs-5">₹ {{i.discounted_price}}0</span> 
                                         <span class="text-decoration-line-through"> {{i.price}}0</span>
@@ -42,7 +42,7 @@
                                 </p>
                                 
                             </div>
-                            <div class="card-footer text-muted">
+                            <div class="card-footer text-muted d-flex">
                                 <form action="/handleAddToCart/{{i.proj_id}}" method="post">
                                     {% csrf_token %}
 
