@@ -7,7 +7,7 @@ from user.models import Project
 
 def home(request):
 
-    topProjs= Project.objects.all()[:4]
+    topProjs= Project.objects.all()[:2]
     params={'topProjs':topProjs}
     return render(request, 'user/index.html', params)
 

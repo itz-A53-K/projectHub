@@ -6,8 +6,8 @@
 }
 .afterLine::after {
   content: " ";
-  width: 55%;
-  height: 1.5px;
+  width: 65%;
+  height: 1.9px;
   margin-top: 6px;
   border-radius: 20px;
   color: red;

@@ -82,7 +82,7 @@
     </div>
   </div>
 </div>
-<div class="container-fluid my-5" style="background: #f5f5f5;; border-radius: 10px; ">
+<div class="container-fluid my-5" style="background: #f0f6eb; border-radius: 10px; ">
   <div class="container-lg my-5 d-flex align-items-center justify-content-between p-2" style="">
     <div style="width:24vw" class="me-5" >
       <h2 class="afterLine my-4" >A broad selection of projects</h2>
@@ -90,23 +90,25 @@
       <a href="/projects/" class="btn btnDesign1 my-2">Explore all >></a>
     </div>
     
-    <div class="container my-4 p-3 d-flex flex-column align-items-center " style="height:40rem; width: fit-content; overflow-y:scroll;">
+    
+    <div class=" my-4 px-4 py-3 d-flex flex-column align-items-center justify-content-center " style="height:fit-content; width: fit-content; box-shadow: 0px 0px 10px 5px rgb(158, 146, 146); ">
   
       {% for i in topProjs %}
-      <a href="/projects/{{i.proj_id}}" style="text-decoration:none; color:black">
-        <div class="card my-3" style="width: 38rem;">
+      <div class="card my-3" style="width: 38rem; box-shadow: 0px 0px 7px 2px rgb(158, 146, 146);">
+        <a href="/projects/{{i.proj_id}}" style="text-decoration:none; color:black;  ">
           <img src="/media/{{i.default_image}}" class="card-img-top" alt="..." style="height:22vh">
           <div class="card-body">
             <h5 class="card-title">{{i.title}} {% if i.short_Desc %}<span> ( {{i.short_Desc}} )</span>{% endif %}</h5>
             <p class="card-text" style="height:7vh">{{i.full_Desc| truncatechars:130}}</p>
             
           </div>
-        </div>
-      </a>
+        </a>
+      </div>
       
       {% endfor %}
         
     </div>
+    
     
   </div>
 </div>
