@@ -93,12 +93,12 @@
     <div class="container my-4 p-3 d-flex flex-column align-items-center " style="height:40rem; width: fit-content; overflow-y:scroll;">
   
       {% for i in topProjs %}
-      <a href="{% url 'projView' %}" style="text-decoration:none; color:black">
+      <a href="/projects/{{i.proj_id}}" style="text-decoration:none; color:black">
         <div class="card my-3" style="width: 38rem;">
           <img src="/media/{{i.default_image}}" class="card-img-top" alt="..." style="height:22vh">
           <div class="card-body">
             <h5 class="card-title">{{i.title}} {% if i.short_Desc %}<span> ( {{i.short_Desc}} )</span>{% endif %}</h5>
-            <p class="card-text" style="height:7vh">{{i.full_Desc|slice:130}} ...</p>
+            <p class="card-text" style="height:7vh">{{i.full_Desc| truncatechars:130}}</p>
             
           </div>
         </div>

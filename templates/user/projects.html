@@ -10,13 +10,15 @@
             
             {% for i in proj %}
                 <div class="col">
-                    <a href="{% url 'projView' %}" style="text-decoration:none; color:black">
+                    
                         
                         <div class="card my-2" style="width: 38rem; min-height:50vh">
-                            <img src="/media/{{i.default_image}}" class="card-img-top" alt="..." style="height:28vh">
+                            <a href="/projects/{{i.proj_id}} " style="">
+                                <img src="/media/{{i.default_image}}" class="card-img-top" alt="..." style="height:28vh">
+                            </a>
                             <div class="card-body" style="height:22vh">
                                 <h5 class="card-title">{{i.title}} {% if i.short_Desc %}<span> ( {{i.short_Desc}} )</span>{% endif %}</h5>
-                                <p class="card-text" style="">{{i.full_Desc|slice:200}} ...</p>
+                                <p class="card-text" style="">{{i.full_Desc| truncatechars:200}}</p>
                                 <p class="card-text " style="">
                                     
                                     {% if  i.free %}
@@ -33,11 +35,11 @@
                                 
                             </div>
                             <div class="card-footer text-muted">
-                                <a href="/projects/" class="btn btn-info my-1 mx-3">Add to cart</a>
-                                <a href="/projects/" class="btn btnDesign1 my-1">Start Viewing</a>
+                                <a href="/projects/ " class="btn btn-info my-1 mx-3">Add to cart</a>
+                                <a href="/projects/{{i.proj_id}}" class="btn btnDesign1 my-1">Start Viewing</a>
                             </div>
                         </div>
-                    </a>
+                   
                 </div>
             {% endfor %}
         </div>

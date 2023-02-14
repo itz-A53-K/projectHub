@@ -12,12 +12,17 @@ def home(request):
     return render(request, 'user/index.html', params)
 
 def projects(request):
-    proj= Project.objects.all()[:4]
+    proj= Project.objects.all()
     params={'proj': proj}
     return render(request, 'user/projects.html', params)
 
-def projView(request):
-    return render(request, 'user/projView.html')
+def projView(request, proj_id):
+
+    project= Project.objects.get(proj_id = proj_id)
+    print(project)
+    print(project.short_Desc)
+    params={'project': project}
+    return render(request, 'user/projView.html' , params)
 
 def handleLogin(request):
     if request.method == "POST" :
