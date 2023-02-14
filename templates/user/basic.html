@@ -123,6 +123,15 @@
             link.classList.add('activePage');
         }
       })
+
+
+      setTimeout(function() {
+        const alert = bootstrap.Alert.getOrCreateInstance('.myAlert')
+        if (alert != null){
+          alert.close()
+        }
+      }, 10000);
+      
     </script>
 
     {%block JS%}{%endblock%}

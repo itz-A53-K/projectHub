@@ -4,7 +4,15 @@
 
 {%block body%}
 <section class="mar-top">
-    <div class="container ">
+    {% if messages %}
+        {% for message in messages %}
+            <div {% if message.tags %} class="alert  my-1 border-{{ message.tags }} alert-dismissible fade show alert-{{ message.tags }} myAlert" {% endif %} role="alert" >
+                <strong></strong> <b>{{ message}}</b>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <div class="container mt-3">
 
         <div class="row row-cols-1 row-cols-md-2 g-4">
             
@@ -30,12 +38,23 @@
                                     {%else%}
                                         <span class="fw-semibold fs-5"> ₹ {{i.price}}0</span>
                                     {%endif%}
-
+                                    
                                 </p>
                                 
                             </div>
                             <div class="card-footer text-muted">
-                                <a href="/projects/ " class="btn btn-info my-1 mx-3">Add to cart</a>
+                                <form action="/handleAddToCart/{{i.proj_id}}" method="post">
+                                    {% csrf_token %}
+
+                                    {% if  i.free %}
+                                        <input type= "hidden" value="0" name= "price">
+                                    {% elif i.discounted_price %}
+                                        <input type= "hidden" value="{{i.discounted_price}}" name= "price">
+                                    {%else%}
+                                        <input type= "hidden" value="{{i.price}}" name= "price">
+                                    {%endif%}
+                                    <button type="submit" class="btn btn-info my-1 mx-3">Add to cart</button>
+                                </form>
                                 <a href="/projects/{{i.proj_id}}" class="btn btnDesign1 my-1">Start Viewing</a>
                             </div>
                         </div>

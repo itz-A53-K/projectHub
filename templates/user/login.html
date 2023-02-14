@@ -13,7 +13,7 @@
             <h2 class="heading">Login</h2>
             {% if messages %}
               {% for message in messages %}
-                <div {% if message.tags %} class="alert alert-dismissible fade show alert-{{ message.tags }}"{% endif %} role="alert">
+                <div {% if message.tags %} class="alert alert-dismissible fade show alert-{{ message.tags }} myAlert"{% endif %} role="alert">
                     <strong></strong> {{ message}}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
@@ -67,7 +67,7 @@
             {% if messages %}
               
                   {% for message in messages %}
-                  <div {% if message.tags %} class="alert alert-dismissible fade show alert-{{ message.tags }}"{% endif %} role="alert">
+                  <div {% if message.tags %} class="alert alert-dismissible fade show alert-{{ message.tags }} myAlert"{% endif %} role="alert">
                     <strong></strong> {{ message}} .
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                   </div>

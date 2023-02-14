@@ -41,9 +41,10 @@ class Project(models.Model):
     
     used_language= models.CharField(max_length=500, null=True, blank=True)
 
-    price= models.FloatField(default="Free", blank=True, null=True)
-    discounted_price = models.FloatField(default="Free", blank=True , null=True)
+    price= models.FloatField( blank=True, null=True)
+    discounted_price = models.FloatField( blank=True , null=True)
     free = models.BooleanField(default=False)
+
     publish_date = models.DateTimeField(auto_now_add=True)
     last_modified_date = models.DateTimeField(auto_now=True)
 
@@ -62,5 +63,17 @@ class Proj_image(models.Model):
     # def __str__(self):
     #     return self.id
 
+class Cart(models.Model):
+    cart_id= models.BigAutoField(primary_key=True)
+    project= models.ForeignKey(Project, on_delete=models.CASCADE)
+    user_id= models.IntegerField()
+    price = models.FloatField()
+    
+class Order(models.Model):
+    order_id= models.BigAutoField(primary_key=True)
+    project= models.ForeignKey(Project, on_delete=models.CASCADE)
+    user_id= models.IntegerField()
+    price = models.FloatField()
 
+    order_time = models.DateTimeField(auto_now_add=True)
     
