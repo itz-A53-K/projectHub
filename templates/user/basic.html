@@ -10,12 +10,14 @@
       rel="stylesheet"
       integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
       crossorigin="anonymous" />
+    <link
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
+      rel="stylesheet" />
     <link rel="stylesheet" href="{% static 'user/css/style.css'%}" />
     {%block csslink%}{%endblock%}
-    
+
     <style>
       {%block css%}{%endblock%}
-      
     </style>
   </head>
   <body>
@@ -59,10 +61,17 @@
 
           <ul class="navbar-nav mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link text-light itemLink" aria-current="page" href="/">Home</a>
+              <a
+                class="nav-link text-light itemLink"
+                aria-current="page"
+                href="/"
+                >Home</a
+              >
             </li>
             <li class="nav-item">
-              <a class="nav-link text-light itemLink" href="/projects">Projects</a>
+              <a class="nav-link text-light itemLink" href="/projects"
+                >Projects</a
+              >
             </li>
             <li class="nav-item dropdown itemLink">
               <a
@@ -75,12 +84,16 @@
               </a>
               <ul class="dropdown-menu">
                 <li><a class="dropdown-item itemLink" href="#">Action</a></li>
-                <li><a class="dropdown-item itemLink" href="#">Another action</a></li>
+                <li>
+                  <a class="dropdown-item itemLink" href="#">Another action</a>
+                </li>
                 <li>
                   <hr class="dropdown-divider" />
                 </li>
                 <li>
-                  <a class="dropdown-item itemLink" href="#">Something else here</a>
+                  <a class="dropdown-item itemLink" href="#"
+                    >Something else here</a
+                  >
                 </li>
               </ul>
             </li>
@@ -88,17 +101,16 @@
 
           <div class="btnDiv">
             {% if request.user.is_authenticated%}
-              <a href="/logout" class="btn btn-outline-info">Logout</a>
+            <a href="/logout" class="btn btn-outline-info">Logout</a>
             {%else%}
-              <a href="/login" class="btn btn-outline-info">Login</a>
-            {%endif%}
-            {% comment %} <a href="/signup" class="btn btn-outline-info mx-2">Signup</a> {% endcomment %}
+            <a href="/login" class="btn btn-outline-info">Login</a>
+            {%endif%} {% comment %}
+            <a href="/signup" class="btn btn-outline-info mx-2">Signup</a> {%
+            endcomment %}
           </div>
         </div>
       </div>
     </nav>
-
-    
 
     {%block body%} {%endblock%}
 
@@ -116,22 +128,22 @@
     </script>
 
     <script>
-      document.querySelectorAll('.itemLink').forEach(link =>{
-        
-        link2= link.href+"/";
-        if(link.href === window.location.href || link2 === window.location.href){
-            link.classList.add('activePage');
+      document.querySelectorAll(".itemLink").forEach((link) => {
+        link2 = link.href + "/";
+        if (
+          link.href === window.location.href ||
+          link2 === window.location.href
+        ) {
+          link.classList.add("activePage");
         }
-      })
+      });
 
-
-      setTimeout(function() {
-        const alert = bootstrap.Alert.getOrCreateInstance('.myAlert')
-        if (alert != null){
-          alert.close()
+      setTimeout(function () {
+        const alert = bootstrap.Alert.getOrCreateInstance(".myAlert");
+        if (alert != null) {
+          alert.close();
         }
       }, 10000);
-      
     </script>
 
     {%block JS%}{%endblock%}
