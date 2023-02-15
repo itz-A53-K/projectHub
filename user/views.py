@@ -1,14 +1,26 @@
 from django.shortcuts import render,HttpResponse, redirect
-
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
-def home(request):
-    return render(request, 'user/index.html')
+from user.models import Project,Proj_image,Cart,Order
 
-def projView(request):
-    return render(request, 'user/projView.html')
+def home(request):
+    topProjs= Project.objects.all()[:2]
+    params={'topProjs':topProjs}
+    return render(request, 'user/index.html', params)
+
+def projects(request):
+    proj= Project.objects.all()
+    params={'proj': proj}
+    return render(request, 'user/projects.html', params)
+
+def projView(request, proj_id):
+    project= Project.objects.get(proj_id = proj_id)
+    print(project)
+    print(project.short_Desc)
+    params={'project': project}
+    return render(request, 'user/projView.html' , params)
 
 def handleLogin(request):
     if request.method == "POST" :
@@ -54,10 +66,31 @@ def handleLogin(request):
 
 
 def handleLogout(request):
-  
     if request.user.is_authenticated:
         logout(request)
         messages.success(request,"You have logged out successfully.")
         return redirect('/')
     else:
         return redirect('/')
+
+
+def handleAddToCart(request, proj_id):
+    if request.method =='POST':
+        if request.user.is_authenticated:
+
+            proj = Project.objects.get(proj_id= proj_id)
+            user_id= request.user.id
+            price = request.POST.get("price")
+            cart= Cart.objects.create(project = proj,user_id = user_id, price =price)
+            cart.save()
+            messages.success(request, "1 Item added to cart successfully.")
+        else:
+            messages.error(request, "Please Login First To Continue")
+            return redirect('/login/')
+    else :
+        return redirect('/projects/')
+    # return HttpResponse("hoooooooo cart")
+    return redirect("/projects/")
+
+def profile(request):
+    return render(request, "user/profile.html")
