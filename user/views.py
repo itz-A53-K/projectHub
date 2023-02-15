@@ -91,3 +91,6 @@ def handleAddToCart(request, proj_id):
         return redirect('/projects/')
     # return HttpResponse("hoooooooo cart")
     return redirect("/projects/")
+
+def profile(request):
+    return render(request, "user/profile.html")

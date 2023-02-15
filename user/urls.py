@@ -8,6 +8,7 @@ urlpatterns = [
     
     path('login/', views.handleLogin, name="handleLogin"),
     path('logout/', views.handleLogout, name="handleLogout"),
+    path('profile/', views.profile, name="profile"),
 
     path('handleAddToCart/<proj_id>', views.handleAddToCart, name="handleAddToCart"),
 ]
