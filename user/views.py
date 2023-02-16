@@ -2,6 +2,7 @@ from django.shortcuts import render,HttpResponse, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.http import JsonResponse
 
 from user.models import Project,Proj_image,Cart,Order,User_detail
 
@@ -87,14 +88,15 @@ def handleAddToCart(request, proj_id):
             price = request.POST.get("price")
             cart= Cart.objects.create(project = proj,user_id = user_id, price =price)
             cart.save()
-            messages.success(request, "1 Item added to cart successfully.")
+            # messages.success(request, "1 Item added to cart successfully.")
+            return JsonResponse({'success': True,
+                         'msg': "Item added to cart successfully.", "tag": "success"})
         else:
-            messages.error(request, "Please Login First To Continue")
-            return redirect('/login/')
+            # messages.error(request, "Please Login First To Continue")
+            return JsonResponse({'success': False,
+                         'msg': "Please Login First To Continue", "tag": "danger"})
     else :
         return redirect('/projects/')
-    # return HttpResponse("hoooooooo cart")
-    # return redirect("/projects/")
 
 def profile(request):
     if request.user.is_authenticated:

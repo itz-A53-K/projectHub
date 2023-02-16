@@ -4,14 +4,19 @@
 {%block body%}
 <div class="container">
     {% comment %} Alert Message Dialog Start {% endcomment %}
-    {% if messages %}
+
+    <div id="alert-section">
+
+    </div>
+
+    {% comment %} {% if messages %}
         {% for message in messages %}
             <div {% if message.tags %} class="alert  my-1 border-{{ message.tags }} alert-dismissible fade show alert-{{ message.tags }} myAlert" {% endif %} role="alert" >
                 <strong></strong> <b>{{ message}}</b>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         {% endfor %}
-    {% endif %}
+    {% endif %} {% endcomment %}
     {% comment %} Alert Message Dialog Ends {% endcomment %}
 
    <div class="project-card-placeholder">
@@ -27,14 +32,18 @@
                         <h1>{% if  i.free %}
                             <span class="fw-semibold fs-5">Free</span>
                             <span class="text-decoration-line-through"> {{i.price}}0</span>
+                            <input type="hidden" id="price" value="0"/>
                         {% elif i.discounted_price %}
                             <span class="fw-semibold fs-5">₹ {{i.discounted_price}}0</span> 
                             <span class="text-decoration-line-through"> {{i.price}}0</span>
+                            <input type="hidden" id="price" value="{{i.discounted_price}}"/>
                         {%else%}
                             <span class="fw-semibold fs-5"> ₹ {{i.price}}0</span>
+                            <input type="hidden" id="price" value="{{i.price}}"/>
                         {%endif%}</h1>
                         <p>{{i.full_Desc| truncatechars:200}}</p>
-                        <button id="addCartHandler">Add to Cart</button>
+                        <input type="hidden" id="pro_id" value="{{i.proj_id}}"/>
+                        <button onclick="addToCart()">Add to Cart</button>
                         <button><a href="/projects/{{i.proj_id}}">View</a></button>
                     </div>
             </div>
@@ -46,33 +55,49 @@
 {%block JS%}
 <script>
     // Getting the button and listening to clicks
-    const addToCartBtn = document.getElementById("addCartHandler");
+    {% comment %} const addToCartBtn = document.getElementById("addCartHandler"); {% endcomment %}
 
-    addToCartBtn.addEventListener("click", ()=> {
+    function addToCart() {
 
+        const amount = document.getElementById("price").value;
+        const projectId = document.getElementById("pro_id").value;
         // Creating post form data to update cart
         let formData = new FormData();
+        formData.append("csrfmiddlewaretoken", "{{ csrf_token }}")
+        formData.append("price", amount)
         
         // Assining the price to post data, letter we need to encrypt this transmition
-        {% csrf_token %}
-            {% if  i.free %}
-                formData.append("price", 0);
-            {% elif i.discounted_price %}
-                formData.append("price", {{i.discounted_price}});
-            {%else%}
-                formData.append("price", {{i.price}});
-        {%endif%}
 
         let postData = {
-            body: formData;
-            method: "post"
+            body: formData,
+            method: "post",
         }
         // Sending request to server
-        fetch("/handleAddToCart/{{i.proj_id}}", postData).then(res=>res.json()).then(data => {
+        fetch("/handleAddToCart/"+projectId, postData).then(res=>res.json()).then(data => {
             console.log(data);
+           
+                {% comment %} document.getElementById("alert-section").innerHTML = `<div class='alert  my-1 border-${data.tag} alert-dismissible fade show alert-${data.tag} myAlert' role='alert' alert>
+                    <strong></strong><b>${data.msg}</b>
+                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>`; {% endcomment %}
+                
+                document.getElementById("alert-section").innerHTML = `<div class="alert alert-${data.tag} alert-dismissible fade show" role="alert">
+                    ${data.msg}
+                    <button onclick="removeAlert()" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>`;
+
+                setTimeout(() => {
+                    document.getElementById("alert-section").innerHTML =""
+                }, 5000);
+
+               
+
         });
-    });
+    }
     {% comment %} // /handleAddToCart/{{i.proj_id}} {% endcomment %}
+    function removeAlert() {
+        document.getElementById("alert-section").innerHTML ="";
+      }
 </script>
 {%endblock%}
 
