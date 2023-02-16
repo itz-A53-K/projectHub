@@ -107,6 +107,15 @@
     </nav>
     {% comment %} NavBar Ended {% endcomment %}
 
+    {% if messages %}
+        {% for message in messages %}
+            <div {% if message.tags %} class="alert  my-1 border-{{ message.tags }} alert-dismissible fade show alert-{{ message.tags }} myAlert" {% endif %} role="alert" >
+                <strong></strong> <b>{{ message}}</b>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
     {%block body%}
     
     {%endblock%}
@@ -121,13 +130,6 @@
     {% comment %} NavBar Tab Manupulation Starts Here {% endcomment %}
     <script>
 
-      const tooltipTriggerList = document.querySelectorAll(
-        '[data-bs-toggle="tooltip"]'
-      );
-      const tooltipList = [...tooltipTriggerList].map(
-        (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
-      );
-
       document.querySelectorAll(".itemLink").forEach((link) => {
         link2 = link.href + "/";
         if (
@@ -138,12 +140,15 @@
         }
       });
 
-      setTimeout(function () {
+      setTimeout(() => {
         const alert = bootstrap.Alert.getOrCreateInstance(".myAlert");
         if (alert != null) {
           alert.close();
         }
       }, 10000);
+
+      
+
     </script>
     {% comment %} NavBar Tab Manupulation Ends Here {% endcomment %}
     {%endblock%}
