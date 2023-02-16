@@ -48,7 +48,7 @@
                         <p>{{i.full_Desc| truncatechars:200}}</p>
                         <input type="hidden" id="pro_id" value="{{i.proj_id}}"/>
                         <button onclick="addToCart()">Add to Cart</button>
-                        <button><a href="/projects/{{i.proj_id}}">View</a></button>
+                        <button onclick="redirectHandlerProject()"><a href="#">View</a></button>
                     </div>
             </div>
         {% comment %} </div> {% endcomment %}
@@ -60,6 +60,8 @@
 <script>
     // Getting the button and listening to clicks
     {% comment %} const addToCartBtn = document.getElementById("addCartHandler"); {% endcomment %}
+
+    function redirectHandlerProject() {window.location='/projects/'+document.getElementById("pro_id").value;}
 
     function addToCart() {
 
