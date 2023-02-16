@@ -152,9 +152,18 @@
     align-items: center;
     min-height: 100vh;
     background:linear-gradient(45deg,#fbda61,#ff5acd) ;
-   
   }
-  
+
+  @media screen and (max-width: 1631px) {
+    .flex-me-bro{
+      display: block;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background:linear-gradient(45deg,#fbda61,#ff5acd) ;
+    }
+  }
+ 
   input[type="button"]{
     width: 25%;
     height: 40px;
