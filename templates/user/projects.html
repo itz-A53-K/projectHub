@@ -34,7 +34,7 @@
                             <span class="fw-semibold fs-5"> ₹ {{i.price}}0</span>
                         {%endif%}</h1>
                         <p>{{i.full_Desc| truncatechars:200}}</p>
-                        <button>Add to Cart</button>
+                        <button id="addCartHandler">Add to Cart</button>
                         <button><a href="/projects/{{i.proj_id}}">View</a></button>
                     </div>
             </div>
@@ -43,20 +43,37 @@
     </div>
 </div>
 
+{%block JS%}
 <script>
-// TODO
+    // Getting the button and listening to clicks
+    const addToCartBtn = document.getElementById("addCartHandler");
 
-{% comment %} /handleAddToCart/{{i.proj_id}}
+    addToCartBtn.addEventListener("click", ()=> {
 
-{% csrf_token %}
-                                    {% if  i.free %}
-                                        <input type= "hidden" value="0" name= "price">
-                                    {% elif i.discounted_price %}
-                                        <input type= "hidden" value="{{i.discounted_price}}" name= "price">
-                                    {%else%}
-                                        <input type= "hidden" value="{{i.price}}" name= "price">
-                                    {%endif%} {% endcomment %}
+        // Creating post form data to update cart
+        let formData = new FormData();
+        
+        // Assining the price to post data, letter we need to encrypt this transmition
+        {% csrf_token %}
+            {% if  i.free %}
+                formData.append("price", 0);
+            {% elif i.discounted_price %}
+                formData.append("price", {{i.discounted_price}});
+            {%else%}
+                formData.append("price", {{i.price}});
+        {%endif%}
 
+        let postData = {
+            body: formData;
+            method: "post"
+        }
+        // Sending request to server
+        fetch("/handleAddToCart/{{i.proj_id}}", postData).then(res=>res.json()).then(data => {
+            console.log(data);
+        });
+    });
+    {% comment %} // /handleAddToCart/{{i.proj_id}} {% endcomment %}
 </script>
+{%endblock%}
 
 {%endblock%}

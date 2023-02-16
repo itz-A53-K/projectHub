@@ -8,6 +8,7 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
   gap: 10px;
+  border-radius: 10px;
 }
 
 .card-pro {

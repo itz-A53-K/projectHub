@@ -77,7 +77,6 @@ def handleLogout(request):
 def handleAddToCart(request, proj_id):
     if request.method =='POST':
         if request.user.is_authenticated:
-
             proj = Project.objects.get(proj_id= proj_id)
             user_id= request.user.id
             price = request.POST.get("price")
@@ -90,7 +89,7 @@ def handleAddToCart(request, proj_id):
     else :
         return redirect('/projects/')
     # return HttpResponse("hoooooooo cart")
-    return redirect("/projects/")
+    # return redirect("/projects/")
 
 def profile(request):
     return render(request, "user/profile.html")
