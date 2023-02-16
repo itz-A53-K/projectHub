@@ -1,0 +1,82 @@
+.card{
+    position: relative;
+    width: 350px;
+    background: #fff;
+    height: 190px;
+    border-radius: 20px;
+    box-shadow: 0 35px 80px rgba(0,0,0,0.15);
+    transition: 0.5s;
+    margin-bottom: 1rem;
+  }
+  .card:hover{
+    height: 450px;
+  }
+  .card input[type="button"]{
+    width: 25%;
+    height: 40px;
+    margin: 2vh;
+    border: 1px solid;
+    background: linear-gradient(120deg,#053452, #38034f);
+    border-radius: 25px;
+    font-size: 15px;
+    color: #e9f4fb;
+    font-weight: 400;
+    cursor: pointer;
+    outline: none;
+    margin-top: 87%;
+    transition: 0.5s;
+    display: flex;
+    
+  }
+  .imgBx{
+    position: absolute;
+    left: 50%;
+    top: -50px;
+    transform: translateX(-50%);
+    width: 150px;
+    height: 150px;
+    background: whitesmoke;
+    border-radius: 20px;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.35);
+    overflow: hidden;
+    transition: 0.5s;
+  }
+  .imgBx img{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .card:hover.imgBx{
+    height: 250px;
+    width: 250px;
+  }
+   .card.content{/*this code not responding  */
+    position: absolute;
+    width: 100%;
+    height:100% ;
+    display: flex;
+    justify-content: center;
+    align-items:flex-end;
+  }
+  .card.content.details{
+    text-align: center;
+    width: 100%;
+    transition: 0.5s;
+  }
+  .card.content.details h2{
+    font-size: 1.25em;
+    font-weight: 600;
+    color: #ec0707;
+  }
+  .card-2{
+    position:absolute;
+    width: 350px;
+    background: #fff;
+    height: 190px;
+    border-radius: 20px;
+    box-shadow: 0 35px 80px rgba(0,0,0,0.15);
+    overflow: hidden; 
+  }

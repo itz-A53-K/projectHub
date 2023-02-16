@@ -1,6 +1,5 @@
 {% extends 'user/basic.html' %}
-{%block title%}Project-Hub {%endblock%}
-
+{%block title%}Project-Hub - Projects Available{%endblock%}
 
 {%block body%}
 <section class="mar-top">
@@ -13,13 +12,9 @@
         {% endfor %}
     {% endif %}
     <div class="container mt-3">
-
         <div class="row row-cols-1 row-cols-md-2 g-4">
-            
             {% for i in proj %}
                 <div class="col">
-                    
-                        
                         <div class="card my-2" style="width: 38rem; min-height:50vh">
                             <a href="/projects/{{i.proj_id}} " style="">
                                 <img src="/media/{{i.default_image}}" class="card-img-top" alt="..." style="height:28vh">
@@ -38,9 +33,7 @@
                                     {%else%}
                                         <span class="fw-semibold fs-5"> ₹ {{i.price}}0</span>
                                     {%endif%}
-                                    
                                 </p>
-                                
                             </div>
                             <div class="card-footer text-muted d-flex">
                                 <form action="/handleAddToCart/{{i.proj_id}}" method="post">
@@ -58,12 +51,9 @@
                                 <a href="/projects/{{i.proj_id}}" class="btn btnDesign1 my-1">Start Viewing</a>
                             </div>
                         </div>
-                   
                 </div>
             {% endfor %}
         </div>
     </div>
-
 </section>
-
 {%endblock%}

@@ -1,40 +1,22 @@
-{% extends 'user/basic.html' %} {%block title%}Project-Hub {%endblock%}
-{%block css%} .card-body .card-title{ font-size: 1.5rem; } .card-body .card-text{
-font-size: 1.2rem; } {%endblock%} {%block body%} {%load static %} 
-{% comment %}short time offer {% endcomment %}
+{% extends 'user/basic.html' %}
+{%load static %} 
 
-{% comment %} <div
-  class="container-fluid p-0"
-  style="height: 35vh;  margin-top:64px ">
-  <img
-    src="{% static 'user/img/projecthub.jpg'%}"
-    alt=""
-    srcset=""
-    class="object-fit-fill h-100 w-100" />
-</div> {% endcomment %}
+{%block title%}Project-Hub - Home Page{%endblock%}
+
+{%block body%}
+
+{% comment %} Alert Message Starts {% endcomment %}
 {% if messages %} {% for message in messages %}
-<div
-  {%
-  if
-  message.tags
-  %}
-  class="alert  my-1 border-{{ message.tags }} alert-dismissible fade show alert-{{ message.tags }} myAlert"
-  {%
-  endif
-  %}
-  role="alert">
-  <strong></strong> <b>{{ message}}</b>
-  <button
-    type="button"
-    class="btn-close"
-    data-bs-dismiss="alert"
-    aria-label="Close"></button>
+<div {%if message.tags%}class="alert  my-1 border-{{ message.tags }} alert-dismissible fade show alert-{{ message.tags }} myAlert"{%endif%} role="alert">
+  <b>{{ message}}</b>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
-{% endfor %} {% endif %}
-<div class="container-lg my-5 d-flex flex-column align-items-center">
-  <h2 class="afterLine mt-3">OUR SERVICES</h2>
+{% endfor %}
+{% endif %}
+{% comment %} Alert Message Ends {% endcomment %}
 
-  <div class="container">
+<div class="container">
+  <center><h2 class="my-3">Our Services</h2></center>
     <div class="card-group my-5">
       <div class="card border-light mx-5 pe-4" style="overflow: hidden;">
         <div class="card-body d-flex flex-column align-items-center">
@@ -55,10 +37,8 @@ font-size: 1.2rem; } {%endblock%} {%block body%} {%load static %}
           </p>
         </div>
       </div>
-      <div class="card border-light mx-5 ps-4" style="overflow: hidden;">
+      <div class="card border-light mx-5 ps-4" style="overflow: hidden; ">
         <div class="card-body d-flex flex-column align-items-center">
-          {% comment %}
-          <img src="..." class="card-img-top" alt="..." /> {%endcomment %}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="40"
@@ -77,14 +57,9 @@ font-size: 1.2rem; } {%endblock%} {%block body%} {%load static %}
         </div>
       </div>
     </div>
-  </div>
 </div>
-<div
-  class="container-fluid my-5"
-  style="background: #f0f6eb; border-radius: 10px">
-  <div
-    class="container-lg my-5 d-flex align-items-center justify-content-between p-2"
-    style="">
+<div class="container-fluid my-5" style="background: #f0f6eb; border-radius: 15px; margin: 10px">
+  <div class="container-lg my-5 d-flex align-items-center justify-content-between p-2" style="">
     <div style="width: 24vw; margin-left: 20px; " class="me-5">
       <h2 class="afterLine my-4">A broad selection of projects</h2>
       <p class="mx-2" style="font-size: 1.2rem" >
@@ -123,10 +98,8 @@ font-size: 1.2rem; } {%endblock%} {%block body%} {%load static %}
           </div>
         </a>
       </div>
-
       {% endfor %}
     </div>
   </div>
 </div>
-
 {%endblock%}

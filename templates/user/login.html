@@ -1,12 +1,12 @@
 {% extends 'user/basic.html' %}
 {%load static %}
-{% comment %} {%block title%}Project-Hub - Authentication {%endblock%} {% endcomment %}
-{% block csslink%}
-<link rel="stylesheet" href="{% static 'user/css/style1.css'%}" />
-{%endblock%}
+{%block title%}Project-Hub - Authentication{%endblock%}
+
+{% comment %} {%block css%}
+  
+{%endblock%} {% endcomment %}
 
 {%block body%}
-
 <section class="container forms">
     <div class="form login">
         <div class="form-content">
@@ -65,15 +65,11 @@
         <div class="form-content">
             <h2 class="heading">Signup</h2>
             {% if messages %}
-              
                   {% for message in messages %}
-                  <div {% if message.tags %} class="alert alert-dismissible fade show alert-{{ message.tags }} myAlert"{% endif %} role="alert">
-                    <strong></strong> {{ message}} .
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                  </div>
-                  
-                  </div>
-                  
+                    <div {% if message.tags %} class="alert alert-dismissible fade show alert-{{ message.tags }} myAlert"{% endif %} role="alert">
+                      <strong></strong> {{ message}} .
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
                   {% endfor %}
              
             {% endif %}
@@ -97,9 +93,6 @@
                             required />
                         <i class="bx bx-hide eye-icon"></i>
                     </div>
-                    {% comment %} <div class="field input-field">
-                        <input type="password" placeholder="Confirm Password" class="password" required />
-                    </div> {% endcomment %}
                 </form>
                 <div class="field button-field">
                     <button id="regBtn">Send OTP</button>
@@ -127,19 +120,13 @@
     </div>
 </section>
 {%endblock%}
-
 {%block JS%}
   <script>
-
     generateCaptcha();
-
     function generateCaptcha() {
-
       document.getElementById('mainCaptcha').innerHTML = "";
-
       let alpha = new Array(
           "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z");
-
       for (var i = 0; i < 4; i++) {
           a = alpha[Math.floor(Math.random() * alpha.length)];
           b = alpha[Math.floor(Math.random() * alpha.length)];
@@ -148,9 +135,7 @@
 
       }
       code = a + b + c + d;
-
       document.getElementById("mainCaptcha").innerHTML = code;
-
       let background = new Array("captcha1", "captcha2", "captcha3");
       let back = background[Math.floor(Math.random() * background.length)];
       document.getElementById("captchaDiv").style.backgroundImage =
@@ -159,7 +144,6 @@
 
     function validateCaptcha() {
       if (document.getElementById("captcha").value == code) {
-
           return true;
       }
       else {
@@ -170,8 +154,6 @@
       }
     }
   </script>
-
-
   <script>
 
     const API = "./api/send-mail.php";
@@ -260,10 +242,6 @@
     {% comment %} function logMe() {
       document.getElementById('loginForm').submit();
     } {% endcomment %}
-  
-  
-  
-  
     
     {% comment %} function regMe() {
       const xhr = new XMLHttpRequest();
