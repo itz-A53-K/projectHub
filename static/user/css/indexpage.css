@@ -9,7 +9,7 @@
     margin-bottom: 1rem;
   }
   .card:hover{
-    height: 450px;
+    height: 350px;
   }
   .card input[type="button"]{
     width: 25%;
@@ -130,23 +130,30 @@
     font-weight:500;
     transition: .1s ease-in; 
     color: #c86b6b;
+    padding: 8px;
     border: 2px solid #c86b6b;
   }
   
   .btnDesign1:hover{
-    font-size: 1rem;
+    font-size: 1.1rem;
+    padding: 8px;
+    padding-left: 15px;
+    padding-right: 15px;
+    transition: 0.5s;
+    color: white;
     background: linear-gradient(100deg,#c86b6b,rgb(227 145 226),#e0c6e8);
-    border: 2px solid #c86b6b;
+    border: 1px solid white;
+    /* border: none; */
   }
   
-  /* body{
+  .flex-me-bro{
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     background:linear-gradient(45deg,#fbda61,#ff5acd) ;
    
-  } */
+  }
   
   input[type="button"]{
     width: 25%;
@@ -161,5 +168,4 @@
     cursor: pointer;
     outline: none;
     margin-left: 200%;
-    
   }

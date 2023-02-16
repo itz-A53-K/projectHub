@@ -6,6 +6,10 @@
     
   } */
 
+  body {
+    background:linear-gradient(45deg,#fbda61,#ff5acd) ;
+  }
+
   .captchaDiv {
     user-select: none;
     height: 40px; 

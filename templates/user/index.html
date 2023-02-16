@@ -1,6 +1,5 @@
 {% extends 'user/basic.html' %}
 {%load static %} 
-
 {%block title%}Project-Hub - Home Page{%endblock%}
 {%block csslink%} 
   <link rel="stylesheet" href="{% static 'user/css/indexpage.css'%}" />
@@ -17,7 +16,7 @@
 {% endfor %}
 {% endif %}
 {% comment %} Alert Message Ends {% endcomment %}
-
+<div class="flex-me-bro">
 <div class="container">
   <center><h2 class="my-3">Our Services</h2></center>
     <div class="card-group my-5">
@@ -55,7 +54,7 @@
           <h5 class="card-title">Why we are?</h5>
           <p class="card-text text-center mx-4">
             Want a professional web developer for your projects? We are here for
-            you .
+            you.
           </p>
         </div>
       </div>
@@ -104,5 +103,6 @@
       {% endfor %}
     </div>
   </div>
+</div>
 </div>
 {%endblock%}
