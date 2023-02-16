@@ -1,28 +1,171 @@
 {% extends 'user/basic.html' %}
 {%load static %}
 {%block title%}Project-Hub : profile{%endblock%}
+{%block css%}
+
+.profile_info .imgDiv img {
+height : 20vh;
+width : 10vw;
+}
+
+.profile_info .input,
+.profile_info textarea {
+border: 2px solid rgba(45, 44, 44, 0.76);
+border-radius: 5px;
+margin:5px;
+padding: 5px 5px 5px 10px;
+width: 25vw;
+font-size:1.2rem;
+font-weight:400;
+color:rgb(46, 43, 43);
+user-select:none;
+font-family: Roboto,Arial,sans-serif;
+}
+.profile_info .input:disabled,
+.profile_info textarea:disabled {
+background-color: #fafafa;
+color:#878787;
+cursor: not-allowed;
+}
+
+.profile_links {
+width:30%;
+height:auto;
+}
+
+.profile_links .card img{
+width:50px;
+height:50px;
+}
+.card{
+margin: 0 15px;
+box-shadow:0px 0px 4px rgba(64, 64, 64, 0.269);
+}
+{%endblock css%}
 {%block body%}
 <section class="mar-top">
-    <input type="button" value="profile"> 
-    <input type="button" value="purchase"> 
-<div class="card">
-    <div class="imgBx">
-         <img src="{% static 'user/img/istockphoto-1284693553-612x612.jpg'%}">
-     </div>
-         <div class="content">
-            <div class="details">
-              <h2> Name</h2>
-              <h2> Name</h2>
-
+    <div class="container d-flex p-4 profile">
+        <div class="profile_links">
+            <div class="card p-2  flex-row align-items-center">
+                <img src="{%static 'user/img/person-circle.png'%}" alt="" srcset="">
+                <div class=" m-2">
+                    <div>Hello,</div>
+                    <h5>{{request.user.first_name}} {{request.user.last_name}}</h5>
+                </div>
             </div>
-         </div>
-        
-         <input type="button" value=" purchase"> 
-</div>
+            <div class="card p-2 mt-3 ">
+                <a href="" class="btn">
+                    <h5>Profile</h5>
+                </a>
+                <a href="" class="btn">
+                    <h5>My Orders</h5>
+                </a>
 
-<div class="card-2">
-</div>
+                <div class="card-footer d-flex justify-content-center">
+                    <a href="/logout" class="btn btn-outline-info w-75">Logout</a>
+                </div>
+            </div>
+        </div>
+        <div class=" w-75 p-4 card profile_info">
+            <div class="container d-flex flex-column align-items-center">
+                <!-- <div>
+                        <h4>Persional Information</h4>
+                        <span>Edit</span>
+                    </div> -->
+                <div class="imgDiv">
+                    <img src="{%static 'user/img/person-circle.png'%}" alt="">
+                </div>
+                <div>
+
+                    <form id="editProfileForm" method="post" action="/profile/" method="post" name="">
+                        {% csrf_token %}
+                        <div>
+                            <h4 class="mt-4">Personal Information</h4>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control input" name="f_name" id="f_name" placeholder="Your first name" value="{{request.user.first_name}}" disabled required>
+                                <label for="f_name">First name</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control input" name="l_name" id="l_name" placeholder="Your last name" value="{{request.user.last_name}}" disabled required>
+                                <label for="l_name">Last name</label>
+                            </div>
+
+                            <div class="input-field">
+                                <h6 class="mt-4">Gender</h6>
+                                <input type="hidden" name="" id="genderValue" value={{User_detail.gender}}>
+                                <input class="form-check-input " type="radio" name="gender" value="male" id="male" disabled>
+                                <label class="form-check-label me-2 fs-5" for="male">Male</label>
+
+                                <input class="form-check-input" type="radio" name="gender" value="female" id="female" disabled>
+                                <label class="form-check-label me-2 fs-5" for="female">Female</label>
+
+                                <input class="form-check-input" type="radio" name="gender" value="other" id="other" disabled>
+                                <label class="form-check-label me-2 fs-5" for="other">Other</label>
+
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="mt-4">Email Address</h4>
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control input" id="email" placeholder="Your email"
+                                    value="{{request.user}}" disabled>
+                                <label for="email">Email</label>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="mt-4">Phone Number</h4>
+                            <div class="form-floating mb-3">
+                                <input type="tel" class="form-control input" name="phone" id="phone" placeholder="Your phone number" value="+{{User_detail.phone}}"
+                                    disabled required>
+                                <label for="f_name">Phone number</label>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="mt-4 visually-hidden" id="profileImgHead">Profile picture</h4>
+                            <div class=" mb-3">
+                                <input type="file" class="form-control input visually-hidden" name="profileImg" id="profileImg">
+                            </div>
+                        </div>
+
+                        <div class=" button-field">
+                            <button id="profileSaveBtn" class="btn btn-primary visually-hidden" type="submit">Save Changes</button>
+                        </div>
+                    </form>
+
+                    <div class="d-grid  col-6 mx-auto mt-4 ">
+                        <button class="btn btn-primary" id="editProfileBtn" onclick="editProfile()">Edit
+                            Profile</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
 </section>
 
 
 {%endblock body%}
+
+{%block JS%}
+<script>
+    genderValue=document.getElementById('genderValue').value
+    console.log(genderValue)
+    document.getElementById(genderValue).checked=true
+    function editProfile() {
+        const f_name = document.getElementById("f_name").disabled = false;
+        const l_name = document.getElementById("l_name").disabled = false;
+        const male = document.getElementById("male").disabled = false;
+        const female = document.getElementById("female").disabled = false;
+        const other = document.getElementById("other").disabled = false;
+        const phone = document.getElementById("phone").disabled = false;
+        const profileImgHead = document.getElementById("profileImgHead").classList.remove('visually-hidden')
+        const profileImg = document.getElementById("profileImg").classList.remove('visually-hidden')
+
+        const profileSaveBtn = document.getElementById("profileSaveBtn").classList.remove('visually-hidden')
+        const editProfileBtn = document.getElementById("editProfileBtn").classList.add('visually-hidden')
+
+    }
+</script>
+{%endblock JS%}

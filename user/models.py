@@ -83,3 +83,14 @@ class Order(models.Model):
 
     order_time = models.DateTimeField(auto_now_add=True)
     
+class User_detail(models.Model):
+    id=models.BigAutoField(primary_key=True)
+    user_id= models.BigIntegerField()
+    name= models.CharField(max_length=200)
+    gender= models.CharField(max_length=30, null=True, blank=True)
+    phone= models.IntegerField(max_length=15, null=True, blank=True)
+    profileImg= models.ImageField(null=True, blank=True)
+    address = models.TextField(null=True, blank=True )
+    
+    def __str__(self):
+        return self.name
