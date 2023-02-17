@@ -106,28 +106,23 @@ def profile(request):
         account= User_detail.objects.get(user_id= user_id)
         print(account.phone)
         if request.method=="POST":
-            form=ImageForm(data=request.POST, files=request.FILES)
-            if form.is_valid():
-                form.save()
-                obj=form.instance
-                return render(request, "user/profile.html", {"obj":obj})
-            # f_name=request.POST.get('f_name')
-            # l_name=request.POST.get('l_name')
-            # gender=request.POST.get('gender')
-            # phone=request.POST.get('phone')
-            # profileImg=request.POST.get('profileImg')
+            f_name=request.POST.get('f_name')
+            l_name=request.POST.get('l_name')
+            gender=request.POST.get('gender')
+            phone=request.POST.get('phone')
+            profileImg=request.POST.get('profileImg')
             
-            # print(profileImg)
-            # user= User.objects.get(id=user_id)
-            # user.first_name=f_name
-            # user.last_name= l_name
+            print(profileImg)
+            user= User.objects.get(id=user_id)
+            user.first_name=f_name
+            user.last_name= l_name
 
-            # account.gender=gender
-            # account.phone=phone
-            # account.profileImg=profileImg
-            # # account.price="100"
-            # # account.save()
-            # # user.save()
+            account.gender=gender
+            account.phone=phone
+            account.profileImg=profileImg
+            account.price="100"
+            account.save()
+            user.save()
             return redirect("/profile/")
         params={'User_detail' : account, "activeProfile" : "activeProfile"}
         return render(request, "user/profile.html", params)
