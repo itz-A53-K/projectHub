@@ -45,10 +45,14 @@
                             <span class="fw-semibold fs-5"> ₹ {{i.price}}0</span>
                             <input type="hidden" id="price" value="{{i.price}}"/>
                         {%endif%}</h1>
-                        <p>{{i.full_Desc| truncatechars:200}}</p>
+                        <div class="full-description">
+                            <p>{{i.full_Desc| truncatechars:200}}</p>
+                        </div>
                         <input type="hidden" id="pro_id" value="{{i.proj_id}}"/>
-                        <button onclick="addToCart()">Add to Cart</button>
-                        <button onclick="redirectHandlerProject()"><a href="#">View</a></button>
+                        <div class="bottom-paste">
+                            <button onclick="addToCart()">Add to Cart</button>
+                            <button onclick="redirectHandlerProject()"><a href="#">View</a></button>
+                        </div>
                     </div>
             </div>
         {% comment %} </div> {% endcomment %}

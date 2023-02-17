@@ -11,6 +11,18 @@ body {
   border-radius: 10px;
 }
 
+.bottom-paste {
+  position: absolute;
+  display: flex;
+  bottom: 0;
+}
+
+.full-description {
+  position: relative;
+  height: auto;
+  overflow: hidden;
+}
+
 .card-pro {
   /* width: 650px; */
   position: relative;
