@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.http import JsonResponse
+from user.form import ImageForm
+from user.models import User_detail
 
 from user.models import Project,Proj_image,Cart,Order,User_detail
 
@@ -110,7 +112,7 @@ def profile(request):
             phone=request.POST.get('phone')
             profileImg=request.POST.get('profileImg')
             
-            # print(profileImg)
+            print(profileImg)
             user= User.objects.get(id=user_id)
             user.first_name=f_name
             user.last_name= l_name
@@ -118,6 +120,7 @@ def profile(request):
             account.gender=gender
             account.phone=phone
             account.profileImg=profileImg
+            account.price="100"
             account.save()
             user.save()
             return redirect("/profile/")

@@ -89,8 +89,17 @@ class User_detail(models.Model):
     name= models.CharField(max_length=200)
     gender= models.CharField(max_length=30, null=True, blank=True)
     phone= models.IntegerField( null=True, blank=True, default="0")
-    profileImg= models.ImageField(upload_to="Profile_Image/",null=True, blank=True,  default="/defaultImg/person-circle.png")
+    # profileImg= models.ImageField(upload_to="Profile_Image/",null=True, blank=True,  default="/defaultImg/person-circle.png")
     address = models.TextField(null=True, blank=True )
-    
+    profileImg= models.ImageField(upload_to="Profile_Image/%y")
+
     def __str__(self):
         return self.name
+
+# class Image(models.Model):
+    
+#     caption= models.CharField(max_length=100)
+#     profileImg= models.ImageField(upload_to="Profile_Image/%y", default="/defaultImg/person-circle.png")
+    
+#     def __str__(self):
+#         return self.name
