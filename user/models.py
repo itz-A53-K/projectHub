@@ -50,7 +50,7 @@ class Project(models.Model):
     publish_date = models.DateTimeField(auto_now_add=True)
     last_modified_date = models.DateTimeField(auto_now=True)
 
-    default_image= models.ImageField(null=True,blank=True)
+    default_image= models.ImageField(null=True,blank=True, upload_to="Project_Image/")
 
     sourcecode_link= models.CharField(max_length=500,null=True, blank=True)
 
@@ -63,7 +63,7 @@ class Project(models.Model):
     
 class Proj_image(models.Model):
     id= models.BigAutoField(primary_key=True)
-    image= models.ImageField(upload_to="Project_Image")
+    image= models.ImageField(upload_to="Project_Image/")
     proj_id = models.ForeignKey( Project, on_delete=models.CASCADE)
 
     # def __str__(self):
@@ -80,7 +80,7 @@ class Order(models.Model):
     project= models.ForeignKey(Project, on_delete=models.CASCADE)
     user_id= models.IntegerField()
     price = models.FloatField()
-
+    transaction_id= models.CharField(max_length=300)
     order_time = models.DateTimeField(auto_now_add=True)
     
 class User_detail(models.Model):
@@ -88,8 +88,8 @@ class User_detail(models.Model):
     user_id= models.BigIntegerField()
     name= models.CharField(max_length=200)
     gender= models.CharField(max_length=30, null=True, blank=True)
-    phone= models.IntegerField(max_length=15, null=True, blank=True)
-    profileImg= models.ImageField(null=True, blank=True)
+    phone= models.IntegerField( null=True, blank=True, default="0")
+    profileImg= models.ImageField(upload_to="Profile_Image/",null=True, blank=True,  default="/defaultImg/person-circle.png")
     address = models.TextField(null=True, blank=True )
     
     def __str__(self):

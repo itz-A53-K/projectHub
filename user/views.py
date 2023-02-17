@@ -60,8 +60,8 @@ def handleLogin(request):
                 name= user.first_name+" "+ user.last_name
                 account= User_detail.objects.create(user_id= user.id, name= name)
                 account.save()
-                messages.success(request,"Your account has been successfully created.")
-                return redirect('/')
+                messages.success(request,"Your account has been successfully created. You can login now.")
+                return redirect('/login/')
             except:
                 messages.error(request,"Error! Email already exists.")
 
@@ -102,6 +102,7 @@ def profile(request):
     if request.user.is_authenticated:
         user_id= request.user.id
         account= User_detail.objects.get(user_id= user_id)
+        print(account.phone)
         if request.method=="POST":
             f_name=request.POST.get('f_name')
             l_name=request.POST.get('l_name')
@@ -109,6 +110,7 @@ def profile(request):
             phone=request.POST.get('phone')
             profileImg=request.POST.get('profileImg')
             
+            print(profileImg)
             user= User.objects.get(id=user_id)
             user.first_name=f_name
             user.last_name= l_name
@@ -117,10 +119,22 @@ def profile(request):
             account.phone=phone
             account.profileImg=profileImg
             # account.price="100"
-            account.save()
-            user.save()
+            # account.save()
+            # user.save()
             return redirect("/profile/")
-        params={'User_detail' : account}
+        params={'User_detail' : account, "activeProfile" : "activeProfile"}
+        return render(request, "user/profile.html", params)
+    else:
+        return redirect("/")
+    
+
+def order(request):
+    if request.user.is_authenticated:
+        user_id= request.user.id
+        # order= Order.objects.get(user_id= user_id)
+        # print(order)
+        
+        params={'User_detail' : "account", "activeOrder" : "activeOrder"}
         return render(request, "user/profile.html", params)
     else:
         return redirect("/")
