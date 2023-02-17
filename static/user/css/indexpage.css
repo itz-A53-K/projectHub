@@ -1,4 +1,4 @@
-.card{
+/* .card{
     position: relative;
     width: 350px;
     background: #fff;
@@ -53,8 +53,9 @@
     height: 250px;
     width: 250px;
   }
-   .card.content{/*this code not responding  */
-    position: absolute;
+   .card.content{
+    /*this code not responding  */
+   /* position: absolute;
     width: 100%;
     height:100% ;
     display: flex;
@@ -79,7 +80,7 @@
     border-radius: 20px;
     box-shadow: 0 35px 80px rgba(0,0,0,0.15);
     overflow: hidden; 
-  }
+  } */
 
   .flex-me-bro{
     display: flex;
@@ -89,6 +90,12 @@
     background:linear-gradient(45deg,#fbda61,#ff5acd) ;
   }
 
+  .projectContainer .projectDiv .card{
+    width: 38rem;
+    box-shadow: 0px 0px 7px 2px rgb(158, 146, 146); 
+    overflow: hidden;
+   
+  }
   @media screen and (max-width: 1631px) {
     .flex-me-bro{
       display: block;
@@ -98,8 +105,29 @@
       background:linear-gradient(45deg,#fbda61,#ff5acd) ;
     }
   }
+
+  @media screen and (max-width: 990px) {
+    .projectContainer{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+  @media screen and (max-width: 660px) {
+    .projectContainer .projectDiv .card{
+      width: 19rem;
+     
+    }
+  }
+  @media screen and (max-width: 290px) {
+    .projectContainer .projectDiv .card{
+      width: 12rem;
+     
+    }
+  }
  
-  input[type="button"]{
+  /* input[type="button"]{
     width: 25%;
     height: 40px;
     margin: 2vh;
@@ -112,4 +140,4 @@
     cursor: pointer;
     outline: none;
     margin-left: 200%;
-  }
+  } */

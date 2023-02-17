@@ -9,5 +9,6 @@ urlpatterns = [
     path('logout/', views.handleLogout, name="handleLogout"),
     path('profile/', views.profile, name="profile"),
     path('order/', views.order, name="order"),
+    path('cart/', views.cart, name="cart"),
     path('handleAddToCart/<proj_id>', views.handleAddToCart, name="handleAddToCart"),
 ]

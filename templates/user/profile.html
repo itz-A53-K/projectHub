@@ -1,6 +1,6 @@
 {% extends 'user/basic.html' %}
 {%load static %}
-{%block title%}Project-Hub : profile{%endblock%}
+{% comment %} {%block title%}Project-Hub : profile{%endblock%} {% endcomment %}
 {%block css%}
 .profile_links .card img{
 width:50px;
@@ -32,20 +32,31 @@ font-family: Roboto,Arial,sans-serif;
 }
 .profile_info .input:disabled,
 .profile_info textarea:disabled {
-background-color: #fafafa;
-color:#878787;
+    background-color: #fafafa;
+    color:#878787;
 cursor: not-allowed;
 }
 
 .profile_links {
 width:30%;
 height:auto;
+
 }
 
 
 {%endblock css%}
+
+{%block title%}
+    {% if activeProfile %}
+        Project-Hub.in : Profile
+    {% elif activeOrder%}
+        Project-Hub.in : Orders
+    {% endif %}
+{%endblock title%}
+    
+
 {%block body%}
-<div class="container d-flex p-4 profile">
+<div class="container d-flex p-4 profile" id="profile">
     <div class="profile_links">
         <div class="card p-2  flex-row align-items-center">
             <img src="/media/{{User_detail.profileImg}}" alt="" srcset="">
@@ -54,16 +65,16 @@ height:auto;
                 <h5>{{request.user.first_name}} {{request.user.last_name}}</h5>
             </div>
         </div>
-        <div class="card p-2 mt-3 ">
-            <a href="/profile/" class="btn itemLink">
+        <div class="card p-2 mt-3 align-items-center">
+            <a href="/profile/" class="itemLink my-2">
                 <h5>Profile</h5>
             </a>
-            <a href="/order/" class="btn itemLink">
+            <a href="/order/" class=" itemLink my-2">
                 <h5>My Orders</h5>
             </a>
 
-            <div class="card-footer d-flex justify-content-center">
-                <a href="/logout" class="btn btn-outline-info w-75">Logout</a>
+            <div class="card-footer d-flex justify-content-center w-100 mt-4">
+                <a href="/logout" class="btn btn-outline-info w-50">Logout</a>
             </div>
         </div>
     </div>
@@ -84,24 +95,24 @@ height:auto;
                     <div>
                         <h4 class="mt-4">Personal Information</h4>
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control input" name="f_name" id="f_name" placeholder="Your first name" value="{{request.user.first_name}}" disabled required>
+                            <input type="text" class="form-control input disabled" name="f_name" id="f_name" placeholder="Your first name" value="{{request.user.first_name}}" disabled required>
                             <label for="f_name">First name</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control input" name="l_name" id="l_name" placeholder="Your last name" value="{{request.user.last_name}}" disabled required>
+                            <input type="text" class="form-control input disabled" name="l_name" id="l_name" placeholder="Your last name" value="{{request.user.last_name}}" disabled required>
                             <label for="l_name">Last name</label>
                         </div>
 
                         <div class="input-field">
                             <h6 class="mt-4">Gender</h6>
                             <input type="hidden" name="" id="genderValue" value={{User_detail.gender}}>
-                            <input class="form-check-input " type="radio" name="gender" value="male" id="male" disabled>
+                            <input class="form-check-input disabled " type="radio" name="gender" value="male" id="male" disabled>
                             <label class="form-check-label me-2 fs-5" for="male">Male</label>
 
-                            <input class="form-check-input" type="radio" name="gender" value="female" id="female" disabled>
+                            <input class="form-check-input disabled" type="radio" name="gender" value="female" id="female" disabled>
                             <label class="form-check-label me-2 fs-5" for="female">Female</label>
 
-                            <input class="form-check-input" type="radio" name="gender" value="other" id="other" disabled>
+                            <input class="form-check-input disabled" type="radio" name="gender" value="other" id="other" disabled>
                             <label class="form-check-label me-2 fs-5" for="other">Other</label>
 
                         </div>
@@ -118,7 +129,7 @@ height:auto;
                     <div>
                         <h4 class="mt-4">Phone Number</h4>
                         <div class="form-floating mb-3">
-                            <input type="tel" class="form-control input" name="phone" id="phone" placeholder="Your phone number" value="{{User_detail.phone}}"
+                            <input type="tel" class="form-control input disabled" name="phone" id="phone" placeholder="Your phone number" value="{{User_detail.phone}}"
                                 disabled required>
                             <label for="f_name">Phone number</label>
                         </div>
@@ -144,7 +155,7 @@ height:auto;
         </div>
 
 
-        <div class="container d-flex flex-column align-items-center order {% if not activeOrder %} visually-hidden{% endif %}" id="order">
+        <div class="container d-flex flex-column align-items-center order {% if not activeOrder %} visually-hidden{% endif %}" id="order"  style="min-height:80vh;">
             
             {% comment %} orderpage code  {% endcomment %}
 
@@ -160,21 +171,33 @@ height:auto;
 {%block JS%}
 <script>
     genderValue=document.getElementById('genderValue').value
-    console.log(genderValue)
     document.getElementById(genderValue).checked=true
+
     function editProfile() {
-        const f_name = document.getElementById("f_name").disabled = false;
-        const l_name = document.getElementById("l_name").disabled = false;
-        const male = document.getElementById("male").disabled = false;
-        const female = document.getElementById("female").disabled = false;
-        const other = document.getElementById("other").disabled = false;
-        const phone = document.getElementById("phone").disabled = false;
-        const profileImgHead = document.getElementById("profileImgHead").classList.remove('visually-hidden')
-        const profileImg = document.getElementById("profileImg").classList.remove('visually-hidden')
+        disabledInput= document.querySelectorAll(".disabled")
+        
+        disabledInput.forEach( e =>{
+            e.disabled=false;
+        })
+        
+        {% comment %} const profileImgHead = document.getElementById("profileImgHead").classList.remove('visually-hidden')
+        const profileImg = document.getElementById("profileImg").classList.remove('visually-hidden') {% endcomment %}
 
         const profileSaveBtn = document.getElementById("profileSaveBtn").classList.remove('visually-hidden')
         const editProfileBtn = document.getElementById("editProfileBtn").classList.add('visually-hidden')
 
     }
+
+    function mediaQuery(x) {
+        if (x.matches) { // If media query matches
+            console.log(document.getElementById("profile"))
+          document.getElementById("profile").classList.remove("container");
+          document.getElementById("profile").classList.add("container-fluid");
+        } 
+      }
+      
+    var x = window.matchMedia("(max-width: 800px)")
+    mediaQuery(x) // Call listener function at run time
+    x.addListener(mediaQuery) 
 </script>
 {%endblock JS%}

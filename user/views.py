@@ -8,21 +8,24 @@ from user.models import User_detail
 
 from user.models import Project,Proj_image,Cart,Order,User_detail
 
+def cartCount(user_id):
+    cart= Cart.objects.filter(user_id = user_id)
+    cart= cart.count()
+    return cart
+
 def home(request):
     topProjs= Project.objects.all()[:2]
-    params={'topProjs':topProjs}
+    params={'topProjs':topProjs, "cartCount": cartCount(request.user.id)}
     return render(request, 'user/index.html', params)
 
 def projects(request):
     proj= Project.objects.all()
-    params={'proj': proj}
+    params={'proj': proj, "cartCount": cartCount(request.user.id)}
     return render(request, 'user/projects.html', params)
 
 def projView(request, proj_id):
     project= Project.objects.get(proj_id = proj_id)
-    print(project)
-    print(project.short_Desc)
-    params={'project': project}
+    params={'project': project, "cartCount": cartCount(request.user.id)}
     return render(request, 'user/projView.html' , params)
 
 def handleLogin(request):
@@ -82,49 +85,29 @@ def handleLogout(request):
         return redirect('/')
 
 
-def handleAddToCart(request, proj_id):
-    if request.method =='POST':
-        if request.user.is_authenticated:
-            proj = Project.objects.get(proj_id= proj_id)
-            user_id= request.user.id
-            price = request.POST.get("price")
-            cart= Cart.objects.create(project = proj,user_id = user_id, price =price)
-            cart.save()
-            # messages.success(request, "1 Item added to cart successfully.")
-            return JsonResponse({'success': True,
-                         'msg': "Item added to cart successfully.", "tag": "success"})
-        else:
-            # messages.error(request, "Please Login First To Continue")
-            return JsonResponse({'success': False,
-                         'msg': "Please Login First To Continue", "tag": "danger"})
-    else :
-        return redirect('/projects/')
-
 def profile(request):
     if request.user.is_authenticated:
         user_id= request.user.id
         account= User_detail.objects.get(user_id= user_id)
-        print(account.phone)
+        
         if request.method=="POST":
             f_name=request.POST.get('f_name')
             l_name=request.POST.get('l_name')
             gender=request.POST.get('gender')
             phone=request.POST.get('phone')
             profileImg=request.POST.get('profileImg')
-            
-            print(profileImg)
+        
             user= User.objects.get(id=user_id)
             user.first_name=f_name
             user.last_name= l_name
 
             account.gender=gender
             account.phone=phone
-            account.profileImg=profileImg
-            account.price="100"
+            # account.profileImg=profileImg
             account.save()
             user.save()
             return redirect("/profile/")
-        params={'User_detail' : account, "activeProfile" : "activeProfile"}
+        params={'User_detail' : account, "activeProfile" : "activeProfile", "cartCount": cartCount(request.user.id)}
         return render(request, "user/profile.html", params)
     else:
         return redirect("/")
@@ -133,10 +116,44 @@ def profile(request):
 def order(request):
     if request.user.is_authenticated:
         user_id= request.user.id
+        account= User_detail.objects.get(user_id= user_id)
         # order= Order.objects.get(user_id= user_id)
         # print(order)
         
-        params={'User_detail' : "account", "activeOrder" : "activeOrder"}
+        params={'User_detail' : account, "activeOrder" : "activeOrder", "orders": "order", "cartCount": cartCount(request.user.id)}
         return render(request, "user/profile.html", params)
     else:
         return redirect("/")
+    
+
+
+    
+def handleAddToCart(request, proj_id):
+    if request.method =='POST':
+        if request.user.is_authenticated:
+
+            proj = Project.objects.get(proj_id= proj_id)
+            user_id= request.user.id
+            price = request.POST.get("price")
+            cart= Cart.objects.create(project = proj,user_id = user_id, price =price)
+            cart.save()
+            # messages.success(request, "1 Item added to cart successfully.")
+            return JsonResponse({'success': True,
+                         'msg': "1 Item added to cart successfully.", "tag": "success"
+                         , "cartCount": cartCount(request.user.id)})
+        else:
+            # messages.error(request, "Please Login First To Continue")
+            return JsonResponse({'success': False,
+                         'msg': "Please Login First To Continue", "tag": "danger"
+                         , "cartCount": cartCount(request.user.id)})
+    else :
+        return redirect('/projects/')
+
+
+
+def cart(request):
+    if request.user.is_authenticated:
+        params={ "cartCount": cartCount(request.user.id)}
+        return render(request,"user/cart.html", params)
+    else :
+        return redirect('/')

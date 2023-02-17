@@ -9,9 +9,7 @@
 <div class="container">
     {% comment %} Alert Message Dialog Start {% endcomment %}
 
-    <div id="alert-section">
-
-    </div>
+    <div id="alert-section"></div>
 
     {% comment %} {% if messages %}
         {% for message in messages %}
@@ -28,27 +26,31 @@
         {% comment %} <div class="col"> {% endcomment %}
             <div class="card-pro">
                     <div class="photo">
-                        <img src="/media/{{i.default_image}}" style="width: 100%; height: 100%; border-radius: 10px" >
+                        <a href="/projects/{{i.proj_id}}"><img src="/media/{{i.default_image}}" onclick="redirectHandlerProject()" style="width: 100%; height: 100%; border-radius: 10px; cursor:pointer;" ></a>
                     </div>
                     <div class="description">
-                        <h2>{{i.title}} {% if i.short_Desc %}<span> ( {{i.short_Desc}} )</span>{% endif %}</h2>
-                        {% comment %} <h4>Popular House Plant</h4> {% endcomment %}
-                        <h1>{% if  i.free %}
-                            <span class="fw-semibold fs-5">Free</span>
-                            <span class="text-decoration-line-through"> {{i.price}}0</span>
-                            <input type="hidden" id="price" value="0"/>
-                        {% elif i.discounted_price %}
-                            <span class="fw-semibold fs-5">₹ {{i.discounted_price}}0</span> 
-                            <span class="text-decoration-line-through"> {{i.price}}0</span>
-                            <input type="hidden" id="price" value="{{i.discounted_price}}"/>
-                        {%else%}
-                            <span class="fw-semibold fs-5"> ₹ {{i.price}}0</span>
-                            <input type="hidden" id="price" value="{{i.price}}"/>
-                        {%endif%}</h1>
-                        <p>{{i.full_Desc| truncatechars:200}}</p>
-                        <input type="hidden" id="pro_id" value="{{i.proj_id}}"/>
-                        <button onclick="addToCart()">Add to Cart</button>
-                        <button onclick="redirectHandlerProject()"><a href="#">View</a></button>
+                        <div>
+                            <h2>{{i.title}} {% if i.short_Desc %}<span> ( {{i.short_Desc}} )</span>{% endif %}</h2>
+                            {% comment %} <h4>Popular House Plant</h4> {% endcomment %}
+                            <h1 >{% if  i.free %}
+                                <span class="fw-semibold fs-5">Free</span>
+                                <span class="text-decoration-line-through"> {{i.price}}0</span>
+                                <input type="hidden" id="price" value="0"/>
+                            {% elif i.discounted_price %}
+                                <span class="fw-semibold fs-5">₹ {{i.discounted_price}}0</span> 
+                                <span class="text-decoration-line-through"> {{i.price}}0</span>
+                                <input type="hidden" id="price" value="{{i.discounted_price}}"/>
+                            {%else%}
+                                <span class="fw-semibold fs-5"> ₹ {{i.price}}0</span>
+                                <input type="hidden" id="price" value="{{i.price}}"/>
+                            {%endif%}</h1>
+                            <p>{{i.full_Desc|title | truncatechars:150}}</p>
+                        </div>
+                        <div class="card-footer">
+                            <input type="hidden" id="pro_id" value="{{i.proj_id}}"/>
+                            <button onclick="addToCart()" id="{{i.proj_id}}">Add to Cart</button>
+                            <a href="/projects/{{i.proj_id}}"><button >View</button></a>
+                        </div>
                     </div>
             </div>
         {% comment %} </div> {% endcomment %}
@@ -61,7 +63,6 @@
     // Getting the button and listening to clicks
     {% comment %} const addToCartBtn = document.getElementById("addCartHandler"); {% endcomment %}
 
-    function redirectHandlerProject() {window.location='/projects/'+document.getElementById("pro_id").value;}
 
     function addToCart() {
 
@@ -80,23 +81,17 @@
         }
         // Sending request to server
         fetch("/handleAddToCart/"+projectId, postData).then(res=>res.json()).then(data => {
-            console.log(data);
            
-                {% comment %} document.getElementById("alert-section").innerHTML = `<div class='alert  my-1 border-${data.tag} alert-dismissible fade show alert-${data.tag} myAlert' role='alert' alert>
-                    <strong></strong><b>${data.msg}</b>
-                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                </div>`; {% endcomment %}
-                
-                document.getElementById("alert-section").innerHTML = `<div class="alert alert-${data.tag} alert-dismissible fade show" role="alert">
-                    ${data.msg}
-                    <button onclick="removeAlert()" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                  </div>`;
-
-                setTimeout(() => {
-                    document.getElementById("alert-section").innerHTML =""
-                }, 5000);
-
-               
+            document.getElementById("alert-section").innerHTML = `<div class="alert alert-${data.tag} alert-dismissible fade show" role="alert">
+                ${data.msg}
+                <button onclick="removeAlert()" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>`;
+            document.getElementById("cartCount").innerHTML= data.cartCount
+            
+            setTimeout(() => {
+                document.getElementById("alert-section").innerHTML =""
+            }, 5000);
+  
 
         });
     }
