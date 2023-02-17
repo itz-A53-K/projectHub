@@ -95,6 +95,7 @@ def profile(request):
             l_name=request.POST.get('l_name')
             gender=request.POST.get('gender')
             phone=request.POST.get('phone')
+            address=request.POST.get('address')
             profileImg=request.POST.get('profileImg')
         
             user= User.objects.get(id=user_id)
@@ -103,6 +104,7 @@ def profile(request):
 
             account.gender=gender
             account.phone=phone
+            account.address=address
             # account.profileImg=profileImg
             account.save()
             user.save()

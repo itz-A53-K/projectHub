@@ -18,7 +18,7 @@ border-radius: 150px;
 }
 
 .profile_info .input,
-.profile_info textarea {
+.profile_info .textarea {
 border: 2px solid rgba(45, 44, 44, 0.76);
 border-radius: 5px;
 margin:5px;
@@ -30,11 +30,14 @@ color:rgb(46, 43, 43);
 user-select:none;
 font-family: Roboto,Arial,sans-serif;
 }
+.profile_info .textarea {
+    height:20vh;
+}
 .profile_info .input:disabled,
 .profile_info textarea:disabled {
     background-color: #fafafa;
     color:#878787;
-cursor: not-allowed;
+    cursor: not-allowed;
 }
 
 .profile_links {
@@ -131,7 +134,15 @@ height:auto;
                         <div class="form-floating mb-3">
                             <input type="tel" class="form-control input disabled" name="phone" id="phone" placeholder="Your phone number" value="{{User_detail.phone}}"
                                 disabled required>
-                            <label for="f_name">Phone number</label>
+                            <label for="phone">Phone number</label>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="mt-4">Address</h4>
+                        <div class="form-floating mb-3">
+                            <textarea name="address" class="form-control textarea disabled" id="address" cols="30" rows="10" placeholder="Your Address" maxlength="200" disabled>{{User_detail.address}}</textarea>
+                            
+                            <label for="address">Your address</label>
                         </div>
                     </div>
                     <div>

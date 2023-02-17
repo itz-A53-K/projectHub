@@ -90,6 +90,12 @@
     background:linear-gradient(45deg,#fbda61,#ff5acd) ;
   }
 
+  .projectContainer .left{
+    width: 20rem;
+    padding: 5px;
+    margin: 3rem;
+   
+  }
   .projectContainer .projectDiv .card{
     width: 38rem;
     box-shadow: 0px 0px 7px 2px rgb(158, 146, 146); 
@@ -115,6 +121,10 @@
     }
   }
   @media screen and (max-width: 660px) {
+    .projectContainer .left{
+      width: 15rem;
+      margin: 0;
+    }
     .projectContainer .projectDiv .card{
       width: 19rem;
      

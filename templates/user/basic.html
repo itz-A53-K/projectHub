@@ -137,11 +137,11 @@
       });
 
       setTimeout(() => {
-        const alert = document.querySelector(".myAlert");
+        const alert = bootstrap.Alert.getOrCreateInstance(".myAlert");
         if (alert != null) {
           alert.close();
         }
-      }, 2000);
+      }, 6000);
 
       
 
