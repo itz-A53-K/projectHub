@@ -4,7 +4,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.http import JsonResponse
 from user.form import ImageForm
-from user.models import User_detail
+
+from django.db.models import Q
 
 from user.models import Project,Proj_image,Cart,Order,User_detail
 
@@ -159,3 +160,16 @@ def cart(request):
         return render(request,"user/cart.html", params)
     else :
         return redirect('/')
+    
+
+
+def search(request):
+    if request.method=="GET":
+        src_query=request.GET.get("src_query")
+        print(src_query)
+        srcResult=Project.objects.filter(Q(title__icontains=src_query) |Q(short_Desc__icontains=src_query)| Q(full_Desc__icontains=src_query) )
+        
+        params={"srcResult": srcResult, "src": "true", "src_query":src_query}
+        return render(request, "user/projects.html", params)
+    else:
+        return redirect("/")

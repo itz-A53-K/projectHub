@@ -20,11 +20,10 @@
   </style>
     
   </head>
-  <body>
+  <body id="body">
 
     {% comment %} Nav Bar Starting {% endcomment %}
-    <nav
-      class="navbar navbar-expand-lg navbar-dark fixed-top w-100"
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top w-100"
       style="background-color: rgba(37, 37, 37, 0.678); margin-bottom: 5px;">
       <div class="container d-flex">
         <a class="navbar-brand" href="/">Project-Hub.in</a>
@@ -41,12 +40,13 @@
         <div
           class="collapse navbar-collapse justify-content-end"
           id="navbarSupportedContent">
-          <form class="d-flex m-2" role="search">
+          <form class="d-flex m-2" role="search" method="get" action="/search">
             <input
               class="form-control me-2 mx-3"
               type="search"
               placeholder="Search"
-              aria-label="Search" />
+              aria-label="Search" 
+              name="src_query"/>
             <button class="btn btn-info mx-3" type="submit">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -115,9 +115,36 @@
     {%block body%}
     
     {%endblock%}
-    </section>
 
-  
+  </section>
+  <button type="button" class="btn btn-info btn-floating btn-lg" id="go-top">^</button>
+
+  <script>
+    //Get the button
+        let go_topbtn = document.getElementById("go-top");
+
+        // When the user scrolls down 150px from the top of the document, show the button
+        window.onscroll = function () {
+          scrollFunction();
+        };
+
+        function scrollFunction() {
+          if (document.body.scrollTop > 150 || document.documentElement.scrollTop > 150) 
+          {
+            go_topbtn.style.display = "block";
+          }
+          else {
+            go_topbtn.style.display = "none";
+          }
+        }
+        function backToTop() {
+          document.body.scrollTop = 0;
+          document.documentElement.scrollTop = 0;
+        }
+        // When the user clicks on the button, scroll to the top of the document
+        go_topbtn.addEventListener("click", backToTop);
+
+</script>
     {% comment %} Bootstrap CDN Links Starts {% endcomment %}
     <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>

@@ -1,10 +1,31 @@
 body {
     background: linear-gradient(45deg, #fbda61, #ff5acd);
+    scroll-behavior: smooth;
 }
 a{
     text-decoration: none;
     color:rgb(35, 34, 34);
 }
+#go-top{
+    position: fixed;
+    display: none;
+    right: 10px;
+    bottom: 10px;
+    border: 2px solid transparent;
+    border-radius: 3px;
+    padding: 10px 15px;
+    color: rgb(255, 255, 255);
+    font-weight: bolder;
+    cursor: pointer;
+    background-color: #d65050;
+}
+#go-top:hover{
+    border: 2px solid #000000;
+    transition: .4s;
+    background-color: #ffffff;
+    color: #d65050;
+}
+
 .afterLine {
     width: fit-content;
     display: flex;
