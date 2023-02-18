@@ -53,6 +53,7 @@ a{
 }
 .mar-top {
     margin-top: 10vh;
+    min-height: 80vh;
 }
 
 .btnDesign1 {
