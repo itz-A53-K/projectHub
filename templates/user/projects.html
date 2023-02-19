@@ -47,10 +47,11 @@
                                         <input type="hidden" id="price" value="{{i.price}}"/>
                                     {%endif%}</h1>
                                     <p>{{i.full_Desc|title | truncatechars:150}}</p>
+
                                 </div>
                                 <div class="card-footer">
-                                    <input type="hidden" id="pro_id" value="{{i.proj_id}}"/>
-                                    <button onclick="addToCart()" id="{{i.proj_id}}">Add to Cart</button>
+                                    <input type="hidden" id="pro_id" value=""/>
+                                    <button onclick="addToCart({{i.proj_id}}, {% if  i.free %}0{% elif i.discounted_price %}{{i.discounted_price}}{%else%}{{i.price}}{%endif%})" id="{{i.proj_id}}">Add to Cart</button>
                                     <a href="/projects/{{i.proj_id}}"><button >View</button></a>
                                 </div>
                             </div>
@@ -83,7 +84,7 @@
                             </div>
                             <div class="card-footer">
                                 <input type="hidden" id="pro_id" value="{{i.proj_id}}"/>
-                                <button onclick="addToCart()" id="{{i.proj_id}}">Add to Cart</button>
+                                <button onclick="addToCart({{i.proj_id}}, {% if  i.free %}0{% elif i.discounted_price %}{{i.discounted_price}}{%else%}{{i.price}}{%endif%})" id="{{i.proj_id}}">Add to Cart</button>
                                 <a href="/projects/{{i.proj_id}}"><button >View</button></a>
                             </div>
                         </div>
@@ -99,10 +100,8 @@
     {% comment %} const addToCartBtn = document.getElementById("addCartHandler"); {% endcomment %}
 
 
-    function addToCart() {
-
-        const amount = document.getElementById("price").value;
-        const projectId = document.getElementById("pro_id").value;
+    function addToCart(projectId, amount) {
+        console.log("Price: "+projectId+"\nAmount: " + amount);
         // Creating post form data to update cart
         let formData = new FormData();
         formData.append("csrfmiddlewaretoken", "{{ csrf_token }}")
