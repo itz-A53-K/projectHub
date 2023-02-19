@@ -1,0 +1,214 @@
+{% extends 'user/basic.html' %}
+{%load static %}
+{% comment %} {%block title%}Project-Hub : profile{%endblock%} {% endcomment %}
+{%block css%}
+.profile_links .card img{
+{% comment %} width:50px; {% endcomment %}
+height:50px;
+border-radius:150px;
+}
+.card{
+margin: 0 10px;
+box-shadow:0px 0px 4px rgba(64, 64, 64, 0.269);
+}
+.profile_info .imgDiv img {
+height : 30vh;
+{% comment %} width : 15vw; {% endcomment %}
+border-radius: 150px;
+}
+
+.profile_info .input,
+.profile_info .textarea {
+border: 2px solid rgba(45, 44, 44, 0.76);
+border-radius: 5px;
+margin:5px;
+padding: 5px 5px 5px 10px;
+width: 25vw;
+font-size:1.2rem;
+font-weight:400;
+color:rgb(46, 43, 43);
+user-select:none;
+font-family: Roboto,Arial,sans-serif;
+}
+.profile_info .textarea {
+    height:20vh;
+}
+.profile_info .input:disabled,
+.profile_info textarea:disabled {
+    background-color: #fafafa;
+    color:#878787;
+    cursor: not-allowed;
+}
+
+.profile_links {
+width:30%;
+height:auto;
+
+}
+
+
+{%endblock css%}
+
+{%block title%}
+    {% if activeProfile %}
+        Project-Hub.in : Profile
+    {% elif activeOrder%}
+        Project-Hub.in : Orders
+    {% endif %}
+{%endblock title%}
+    
+
+{%block body%}
+<div class="container d-flex p-4 profile" id="profile">
+    <div class="profile_links">
+        <div class="card p-2  flex-row align-items-center">
+            <img src="/media/{{User_detail.profileImg}}" alt="" srcset="">
+            <div class=" m-2">
+                <div>Hello,</div>
+                <h5>{{request.user.first_name}} {{request.user.last_name}}</h5>
+            </div>
+        </div>
+        <div class="card p-2 mt-3 align-items-center">
+            <a href="/profile/" class="itemLink my-2">
+                <h5>Profile</h5>
+            </a>
+            <a href="/order/" class=" itemLink my-2">
+                <h5>My Orders</h5>
+            </a>
+
+            <div class="card-footer d-flex justify-content-center w-100 mt-4">
+                <a href="/logout" class="btn btn-outline-info w-50">Logout</a>
+            </div>
+        </div>
+    </div>
+    <div class=" w-75 p-4 card ">
+        
+        <div class="container d-flex flex-column align-items-center profile_info {% if not activeProfile %} visually-hidden{% endif %}" id="profile_info">
+            <!-- <div>
+                    <h4>Persional Information</h4>
+                    <span>Edit</span>
+                </div> -->
+            <div class="imgDiv">
+                <img src="/media/{{User_detail.profileImg}}" alt="">
+            </div>
+            <div>
+
+                <form id="editProfileForm" method="post" action="/profile/" method="post" name="" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div>
+                        <h4 class="mt-4">Personal Information</h4>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control input disabled" name="f_name" id="f_name" placeholder="Your first name" value="{{request.user.first_name}}" disabled required>
+                            <label for="f_name">First name</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control input disabled" name="l_name" id="l_name" placeholder="Your last name" value="{{request.user.last_name}}" disabled required>
+                            <label for="l_name">Last name</label>
+                        </div>
+
+                        <div class="input-field">
+                            <h6 class="mt-4">Gender</h6>
+                            <input type="hidden" name="" id="genderValue" value={{User_detail.gender}}>
+                            <input class="form-check-input disabled " type="radio" name="gender" value="male" id="male" disabled>
+                            <label class="form-check-label me-2 fs-5" for="male">Male</label>
+
+                            <input class="form-check-input disabled" type="radio" name="gender" value="female" id="female" disabled>
+                            <label class="form-check-label me-2 fs-5" for="female">Female</label>
+
+                            <input class="form-check-input disabled" type="radio" name="gender" value="other" id="other" disabled>
+                            <label class="form-check-label me-2 fs-5" for="other">Other</label>
+
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="mt-4">Email Address</h4>
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control input" id="email" placeholder="Your email"
+                                value="{{request.user}}" disabled>
+                            <label for="email">Email</label>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="mt-4">Phone Number</h4>
+                        <div class="form-floating mb-3">
+                            <input type="tel" class="form-control input disabled" name="phone" id="phone" placeholder="Your phone number" value="{{User_detail.phone}}"
+                                disabled required>
+                            <label for="phone">Phone number</label>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="mt-4">Address</h4>
+                        <div class="form-floating mb-3">
+                            <textarea name="address" class="form-control textarea disabled" id="address" cols="30" rows="10" placeholder="Your Address" maxlength="200" disabled>{{User_detail.address}}</textarea>
+                            
+                            <label for="address">Your address</label>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="mt-4 visually-hidden" id="profileImgHead">Profile picture</h4>
+                        <div class=" mb-3">
+                            <input type="file" class="form-control input visually-hidden" name="profileImg" id="profileImg">
+                        </div>
+                    </div>
+
+                    <div class=" button-field">
+                        <button id="profileSaveBtn" class="btn btn-primary visually-hidden" type="submit">Save Changes</button>
+                    </div>
+                </form>
+
+                <div class="d-grid  col-6 mx-auto mt-4 ">
+                    <button class="btn btn-primary" id="editProfileBtn" onclick="editProfile()">Edit
+                        Profile</button>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="container d-flex flex-column align-items-center order {% if not activeOrder %} visually-hidden{% endif %}" id="order"  style="min-height:80vh;">
+            
+            {% comment %} orderpage code  {% endcomment %}
+
+        </div>
+    </div>
+
+</div>
+
+
+
+{%endblock body%}
+
+{%block JS%}
+<script>
+    genderValue=document.getElementById('genderValue').value
+    document.getElementById(genderValue).checked=true
+
+    function editProfile() {
+        disabledInput= document.querySelectorAll(".disabled")
+        
+        disabledInput.forEach( e =>{
+            e.disabled=false;
+        })
+        
+        {% comment %} const profileImgHead = document.getElementById("profileImgHead").classList.remove('visually-hidden')
+        const profileImg = document.getElementById("profileImg").classList.remove('visually-hidden') {% endcomment %}
+
+        const profileSaveBtn = document.getElementById("profileSaveBtn").classList.remove('visually-hidden')
+        const editProfileBtn = document.getElementById("editProfileBtn").classList.add('visually-hidden')
+
+    }
+
+    function mediaQuery(x) {
+        if (x.matches) { // If media query matches
+            console.log(document.getElementById("profile"))
+          document.getElementById("profile").classList.remove("container");
+          document.getElementById("profile").classList.add("container-fluid");
+        } 
+      }
+      
+    var x = window.matchMedia("(max-width: 800px)")
+    mediaQuery(x) // Call listener function at run time
+    x.addListener(mediaQuery) 
+</script>
+{%endblock JS%}

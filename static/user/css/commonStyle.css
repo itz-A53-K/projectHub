@@ -1,0 +1,96 @@
+body {
+    background: linear-gradient(45deg, #fbda61, #ff5acd);
+    scroll-behavior: smooth;
+}
+a{
+    text-decoration: none;
+    color:rgb(35, 34, 34);
+}
+#go-top{
+    position: fixed;
+    display: none;
+    right: 10px;
+    bottom: 10px;
+    border: 2px solid transparent;
+    border-radius: 3px;
+    padding: 10px 15px;
+    color: rgb(255, 255, 255);
+    font-weight: bolder;
+    cursor: pointer;
+    background-color: #d65050;
+}
+#go-top:hover{
+    border: 2px solid #000000;
+    transition: .4s;
+    background-color: #ffffff;
+    color: #d65050;
+}
+
+.afterLine {
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: 0.2s ease-in;
+}
+
+.afterLine::after {
+    content: " ";
+    width: 65%;
+    height: 1.9px;
+    margin-top: 6px;
+    border-radius: 20px;
+    color: red;
+    background: linear-gradient(100deg,
+            rgba(255, 255, 255, 0),
+            rgb(221, 32, 32),
+            rgba(255, 255, 255, 0));
+    transition: 0.2s ease-in;
+}
+
+.activePage {
+    display: flex;
+    flex-direction: column;
+    /* align-items: center; */
+    margin-top: -3px;
+
+}
+
+.activePage:after {
+    align-self: center;
+    content: " ";
+    width: 75%;
+    margin-top: 2px;
+    height: 1.7px;
+    border-radius: 20px;
+    background: rgb(255, 0, 0);
+    transition: 0.2s ease-in;
+}
+
+.itemLink{
+    width: fit-content;
+    text-decoration: none;
+    /* color: rgb(35, 34, 34); */
+}
+.mar-top {
+    margin-top: 10vh;
+    min-height: 80vh;
+}
+
+.btnDesign1 {
+    font-size: 1rem;
+    font-weight: 500;
+    transition: .1s ease-in;
+    color: #c86b6b;
+    padding: 8px;
+    border: 2px solid #c86b6b;
+}
+
+.btnDesign1:hover {
+    transition: 0.3s ease-in-out;
+    color: white;
+    padding: 8px 30px;
+    background: linear-gradient(100deg, #c86b6b, rgb(227 145 226), #e0c6e8);
+    border: 2px solid #ce6565;
+    /* border: none; */
+}
