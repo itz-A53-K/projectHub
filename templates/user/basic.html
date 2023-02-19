@@ -11,7 +11,7 @@
     {%block csslink%}
     
       {% comment %} <link rel="stylesheet" href="{% static 'user/css/authstyle.css'%}" /> {% endcomment %}
-      <link rel="stylesheet" href="{% static 'user/css/project-cards.css'%}" />
+
     {%endblock%}
     <style>
     {%block css%}
@@ -20,11 +20,10 @@
   </style>
     
   </head>
-  <body>
+  <body id="body">
 
     {% comment %} Nav Bar Starting {% endcomment %}
-    <nav
-      class="navbar navbar-expand-lg navbar-dark fixed-top w-100"
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top w-100"
       style="background-color: rgba(37, 37, 37, 0.678); margin-bottom: 5px;">
       <div class="container d-flex">
         <a class="navbar-brand" href="/">Project-Hub.in</a>
@@ -41,12 +40,13 @@
         <div
           class="collapse navbar-collapse justify-content-end"
           id="navbarSupportedContent">
-          <form class="d-flex m-2" role="search">
+          <form class="d-flex m-2" role="search" method="get" action="/search">
             <input
               class="form-control me-2 mx-3"
               type="search"
               placeholder="Search"
-              aria-label="Search" />
+              aria-label="Search" 
+              name="src_query"/>
             <button class="btn btn-info mx-3" type="submit">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -79,19 +79,15 @@
                 role="button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false">
-                More
+                {{request.user.first_name}}
               </a>
-              <ul class="dropdown-menu">
+              <ul class="dropdown-menu dropdown-menu-dark">
                 <li><a class="dropdown-item itemLink" href="/profile/">Profile</a></li>
-                {% comment %} <li>
-                  <a class="dropdown-item itemLink" href="#">Another action</a>
-                </li>
-                <li>
-                  <hr class="dropdown-divider" />
-                </li>
-                <li>
-                  <a class="dropdown-item itemLink" href="#">Something else here</a>
-                </li> {% endcomment %}
+                <li><a class="dropdown-item itemLink" href="/order/">My Orders</a></li>
+
+                <li><hr class="dropdown-divider"></li>
+                <li><center><a href="/logout" class="btn btn-outline-info ">Logout</a></center></li>
+                
               </ul>
             </li>
           </ul>
@@ -99,7 +95,13 @@
 
           <div class="btnDiv mx-3">
             {% if request.user.is_authenticated%}
-            <a href="/logout" class="btn btn-outline-info">Logout</a>
+            <a href="/cart" class="btn btn-outline-warning m-1 ">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart " viewBox="0 0 16 16">
+                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+              </svg>
+              Cart (<span id="cartCount" >{{cartCount}}</span>)
+            </a>
+            
             {%else%}
             <a href="/login" class="btn btn-outline-info">Login</a>
             {%endif%}
@@ -113,9 +115,36 @@
     {%block body%}
     
     {%endblock%}
-    </section>
 
-  
+  </section>
+  <button type="button" class="btn btn-info btn-floating btn-lg" id="go-top">^</button>
+
+  <script>
+    //Get the button
+        let go_topbtn = document.getElementById("go-top");
+
+        // When the user scrolls down 150px from the top of the document, show the button
+        window.onscroll = function () {
+          scrollFunction();
+        };
+
+        function scrollFunction() {
+          if (document.body.scrollTop > 150 || document.documentElement.scrollTop > 150) 
+          {
+            go_topbtn.style.display = "block";
+          }
+          else {
+            go_topbtn.style.display = "none";
+          }
+        }
+        function backToTop() {
+          document.body.scrollTop = 0;
+          document.documentElement.scrollTop = 0;
+        }
+        // When the user clicks on the button, scroll to the top of the document
+        go_topbtn.addEventListener("click", backToTop);
+
+</script>
     {% comment %} Bootstrap CDN Links Starts {% endcomment %}
     <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
@@ -139,7 +168,7 @@
         if (alert != null) {
           alert.close();
         }
-      }, 10000);
+      }, 6000);
 
       
 

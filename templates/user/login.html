@@ -6,311 +6,326 @@
 {%endblock%}
 
 {%block css%}
-  
+
 {%endblock%}
 
 {%block body%}
 <section class="container forms" style="background: none;">
-    <div class="form login">
-        <div class="form-content">
-            <h2 class="heading">Login</h2>
-            {% if messages %}
-              {% for message in messages %}
-                <div {% if message.tags %} class="alert alert-dismissible fade show alert-{{ message.tags }} myAlert"{% endif %} role="alert">
-                    <strong></strong> {{ message}}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-              {% endfor %}
-            {% endif %}
-            
-            <form id="loginForm" action="/login/" method="post" name="logForm" onsubmit="return validateCaptcha()">
-                {% csrf_token %}
-                <div class="field input-field">
-                    <input type="email" placeholder="Email" class="input" id="uidLog" name="email" required />
-                </div>
-                <input type="hidden" name="formType" value="login" />
+  <div class="form login">
+    <div class="form-content">
+      <h2 class="heading">Login</h2>
+      {% if messages %}
+      {% for message in messages %}
+      <div {% if message.tags %} class="alert alert-dismissible fade show alert-{{ message.tags }} myAlert" {% endif %}
+        role="alert">
+        <strong></strong> {{ message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endfor %}
+      {% endif %}
 
-                <div class="field input-field">
-                    <input type="password" placeholder="Password" class="password" id="pass" name="upass" required />
-                    <i class="bx bx-hide eye-icon"></i>
-                </div>
-
-                <div class="field input-field">
-                    <div id="captchaDiv" class="captchaDiv">
-                        <span id="mainCaptcha"></span>
-                    </div>
-                </div>
-
-                <div class="field input-field">
-                    <input type="text" placeholder="Captcha" class="input" id="captcha" name="captcha" maxlength="4"
-                        required />
-                </div>
-
-                <div class="form-link">
-                    <a href="#" class="forgot-pass">Forgot password?</a>
-                </div>
-
-                <div class="field button-field">
-                    <button id="loginBtn" type="submit">Login</button>
-                </div>
-
-            </form>
-
-            <div class="form-link">
-                <span>Don't have an account?
-                    <a href="#" class="link signup-link">Signup</a>
-                </span>
-            </div>
+      <form id="loginForm" action="/login/" method="post" name="logForm" onsubmit="return validateCaptcha()">
+        {% csrf_token %}
+        <div class="field input-field">
+          <input type="email" placeholder="Email" class="input" id="uidLog" name="email" required />
         </div>
-    </div>
+        <input type="hidden" name="formType" value="login" />
 
-    <div class="form signup">
-        <div class="form-content">
-            <h2 class="heading">Signup</h2>
-            {% if messages %}
-                  {% for message in messages %}
-                    <div {% if message.tags %} class="alert alert-dismissible fade show alert-{{ message.tags }} myAlert"{% endif %} role="alert">
-                      <strong></strong> {{ message}} .
-                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                  {% endfor %}
-             
-            {% endif %}
-            <div id="m-reg">
-                <form id="regForm" method="post" action="" method="post" name="regForm">
-                    {% csrf_token %}
-                    <div class="field input-field">
-                        <input type="text" placeholder="First name" class="input" name="f_name" required />
-                    </div>
-                    <div class="field input-field">
-                        <input type="text" placeholder="Last name" class="input" name="l_name" required />
-                    </div>
-
-                    <div class="field input-field">
-                        <input type="email" placeholder="Email" class="input" id="email" name="email_reg" required />
-                    </div>
-                    <input type="hidden" name="formType" value="registration" />
-
-                    <div class="field input-field">
-                        <input type="password" placeholder="Create Password" class="password" name="password"
-                            required />
-                        <i class="bx bx-hide eye-icon"></i>
-                    </div>
-                </form>
-                <div class="field button-field">
-                    <button id="regBtn">Send OTP</button>
-                </div>
-            </div>
-            <div id="reg-otp" style="display: none">
-                <form id="formOtp">
-                    <div class="field input-field" id="otpInput">
-                        <input type="number" placeholder="OTP Here" class="input" id="otpField" name="otp" required />
-                    </div>
-                    <div class="form-link">
-                        <label id="otp-status" class="forgot-pass">Trying to send OTP</label>
-                    </div>
-                </form>
-                <div class="field button-field">
-                    <button id="otpBtn">Confirm OTP</button>
-                </div>
-            </div>
-
-            <div class="form-link">
-                <span>Already have an account?
-                    <a href="#" class="link login-link">Login</a></span>
-            </div>
+        <div class="field input-field">
+          <input type="password" placeholder="Password" class="password" id="pass" name="upass" required />
+          <i class="bx bx-hide eye-icon"></i>
         </div>
+
+        <div class="field input-field">
+          <div id="captchaDiv" class="captchaDiv">
+            <span id="mainCaptcha"></span>
+          </div>
+        </div>
+
+        <div class="field input-field">
+          <input type="text" placeholder="Captcha" class="input" id="captcha" name="captcha" maxlength="4" required />
+        </div>
+
+        <div class="form-link">
+          <a href="#" class="forgot-pass">Forgot password?</a>
+        </div>
+
+        <div class="field button-field">
+          <button id="loginBtn" type="submit">Login</button>
+        </div>
+
+      </form>
+
+      <div class="form-link">
+        <span>Don't have an account?
+          <a href="#" class="link signup-link">Signup</a>
+        </span>
+      </div>
     </div>
+  </div>
+
+  <div class="form signup">
+    <div class="form-content">
+      <h2 class="heading">Signup</h2>
+      {% if messages %}
+      {% for message in messages %}
+      <div {% if message.tags %} class="alert alert-dismissible fade show alert-{{ message.tags }} myAlert" {% endif %}
+        role="alert">
+        <strong></strong> {{ message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endfor %}
+      {% endif %}
+
+      <div id="m-reg">
+        <form id="regForm" method="post" action="" method="post" name="regForm">
+          {% csrf_token %}
+          <div class="field input-field">
+            <input type="text" placeholder="First name" class="input" name="f_name" maxlength="15" required />
+          </div>
+          <div class="field input-field">
+            <input type="text" placeholder="Last name" class="input" name="l_name" maxlength="15" required />
+          </div>
+
+          <div class="field input-field">
+            <input type="email" placeholder="Email" class="input" id="email" name="email_reg" required />
+          </div>
+          <input type="hidden" name="formType" value="registration" />
+
+          <div class="field input-field">
+            <input type="password" placeholder="Create Password" class="password" name="password" id="regPass1"
+              maxlength="16" required />
+            <i class="bx bx-hide eye-icon"></i>
+          </div>
+          <div class="field input-field">
+            <input type="password" placeholder="Password (again)" class="password" name="" id="regPass2" maxlength="16"
+              required />
+            <i class="bx bx-hide eye-icon"></i>
+          </div>
+        </form>
+        <div class="field button-field">
+          <button id="regBtn">Send OTP</button>
+        </div>
+      </div>
+      <div id="reg-otp" style="display: none">
+        <form id="formOtp">
+          <div class="field input-field" id="otpInput">
+            <input type="number" placeholder="OTP Here" class="input" id="otpField" name="otp" required />
+          </div>
+          <div class="form-link">
+            <label id="otp-status" class="forgot-pass">Trying to send OTP</label>
+          </div>
+        </form>
+        <div class="field button-field">
+          <button id="otpBtn">Confirm OTP</button>
+        </div>
+      </div>
+
+      <div class="form-link">
+        <span>Already have an account?
+          <a href="#" class="link login-link">Login</a></span>
+      </div>
+    </div>
+  </div>
 </section>
 {%endblock%}
 {%block JS%}
-  <script>
-    generateCaptcha();
-    function generateCaptcha() {
-      document.getElementById('mainCaptcha').innerHTML = "";
-      let alpha = new Array(
-          "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z");
-      for (var i = 0; i < 4; i++) {
-          a = alpha[Math.floor(Math.random() * alpha.length)];
-          b = alpha[Math.floor(Math.random() * alpha.length)];
-          c = alpha[Math.floor(Math.random() * alpha.length)];
-          d = alpha[Math.floor(Math.random() * alpha.length)];
+<script>
+  generateCaptcha();
+  function generateCaptcha() {
+    document.getElementById('mainCaptcha').innerHTML = "";
+    let alpha = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    for (var i = 0; i < 4; i++) {
+      a = alpha[Math.floor(Math.random() * alpha.length)];
+      b = alpha[Math.floor(Math.random() * alpha.length)];
+      c = alpha[Math.floor(Math.random() * alpha.length)];
+      d = alpha[Math.floor(Math.random() * alpha.length)];
 
-      }
-      code = a + b + c + d;
-      document.getElementById("mainCaptcha").innerHTML = code;
-      let background = new Array("captcha1", "captcha2", "captcha3");
-      let back = background[Math.floor(Math.random() * background.length)];
-      document.getElementById("captchaDiv").style.backgroundImage =
-          "url('../static/user/img/" + back + ".jpg')";
     }
+    code = a + b + c + d;
+    document.getElementById("mainCaptcha").innerHTML = code;
+    let background = new Array("captcha1", "captcha2", "captcha3");
+    let back = background[Math.floor(Math.random() * background.length)];
+    document.getElementById("captchaDiv").style.backgroundImage =
+      "url('../static/user/img/" + back + ".jpg')";
+  }
 
-    function validateCaptcha() {
-      if (document.getElementById("captcha").value == code) {
-          return true;
-      }
-      else {
-          alert("Captcha do not match. Try Again");
-          document.getElementById("captcha").value = "";
-          generateCaptcha();
-          return false;
-      }
+  function validateCaptcha() {
+    if (document.getElementById("captcha").value == code) {
+      return true;
     }
-  </script>
-  <script>
+    else {
+      alert("Captcha do not match. Try Again");
+      document.getElementById("captcha").value = "";
+      generateCaptcha();
+      return false;
+    }
+  }
+</script>
 
-    const API = "./api/send-mail.php";
-  
-    const logBtn = document.getElementById("loginBtn");
-    const regBtn = document.getElementById("regBtn");
-    const otpBtn = document.getElementById("otpBtn");
-    const uidEl = document.getElementById("uid");
-    const passEl = document.getElementById("pass");
-    let otp;
-  
-    const forms = document.querySelector(".forms");
-    const pwShowHide = document.querySelectorAll(".eye-icon");
-    const links = document.querySelectorAll(".link");
-  
-  
-    pwShowHide.forEach((eyeIcon) => {
-      eyeIcon.addEventListener("click", () => {
-        let pwFields =
-          eyeIcon.parentElement.parentElement.querySelectorAll(".password");
-  
-        pwFields.forEach((password) => {
-          if (password.type === "password") {
-            password.type = "text";
-            eyeIcon.classList.replace("bx-hide", "bx-show");
-            return;
-          }
-          password.type = "password";
-          eyeIcon.classList.replace("bx-show", "bx-hide");
-        });
+<script>
+
+  const API = "./api/send-mail.php";
+
+  const logBtn = document.getElementById("loginBtn");
+  const regBtn = document.getElementById("regBtn");
+  const otpBtn = document.getElementById("otpBtn");
+  const uidEl = document.getElementById("uid");
+  const passEl = document.getElementById("pass");
+  let otp;
+
+  const forms = document.querySelector(".forms");
+  const pwShowHide = document.querySelectorAll(".eye-icon");
+  const links = document.querySelectorAll(".link");
+
+
+  pwShowHide.forEach((eyeIcon) => {
+    eyeIcon.addEventListener("click", () => {
+      let pwFields = eyeIcon.parentElement.parentElement.querySelectorAll(".password");
+
+      pwFields.forEach((password) => {
+        if (password.type === "password") {
+          password.type = "text";
+          eyeIcon.classList.replace("bx-hide", "bx-show");
+          return;
+        }
+        password.type = "password";
+        eyeIcon.classList.replace("bx-show", "bx-hide");
       });
     });
-  
-    links.forEach((link) => {
-      link.addEventListener("click", (e) => {
-        e.preventDefault();
-        forms.classList.toggle("show-signup");
-      });
+  });
+
+  links.forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      forms.classList.toggle("show-signup");
     });
-  
-    regBtn.addEventListener("click", () => {
-      
-        let email = document.getElementById("email").value;
-        otp = Math.floor(100000 + Math.random() * 900000);
-        console.log(otp);
-    
-        {% comment %} const xhr = new XMLHttpRequest();
-    
-        xhr.open("GET", API + "?email=" + email + "&otp=" + otp, true);
-    
-        xhr.onload = function () {
-          if (this.status === 200) {
-            console.log(this.responseText);
-            let jsonObj = JSON.parse(this.responseText);
-            if (jsonObj.success === true) {
-              document.getElementById("otp-status").innerHTML = "OTP sent on email";
-            } else {
-              document.getElementById("otp-status").innerHTML =
-                "OTP sent failed, try again";
-            }
+  });
+
+  regBtn.addEventListener("click", () => {
+
+    const regPass1 = document.getElementById("regPass1").value;
+    const regPass2 = document.getElementById("regPass2").value;
+
+    if (regPass1 != regPass2) {
+      alert("Passwords do not match !")
+    }
+    else if (regPass1.length < 5) {
+      alert("Password must contain atleast 5 characters !")
+    }
+    else {
+      let email = document.getElementById("email").value;
+      otp = Math.floor(100000 + Math.random() * 900000);
+      console.log(otp);
+
+      {% comment %} const xhr = new XMLHttpRequest();
+
+      xhr.open("GET", API + "?email=" + email + "&otp=" + otp, true);
+
+      xhr.onload = function () {
+        if (this.status === 200) {
+          console.log(this.responseText);
+          let jsonObj = JSON.parse(this.responseText);
+          if (jsonObj.success === true) {
+            document.getElementById("otp-status").innerHTML = "OTP sent on email";
           } else {
-            console.log("Error");
+            document.getElementById("otp-status").innerHTML =
+              "OTP sent failed, try again";
           }
-        };
-        xhr.send(); {% endcomment %}
-        document.getElementById("m-reg").style.display = "none";
-        document.getElementById("reg-otp").style.display = "block";
-      
-      
-    });
-  
-    otpBtn.addEventListener("click", () => {
-      let userOtp = document.getElementById("otpField").value;
-      if (userOtp == otp) {
-        regMe();
-      } else {
-        alert("Invalid OTP");
-        document.getElementById("otpField").value = "";
-      }
-    });
-  
-    function regMe() {
-      document.getElementById('regForm').submit();
+        } else {
+          console.log("Error");
+        }
+      };
+      xhr.send(); {% endcomment %}
+      document.getElementById("m-reg").style.display = "none";
+      document.getElementById("reg-otp").style.display = "block";
+
     }
-  
-    {% comment %} function logMe() {
-      document.getElementById('loginForm').submit();
-    } {% endcomment %}
-    
-    {% comment %} function regMe() {
+  });
+
+  otpBtn.addEventListener("click", () => {
+    let userOtp = document.getElementById("otpField").value;
+    if (userOtp == otp) {
+      regMe();
+    } else {
+      alert("Invalid OTP");
+      document.getElementById("otpField").value = "";
+    }
+  });
+
+  function regMe() {
+    document.getElementById('regForm').submit();
+  }
+
+  {% comment %} function logMe() {
+    document.getElementById('loginForm').submit();
+  } {% endcomment %}
+
+  {% comment %} function regMe() {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "./api/register.php", true);
+    xhr.getResponseHeader("Content-type", "application/x-www-form-urlencoded");
+
+    xhr.onload = function () {
+      if (this.status === 200) {
+        console.log(this.responseText);
+        let jsonObj = JSON.parse(this.responseText);
+        if (jsonObj["success"] === true) {
+          alert("Registration Successfull");
+          window.location = "http://localhost/food/login.php";
+        } else {
+          alert(jsonObj["message"]);
+        }
+      } else {
+        alert("Server error, Please try again later.");
+      }
+    };
+
+    let formData = new FormData(document.getElementById("regForm"));
+
+    xhr.send(formData);
+  } {% endcomment %}
+
+  {% comment %} function logMe() {
+    let string1 = removeSpaces(document.getElementById("mainCaptcha").value);
+    let string2 = removeSpaces(document.getElementById("captcha").value);
+
+    console.log(string1 + " = " + string2);
+
+    if (string1 == string2) {
       const xhr = new XMLHttpRequest();
-      xhr.open("POST", "./api/register.php", true);
-      xhr.getResponseHeader("Content-type", "application/x-www-form-urlencoded");
-  
+      xhr.open("POST", "./api/login.php", true);
+      xhr.getResponseHeader(
+        "Content-type",
+        "application/x-www-form-urlencoded"
+      );
+
       xhr.onload = function () {
         if (this.status === 200) {
           console.log(this.responseText);
           let jsonObj = JSON.parse(this.responseText);
           if (jsonObj["success"] === true) {
-            alert("Registration Successfull");
-            window.location = "http://localhost/food/login.php";
-          } else {
             alert(jsonObj["message"]);
+            window.location = "./index.php";
+          } else {
+            alert("Invalid Username Or Password");
           }
         } else {
-          alert("Server error, Please try again later.");
+          console.log("Error");
+          alert("Some error occured, try again later.");
         }
       };
-  
-      let formData = new FormData(document.getElementById("regForm"));
-  
+
+      let formData = new FormData(document.getElementById("loginForm"));
       xhr.send(formData);
-    } {% endcomment %}
-  
-    {% comment %} function logMe() {
-      let string1 = removeSpaces(document.getElementById("mainCaptcha").value);
-      let string2 = removeSpaces(document.getElementById("captcha").value);
-  
-      console.log(string1 + " = " + string2);
-  
-      if (string1 == string2) {
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", "./api/login.php", true);
-        xhr.getResponseHeader(
-          "Content-type",
-          "application/x-www-form-urlencoded"
-        );
-  
-        xhr.onload = function () {
-          if (this.status === 200) {
-            console.log(this.responseText);
-            let jsonObj = JSON.parse(this.responseText);
-            if (jsonObj["success"] === true) {
-              alert(jsonObj["message"]);
-              window.location = "./index.php";
-            } else {
-              alert("Invalid Username Or Password");
-            }
-          } else {
-            console.log("Error");
-            alert("Some error occured, try again later.");
-          }
-        };
-  
-        let formData = new FormData(document.getElementById("loginForm"));
-        xhr.send(formData);
-  
-        return true;
-      } else {
-        // document.getElementById("error").innerHTML =
-        //   "Please enter a valid captcha.";
-        alert("Please enter a valid captcha.");
-        return false;
-      }
-    } {% endcomment %}
-  </script>
+
+      return true;
+    } else {
+      // document.getElementById("error").innerHTML =
+      //   "Please enter a valid captcha.";
+      alert("Please enter a valid captcha.");
+      return false;
+    }
+  } {% endcomment %}
+</script>
 {%endblock%}

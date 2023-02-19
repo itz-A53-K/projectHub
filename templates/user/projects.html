@@ -7,21 +7,8 @@
 
 {%block body%}
 <div class="container">
-    {% comment %} Alert Message Dialog Start {% endcomment %}
 
-    <div id="alert-section">
-
-    </div>
-
-    {% comment %} {% if messages %}
-        {% for message in messages %}
-            <div {% if message.tags %} class="alert  my-1 border-{{ message.tags }} alert-dismissible fade show alert-{{ message.tags }} myAlert" {% endif %} role="alert" >
-                <strong></strong> <b>{{ message}}</b>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endfor %}
-    {% endif %} {% endcomment %}
-    {% comment %} Alert Message Dialog Ends {% endcomment %}
+    <div id="alert-section"></div> {% comment %} Alert Message Dialog{% endcomment %}
 
    <div class="project-card-placeholder">
         {% for i in proj %}
@@ -45,14 +32,10 @@
                             <span class="fw-semibold fs-5"> ₹ {{i.price}}0</span>
                             <input type="hidden" id="price" value="{{i.price}}"/>
                         {%endif%}</h1>
-                        <div class="full-description">
-                            <p>{{i.full_Desc| truncatechars:200}}</p>
-                        </div>
+                        <p>{{i.full_Desc| truncatechars:200}}</p>
                         <input type="hidden" id="pro_id" value="{{i.proj_id}}"/>
-                        <div class="bottom-paste">
-                            <button onclick="addToCart()">Add to Cart</button>
-                            <button onclick="redirectHandlerProject()"><a href="#">View</a></button>
-                        </div>
+                        <button onclick="addToCart()">Add to Cart</button>
+                        <button onclick="redirectHandlerProject()"><a href="#">View</a></button>
                     </div>
             </div>
         {% comment %} </div> {% endcomment %}
@@ -65,7 +48,6 @@
     // Getting the button and listening to clicks
     {% comment %} const addToCartBtn = document.getElementById("addCartHandler"); {% endcomment %}
 
-    function redirectHandlerProject() {window.location='/projects/'+document.getElementById("pro_id").value;}
 
     function addToCart() {
 
@@ -84,23 +66,17 @@
         }
         // Sending request to server
         fetch("/handleAddToCart/"+projectId, postData).then(res=>res.json()).then(data => {
-            console.log(data);
            
-                {% comment %} document.getElementById("alert-section").innerHTML = `<div class='alert  my-1 border-${data.tag} alert-dismissible fade show alert-${data.tag} myAlert' role='alert' alert>
-                    <strong></strong><b>${data.msg}</b>
-                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-                </div>`; {% endcomment %}
-                
-                document.getElementById("alert-section").innerHTML = `<div class="alert alert-${data.tag} alert-dismissible fade show" role="alert">
-                    ${data.msg}
-                    <button onclick="removeAlert()" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                  </div>`;
-
-                setTimeout(() => {
-                    document.getElementById("alert-section").innerHTML =""
-                }, 5000);
-
-               
+            document.getElementById("alert-section").innerHTML = `<div class="alert alert-${data.tag} alert-dismissible fade show" role="alert">
+                ${data.msg}
+                <button onclick="removeAlert()" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>`;
+            document.getElementById("cartCount").innerHTML= data.cartCount
+            
+            setTimeout(() => {
+                document.getElementById("alert-section").innerHTML =""
+            }, 5000);
+  
 
         });
     }
