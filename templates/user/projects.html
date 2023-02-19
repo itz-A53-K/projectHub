@@ -6,7 +6,6 @@
 {%endblock%}
 
 {%block body%}
-<div class="container">
 
     <div id="alert-section"></div> {% comment %} Alert Message Dialog{% endcomment %}
 
@@ -26,18 +25,60 @@
             {% else %}
             <h2 class="">Search results for : <em>{{src_query}}</em></h2><br>
                 {% for i in srcResult %}
-                    <div class="card-pro">
-                            <div class="photo">
-                                <a href="/projects/{{i.proj_id}}"><img src="/media/{{i.default_image}}" onclick="redirectHandlerProject()" style="width: 100%; height: 100%; border-radius: 10px; cursor:pointer;" ></a>
-                            </div>
-                            <div class="description">
-                                <div>
-                                    <h2>{{i.title}} {% if i.short_Desc %}<span> ( {{i.short_Desc}} )</span>{% endif %}</h2>
-                                    {% comment %} <h4>Popular House Plant</h4> {% endcomment %}
-                                    <h1 >{% if  i.free %}
+                    <!-- Products -->
+                    <div class="bg-white rounded-lg shadow-md">
+                        <a href="/projects/{{i.proj_id}}">
+                            <img src="/media/{{i.default_image}}" alt="Product"
+                                class="w-full h-64 object-cover rounded-t-lg">
+                        </a>
+                        <div class="p-4">
+                            <h3 class="font-medium text-gray-900 mb-2"><a href="#">{{i.title}} {% if i.short_Desc %}<span> ( {{i.short_Desc}} )</span
+                            >{% endif %}</a></h3>
+                            <p class="text-gray-600 text-sm">{{i.full_Desc| truncatechars:130}}</p>
+                            <div class="mt-4 flex justify-between items-center">
+                                <span class="font-bold text-gray-900">
+                                    
+                                    {% if  i.free %}
                                         <span class="fw-semibold fs-5">Free</span>
                                         <span class="text-decoration-line-through"> {{i.price}}0</span>
                                         <input type="hidden" id="price" value="0"/>
+                                        {% elif i.discounted_price %}
+                                            <span class="fw-semibold fs-5">₹ {{i.discounted_price}}0</span> 
+                                            <span class="text-decoration-line-through"> {{i.price}}0</span>
+                                            <input type="hidden" id="price" value="{{i.discounted_price}}"/>
+                                        {%else%}
+                                            <span class="fw-semibold fs-5"> ₹ {{i.price}}0</span>
+                                            <input type="hidden" id="price" value="{{i.price}}"/>
+                                    {%endif%}
+
+                                </span>
+                                <input type="hidden" id="pro_id" value="{{i.proj_id}}"/>
+                                <button class="bg-gray-800 text-white py-2 px-4 rounded hover:bg-gray-700" onclick="addToCart()">Add to
+                                    Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% else %}
+            {% for i in proj %}
+                <!-- Products -->
+                <div class="bg-white rounded-lg shadow-md">
+                    <a href="/projects/{{i.proj_id}}">
+                        <img src="/media/{{i.default_image}}" alt="Product"
+                            class="w-full h-64 object-cover rounded-t-lg">
+                    </a>
+                    <div class="p-4">
+                        <h3 class="font-medium text-gray-900 mb-2"><a href="#">{{i.title}} {% if i.short_Desc %}<span> ( {{i.short_Desc}} )</span
+                        >{% endif %}</a></h3>
+                        <p class="text-gray-600 text-sm">{{i.full_Desc| truncatechars:130}}</p>
+                        <div class="mt-4 flex justify-between items-center">
+                            <span class="font-bold text-gray-900">
+                                
+                                {% if  i.free %}
+                                    <span class="fw-semibold fs-5">Free</span>
+                                    <span class="text-decoration-line-through"> {{i.price}}0</span>
+                                    <input type="hidden" id="price" value="0"/>
                                     {% elif i.discounted_price %}
                                         <span class="fw-semibold fs-5">₹ {{i.discounted_price}}0</span> 
                                         <span class="text-decoration-line-through"> {{i.price}}0</span>
@@ -45,53 +86,19 @@
                                     {%else%}
                                         <span class="fw-semibold fs-5"> ₹ {{i.price}}0</span>
                                         <input type="hidden" id="price" value="{{i.price}}"/>
-                                    {%endif%}</h1>
-                                    <p>{{i.full_Desc|title | truncatechars:150}}</p>
-                                </div>
-                                <div class="card-footer">
-                                    <input type="hidden" id="pro_id" value="{{i.proj_id}}"/>
-                                    <button onclick="addToCart()" id="{{i.proj_id}}">Add to Cart</button>
-                                    <a href="/projects/{{i.proj_id}}"><button >View</button></a>
-                                </div>
-                            </div>
+                                {%endif%}
+
+                            </span>
+                            <input type="hidden" id="pro_id" value="{{i.proj_id}}"/>
+                            <button class="bg-gray-800 text-white py-2 px-4 rounded hover:bg-gray-700" onclick="addToCart()">Add to
+                                Cart</button>
+                        </div>
                     </div>
-                {% endfor %}
-            {% endif %}
-        {% else %}
-            {% for i in proj %}
-                <div class="card-pro">
-                        <div class="photo">
-                            <a href="/projects/{{i.proj_id}}"><img src="/media/{{i.default_image}}" onclick="redirectHandlerProject()" style="width: 100%; height: 100%; border-radius: 10px; cursor:pointer;" ></a>
-                        </div>
-                        <div class="description">
-                            <div>
-                                <h2>{{i.title}} {% if i.short_Desc %}<span> ( {{i.short_Desc}} )</span>{% endif %}</h2>
-                                {% comment %} <h4>Popular House Plant</h4> {% endcomment %}
-                                <h1 >{% if  i.free %}
-                                    <span class="fw-semibold fs-5">Free</span>
-                                    <span class="text-decoration-line-through"> {{i.price}}0</span>
-                                    <input type="hidden" id="price" value="0"/>
-                                {% elif i.discounted_price %}
-                                    <span class="fw-semibold fs-5">₹ {{i.discounted_price}}0</span> 
-                                    <span class="text-decoration-line-through"> {{i.price}}0</span>
-                                    <input type="hidden" id="price" value="{{i.discounted_price}}"/>
-                                {%else%}
-                                    <span class="fw-semibold fs-5"> ₹ {{i.price}}0</span>
-                                    <input type="hidden" id="price" value="{{i.price}}"/>
-                                {%endif%}</h1>
-                                <p>{{i.full_Desc|title | truncatechars:150}}</p>
-                            </div>
-                            <div class="card-footer">
-                                <input type="hidden" id="pro_id" value="{{i.proj_id}}"/>
-                                <button onclick="addToCart()" id="{{i.proj_id}}">Add to Cart</button>
-                                <a href="/projects/{{i.proj_id}}"><button >View</button></a>
-                            </div>
-                        </div>
                 </div>
             {% endfor %}
         {% endif %}
     </div>
-</div>
+
 
 {%block JS%}
 <script>

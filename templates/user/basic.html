@@ -5,24 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{%block title%}{% endblock %}</title>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"/>
+    {% comment %}
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" />
+    {% endcomment %}
     <link rel="stylesheet" href="{% static 'user/css/commonStyle.css'%}" />
-    
-    {%block csslink%}
-    
-    {%endblock%}
+
+    {%block csslink%} {%endblock%}
     <style>
-    {%block css%}
-    
-    {%endblock%}
-  </style>
-    
+      {%block css%}
+
+      {%endblock%}
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body id="body">
-
-    {% comment %} Nav Bar Starting {% endcomment %}
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top w-100"
-      style="background-color: rgba(37, 37, 37, 0.678); margin-bottom: 5px;">
+    {% comment %} Nav Bar Starting {% endcomment %} {% comment %}
+    <nav
+      class="navbar navbar-expand-lg navbar-dark fixed-top w-100"
+      style="background-color: rgba(37, 37, 37, 0.678); margin-bottom: 5px">
       <div class="container d-flex">
         <a class="navbar-brand" href="/">Project-Hub.in</a>
         <button
@@ -43,8 +45,8 @@
               class="form-control me-2 mx-3"
               type="search"
               placeholder="Search"
-              aria-label="Search" 
-              name="src_query"/>
+              aria-label="Search"
+              name="src_query" />
             <button class="btn btn-info mx-3" type="submit">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -64,10 +66,14 @@
               <a
                 class="nav-link text-light itemLink"
                 aria-current="page"
-                href="/">Home</a>
+                href="/"
+                >Home</a
+              >
             </li>
             <li class="nav-item mx-3">
-              <a class="nav-link text-light itemLink" href="/projects">Projects</a>
+              <a class="nav-link text-light itemLink" href="/projects"
+                >Projects</a
+              >
             </li>
             {% if request.user.is_authenticated%}
             <li class="nav-item dropdown itemLink mx-3">
@@ -80,12 +86,19 @@
                 {{request.user.first_name}}
               </a>
               <ul class="dropdown-menu dropdown-menu-dark">
-                <li><a class="dropdown-item itemLink" href="/profile/">Profile</a></li>
-                <li><a class="dropdown-item itemLink" href="/order/">My Orders</a></li>
+                <li>
+                  <a class="dropdown-item itemLink" href="/profile/">Profile</a>
+                </li>
+                <li>
+                  <a class="dropdown-item itemLink" href="/order/">My Orders</a>
+                </li>
 
-                <li><hr class="dropdown-divider"></li>
-                <li><center><a href="/logout" class="btn btn-outline-info ">Logout</a></center></li>
-                
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <center>
+                    <a href="/logout" class="btn btn-outline-info">Logout</a>
+                  </center>
+                </li>
               </ul>
             </li>
           </ul>
@@ -93,13 +106,20 @@
 
           <div class="btnDiv mx-3">
             {% if request.user.is_authenticated%}
-            <a href="/cart" class="btn btn-outline-warning m-1 ">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart " viewBox="0 0 16 16">
-                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+            <a href="/cart" class="btn btn-outline-warning m-1">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-cart"
+                viewBox="0 0 16 16">
+                <path
+                  d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
               </svg>
-              Cart (<span id="cartCount" >{{cartCount}}</span>)
+              Cart (<span id="cartCount">{{cartCount}}</span>)
             </a>
-            
+
             {%else%}
             <a href="/login" class="btn btn-outline-info">Login</a>
             {%endif%}
@@ -107,50 +127,183 @@
         </div>
       </div>
     </nav>
-    {% comment %} NavBar Ended {% endcomment %}
+    {% endcomment %} {% comment %} Tailwind Nav Starts {% endcomment %}
+    <nav class="flex items-center justify-between flex-wrap bg-gray-800 p-6">
+      <div class="flex items-center flex-shrink-0 text-white mr-6">
+        <span class="font-semibold text-xl tracking-tight">Project HUB</span>
+      </div>
+      <div class="block lg:hidden">
+        <button
+          class="flex items-center px-3 py-2 border rounded text-gray-200 border-gray-400 hover:text-white hover:border-white">
+          <svg
+            class="fill-current h-3 w-3"
+            viewBox="0 0 20 20"
+            xmlns="http://www.w3.org/2000/svg">
+            <title>Menu</title>
+            <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
+          </svg>
+        </button>
+      </div>
+      <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
+        <div class="text-sm lg:flex-grow">
+          <a
+            href="#"
+            class="block mt-4 lg:inline-block lg:mt-0 text-gray-400 hover:text-white mr-4">
+            Home
+          </a>
+          <a
+            href="#"
+            class="block mt-4 lg:inline-block lg:mt-0 text-gray-400 hover:text-white mr-4">
+            Products
+          </a>
+          <a
+            href="#"
+            class="block mt-4 lg:inline-block lg:mt-0 text-gray-400 hover:text-white">
+            Contact
+          </a>
+        </div>
 
-    <section class="mar-top">
-    {%block body%}
-    
-    {%endblock%}
+        <div class="flex items-center flex-shrink-0 text-black mr-6">
+          <label class="relative block">
+            <span class="sr-only">Search</span>
+            <span class="absolute inset-y-0 left-0 flex items-center pl-2">
+              <svg class="h-5 w-5 fill-slate-300" viewBox="0 0 20 20"></svg>
+            </span>
+            <input
+              id="searchBar"
+              class="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-sm"
+              placeholder="Search for anything..."
+              type="text"
+              name="search" />
+          </label>
+          <button
+            class="btn btn-info mx-3"
+            style="color: white"
+            type="submit"
+            onclick="handleSearch()">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              class="bi bi-search"
+              viewBox="0 0 16 16">
+              <path
+                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+            </svg>
+          </button>
+        </div>
 
-  </section>
-  <button type="button" class="btn btn-info btn-floating btn-lg" id="go-top">^</button>
+        <div class="mt-4 lg:mt-0">
+          <a
+            href="#"
+            class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-gray-500 hover:bg-white mt-4 lg:mt-0"
+            >Sign In</a
+          >
+        </div>
+      </div>
+    </nav>
+    {% comment %} Tailwind Nav Ends {% endcomment %} {% comment %} NavBar Ended
+    {% endcomment %}
 
-  <script>
-    //Get the button
-        let go_topbtn = document.getElementById("go-top");
+    <section class="mar-top">{%block body%} {%endblock%}</section>
+    <button type="button" class="btn btn-info btn-floating btn-lg" id="go-top">
+      ^
+    </button>
 
-        // When the user scrolls down 150px from the top of the document, show the button
-        window.onscroll = function () {
-          scrollFunction();
-        };
+    {% comment %} Footer Starts here {% endcomment %}
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white">
+      <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-wrap justify-center">
+          <div class="lg:w-1/3 w-full lg:pr-8 mb-8 lg:mb-0">
+            <h3 class="text-2xl font-bold mb-4">About Us</h3>
+            <p class="text-gray-400 mb-4">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
+              tincidunt mauris mauris, nec bibendum mauris tincidunt vel. Nulla
+              convallis fringilla odio, ac euismod turpis ultricies vel.
+            </p>
+            <ul class="list-none">
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white">Our Story</a>
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white"
+                  >Our Values</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white">Our Team</a>
+              </li>
+            </ul>
+          </div>
+          <div class="lg:w-1/3 w-full lg:pr-8 mb-8 lg:mb-0">
+            <h3 class="text-2xl font-bold mb-4">Contact Us</h3>
+            {% comment %}
+            <p class="text-gray-400 mb-4">123 Main St.</p>
+            <p class="text-gray-400 mb-4">Anytown, USA 12345</p>
+            <p class="text-gray-400 mb-4">hello@example.com</p>
+            <p class="text-gray-400 mb-4">(123) 456-7890</p>
+            {% endcomment %}
+          </div>
+          <div class="lg:w-1/3 w-full">
+            <h3 class="text-2xl font-bold mb-4">Connect with Us</h3>
+            <ul class="list-none">
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white"
+                  ><i class="fab fa-facebook-square mr-2"></i> Facebook</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white"
+                  ><i class="fab fa-twitter-square mr-2"></i> Twitter</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-gray-400 hover:text-white"
+                  ><i class="fab fa-instagram-square mr-2"></i> Instagram</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="text-center mt-12">
+          <p class="text-gray-400">
+            &copy; 2023 My Ecommerce Website. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+    {% comment %} footer ends here {% endcomment %}
 
-        function scrollFunction() {
-          if (document.body.scrollTop > 150 || document.documentElement.scrollTop > 150) 
-          {
-            go_topbtn.style.display = "block";
-          }
-          else {
-            go_topbtn.style.display = "none";
-          }
-        }
-        function backToTop() {
-          document.body.scrollTop = 0;
-          document.documentElement.scrollTop = 0;
-        }
-        // When the user clicks on the button, scroll to the top of the document
-        go_topbtn.addEventListener("click", backToTop);
-
-</script>
-    {% comment %} Bootstrap CDN Links Starts {% endcomment %}
-    <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
-    {% comment %} Bootstrap CDN Links Ended {% endcomment %}
-
-    {% comment %} NavBar Tab Manupulation Starts Here {% endcomment %}
     <script>
+      let go_topbtn = document.getElementById("go-top");
 
+      window.onscroll = function () {
+        scrollFunction();
+      };
+
+      function scrollFunction() {
+        if (
+          document.body.scrollTop > 150 ||
+          document.documentElement.scrollTop > 150
+        ) {
+          go_topbtn.style.display = "block";
+        } else {
+          go_topbtn.style.display = "none";
+        }
+      }
+      function backToTop() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+      }
+      go_topbtn.addEventListener("click", backToTop);
+    </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+      crossorigin="anonymous"></script>
+    <script>
       document.querySelectorAll(".itemLink").forEach((link) => {
         link2 = link.href + "/";
         if (
@@ -167,14 +320,15 @@
           alert.close();
         }
       }, 6000);
-
-      
-
     </script>
-    {% comment %} NavBar Tab Manupulation Ends Here {% endcomment %}
+
+    <script>
+      const searchBar = document.getElementById("searchBar");
+      searchBar.addEventListener("input", (event) => {
+        window.location = "/projects.html/search/q=" + event.target.value;
+      });
+    </script>
+
     {%block JS%}{%endblock%}
   </body>
 </html>
-
-
-{% comment %} Please keep everything organized {% endcomment %}
