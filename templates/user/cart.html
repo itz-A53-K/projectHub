@@ -8,10 +8,24 @@
 
 {%block body%}
 
+    <div class="container text-center">
+        <div class="row">
+        <div class="col">
+            Column
+        </div>
+        <div class="col">
+            Column
+        </div>
+        
+        
+    </div>
+
     {% for item in cart%}
         {{item.project}}<br>
         {{item.project.short_Desc}}<br>
         {{item.price}}<br>
     {% endfor %}
+
+
 
 {%endblock body%}
