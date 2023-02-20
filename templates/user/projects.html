@@ -84,7 +84,7 @@
                             </div>
                             <div class="card-footer">
                                 <input type="hidden" id="pro_id" value="{{i.proj_id}}"/>
-                                <button onclick="addToCart({{i.proj_id}}, {% if  i.free %}0{% elif i.discounted_price %}{{i.discounted_price}}{%else%}{{i.price}}{%endif%})" id="{{i.proj_id}}">Add to Cart</button>
+                                <button onclick="addToCart({{i.proj_id}})" id="{{i.proj_id}}">Add to Cart</button>
                                 <a href="/projects/{{i.proj_id}}"><button >View</button></a>
                             </div>
                         </div>
