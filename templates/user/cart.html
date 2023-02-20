@@ -7,10 +7,78 @@
 
 {%block body%}
 
-    {% for item in cart%}
-        {{item.project}}<br>
-        {{item.project.short_Desc}}<br>
-        {{item.price}}<br>
-    {% endfor %}
+    <div class="container">
+        <div class="row">
+        <div class="col-8">
+            {% for i in cart %}
+                <div class="card-pro">
+                        <div class="photo">
+                            <a href="/projects/{{i.project.proj_id}}"><img src="/media/{{i.project.default_image}}" onclick="redirectHandlerProject()" style="width: 100%; height: 100%; border-radius: 10px; cursor:pointer;" ></a>
+                        </div>
+                        <div class="description">
+                            <div>
+                                <h2>{{i.project.title}} {% if i.project.short_Desc %}<span> ( {{i.project.short_Desc}} )</span>{% endif %}</h2>
+                                {% comment %} <h4>Popular House Plant</h4> {% endcomment %}
+                                <h1 >{% if  i.project.free %}
+                                    <span class="fw-semibold fs-5">Free</span>
+                                    <span class="text-decoration-line-through"> {{i.project.price}}0</span>
+                                    <input type="hidden" id="price" value="0"/>
+                                {% elif i.project.discounted_price %}
+                                    <span class="fw-semibold fs-5">₹ {{i.project.discounted_price}}0</span> 
+                                    <span class="text-decoration-line-through"> {{i.project.price}}0</span>
+                                    <input type="hidden" id="price" value="{{i.project.discounted_price}}"/>
+                                {%else%}
+                                    <span class="fw-semibold fs-5"> ₹ {{i.project.price}}0</span>
+                                    <input type="hidden" id="price" value="{{i.project.price}}"/>
+                                {%endif%}</h1>
+                                <p>{{i.project.full_Desc|title | truncatechars:150}}</p>
+                            </div>
+                            {% comment %} <div class="card-footer">
+                                <input type="hidden" id="pro_id" value="{{i.project.proj_id}}"/>
+                                <button onclick="addToCart({{i.project.proj_id}}, {% if  i.free %}0{% elif i.discounted_price %}{{i.discounted_price}}{%else%}{{i.price}}{%endif%})" id="{{i.proj_id}}">Add to Cart</button>
+                                <a href="/projects/{{i.proj_id}}"><button >View</button></a>
+                            </div> {% endcomment %}
+                        </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="col-4">
+           
+                <div class="card mb-4">
+                  <div class="card-header py-3">
+                    <h5 class="mb-0">Summary</h5>
+                  </div>
+                  <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                      <li
+                        class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                        Products
+                        <span>{{cartCount}} Items</span>
+                      </li>
+                      <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                        Free Delivery
+                        <span>Available</span>
+                      </li>
+                      <li
+                        class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                        <div>
+                          <strong>Total amount</strong>
+                          <strong>
+                            <p class="mb-0">(including TAX)</p>
+                          </strong>
+                        </div>
+                        <span><strong>{{total_price}} INR</strong></span>
+                      </li>
+                    </ul>
+        
+                    <button type="button" class="btn btn-primary btn-lg btn-block">
+                      Go to checkout
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+        
+    </div>
 
 {%endblock body%}
