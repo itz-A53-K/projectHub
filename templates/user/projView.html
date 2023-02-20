@@ -2,9 +2,12 @@
 {%block title%}Project-Hub {%endblock%}
 
 {% block body %}
-{{project.title}}<br>
-{{project.short_Desc}} 
+    {{project.title}}<br>
+    {{project.short_Desc}} 
 
+    {% for img in images %}
+        <img src="/media/{{img.image}}" alt="" srcset="">
        
+    {% endfor %}
     
 {% endblock body %}

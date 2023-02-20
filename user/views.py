@@ -26,7 +26,8 @@ def projects(request):
 
 def projView(request, proj_id):
     project= Project.objects.get(proj_id = proj_id)
-    params={'project': project, "cartCount": cartCount(request.user.id)}
+    images=Proj_image.objects.filter(proj_id=proj_id)
+    params={'project': project, "cartCount": cartCount(request.user.id), "images":images}
     return render(request, 'user/projView.html' , params)
 
 def handleLogin(request):
@@ -156,7 +157,9 @@ def handleAddToCart(request, proj_id):
 
 def cart(request):
     if request.user.is_authenticated:
-        params={ "cartCount": cartCount(request.user.id)}
+        user_id=request.user.id
+        cart= Cart.objects.filter(user_id=user_id)
+        params={"cart": cart, "cartCount": cartCount(user_id)}
         return render(request,"user/cart.html", params)
     else :
         return redirect('/')
