@@ -8,5 +8,10 @@
 
 {%block body%}
 
+    {% for item in cart%}
+        {{item.project}}<br>
+        {{item.project.short_Desc}}<br>
+        {{item.price}}<br>
+    {% endfor %}
 
 {%endblock body%}
