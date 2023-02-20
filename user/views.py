@@ -163,7 +163,12 @@ def cart(request):
     if request.user.is_authenticated:
         user_id=request.user.id
         cart= Cart.objects.filter(user_id=user_id)
-        params={"cart": cart, "cartCount": cartCount(user_id)}
+        # print(cart)
+        sum=0
+        for i in cart:
+            sum = sum +i.price
+          
+        params={"cart": cart, "cartCount": cartCount(user_id), "totalPrice":sum}
         return render(request,"user/cart.html", params)
     else :
         return redirect('/')
