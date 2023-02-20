@@ -144,12 +144,22 @@ def handleAddToCart(request, proj_id):
                 price = proj.price
             
             user_id= request.user.id
-            cart= Cart.objects.create(project = proj,user_id = user_id, price =price)
-            cart.save()
-            # messages.success(request, "1 Item added to cart successfully.")
-            return JsonResponse({'success': True,
+            itemInCart= Cart.objects.filter(project=proj, user_id=user_id)
+            
+            if not itemInCart.count() is 0:
+
+                itemInCart.update(price = price)
+
+                return JsonResponse({'success': True,
+                            'msg': "Item already in cart.", "tag": "success"
+                            , "cartCount": cartCount(request.user.id)})
+            else:
+                cart= Cart.objects.create(project = proj,user_id = user_id, price =price)
+                cart.save()
+                return JsonResponse({'success': True,
                          'msg': "Item added to cart successfully.", "tag": "success"
                          , "cartCount": cartCount(request.user.id)})
+            # messages.success(request, "1 Item added to cart successfully.")
         else:
             # messages.error(request, "Please Login First To Continue")
             return JsonResponse({'success': False,
@@ -164,13 +174,16 @@ def cart(request):
     if request.user.is_authenticated:
         user_id=request.user.id
         cart= Cart.objects.filter(user_id=user_id)
-        total_price = 0
+        total_original_price = 0
+        total_descounted_price = 0
         for i in cart:
-            total_price += i.project.price
-        
-        print(total_price)
+            total_original_price += i.project.price
+            total_descounted_price += i.price
 
-        params={"cart": cart, "cartCount": cartCount(user_id), "total_price": total_price}
+        discount= total_original_price-total_descounted_price
+        # print(total_descounted_price)
+
+        params={"cart": cart, "cartCount": cartCount(user_id), "total_original_price" : total_original_price, "total_descounted_price": total_descounted_price, "discount": discount}
         return render(request,"user/cart.html", params)
     else :
         return redirect('/')

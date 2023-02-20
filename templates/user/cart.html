@@ -5,12 +5,37 @@
 <link rel="stylesheet" href="{% static 'user/css/project-cards-cart.css'%}" />
 <link rel="stylesheet" href="{% static 'user/css/cart.css'%}" />
 {%endblock%}
+{%block css%}
+#titleDiv :hover{
+  transition:.2s;
+  color:#2874f0;
+}
+
+.btnDesign2{
+  padding: 5px 30px;
+  margin: 2px;
+  font-size: 1.3rem;
+  border-radius: 2px;
+  font-weight: 500;
+  /* border: 2px solid #137ae1; */
+  border: 2px solid #cb148ba8;
+  color: #c81812a8;
+}
+.btnDesign2:hover{
+  transition: .3s ease-in-out;
+  border: 2px solid #cb148ba8;
+  /* background: linear-gradient(100deg ,  #cb148ba8 ,#8912e48c,#137ae1) ; */
+  background: #c81812a8 ;
+  color: #e7efef;
+}
+{%endblock%}
 
 {%block body%}
 
     <div class="container">
-        <div class="row">
-        <div class="col-8">
+      <div class="row pt-4">
+        <div class="col-8 cartItems mb-4">
+          {% if cart %}
             {% for i in cart %}
                 <div class="card-pro">
                         <div class="photo">
@@ -18,82 +43,84 @@
                         </div>
                         <div class="description">
                             <div>
-                                <h2>{{i.project.title}} {% if i.project.short_Desc %}<span> ( {{i.project.short_Desc}} )</span>{% endif %}</h2>
+                              <div id="titleDiv">
+                                <h5><a href="/projects/{{i.project.proj_id}}">{{i.project.title}} {% if i.project.short_Desc %}<span> ( {{i.project.short_Desc}} )</span>{% endif %}</a></h5>
+                              </div>
+                                <p>{{i.project.full_Desc|title | truncatechars:150}}</p>
+                                
                                 {% comment %} <h4>Popular House Plant</h4> {% endcomment %}
-                                <h1 >{% if  i.project.free %}
+                                <h1 class="mb-4 p-0">{% if  i.price == 0 %}
                                     <span class="fw-semibold fs-5">Free</span>
                                     <span class="text-decoration-line-through"> {{i.project.price}}0</span>
                                     <input type="hidden" id="price" value="0"/>
-                                {% elif i.project.discounted_price %}
-                                    <span class="fw-semibold fs-5">₹ {{i.project.discounted_price}}0</span> 
+                                {% else%}
+                                    <span class="fw-semibold fs-5">₹ {{i.price}}0</span> 
                                     <span class="text-decoration-line-through"> {{i.project.price}}0</span>
                                     <input type="hidden" id="price" value="{{i.project.discounted_price}}"/>
-                                {%else%}
-                                    <span class="fw-semibold fs-5"> ₹ {{i.project.price}}0</span>
-                                    <input type="hidden" id="price" value="{{i.project.price}}"/>
                                 {%endif%}</h1>
-                                <p>{{i.project.full_Desc|title | truncatechars:150}}</p>
+                                
                             </div>
-                            <div class="card-footer">
-                                {% comment %} <button onclick="addToCart({{i.project.proj_id}}, {% if  i.free %}0{% elif i.discounted_price %}{{i.discounted_price}}{%else%}{{i.price}}{%endif%})" id="{{i.proj_id}}">Add to Cart</button>
-                                <a href="/projects/{{i.proj_id}}"><button >View</button></a> {% endcomment %}
-
-                                <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
-                                    <button class="btn btn-link px-2"
-                                      onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                                      <i class="fas fa-minus"></i>
-                                    </button>
-              
-                                    <input id="form1" min="0" name="quantity" value="1" type="number"
-                                      class="form-control form-control-sm mx-3" style="width: 60px;"  readonly />
-              
-                                    <button class="btn btn-link px-2"
-                                      onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                                      <i class="fas fa-plus"></i>
-                                    </button>
-                                  </div>
-
+                            <div class="card-footer mx-3">
+                              <a href="#" id="removeItemBtn">Remove</a>
+                             
                             </div>
                         </div>
                 </div>
             {% endfor %}
+            <div class="d-flex align-items-center justify-content-end p-4">
+                <button type="button" class=" btnDesign2 mx-5">
+                  Checkout
+                </button>
+            </div>
+          {% else %}
+            <div class="d-flex  flex-column justify-content-center align-items-center h-100">
+              <h5>Your cart is empty!☹</h5>
+              <p>Explore our wide collection of projects and find something you need😀</p>
+              <a href="/projects/" class="btn btn-outline-dark">Find projects</a>
+            </div>
+          {% endif %}
         </div>
-        <div class="col-4">
-           
-                <div class="card mb-4 text-center">
-                  <div class="card-header py-3">
-                    <h5 class="mb-0">Summary</h5>
-                  </div>
-                  <div class="card-body">
-                    <ul class="list-group list-group-flush">
-                      <li
-                        class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-                        Products
-                        <span>{{cartCount}} Items</span>
-                      </li>
-                      <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                        Free Delivery
-                        <span>Available</span>
-                      </li>
-                      <li
-                        class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
-                        <div>
-                          <strong>Total amount</strong>
-                          <strong>
-                            <p class="mb-0">(including TAX)</p>
-                          </strong>
-                        </div>
-                        <span><strong>{{total_price}} INR</strong></span>
-                      </li>
-                    </ul>
-        
-                    <button type="button" class="btn btn-primary btn-lg btn-block">
-                      Go to checkout
-                    </button>
-                  </div>
-                </div>
+        <div class="col-4" style="font-family: ;">
+            <div class="card mb-4 text-center">
+              <div class="card-header py-3">
+                <h5 class="mb-0">Summary</h5>
+              </div>
+              <div class="card-body">
+                <ul class="list-group list-group-flush">
+                  <li
+                    class="list-group-item d-flex justify-content-between align-items-center border-0 py-2">
+                    Products
+                    <span style="letter-spacing: ;">{{cartCount}} Items</span>
+                  </li>
+                  <li
+                    class="list-group-item d-flex justify-content-between align-items-center border-0 py-2">
+                    Price
+                    <span style="letter-spacing: 1.2px;">₹{{total_original_price}}0</span>
+                  </li>
+                  <li class="list-group-item d-flex justify-content-between align-items-center py-2">
+                    Discount
+                    <span class="text-success fw-semibold" style="letter-spacing: 1.2px;">-₹{{discount}}0</span>
+                  </li>
+                  <li
+                    class="list-group-item d-flex justify-content-between align-items-center border-0 py-2 mb-3 ">
+                    <div>
+                      <strong>Total amount</strong>
+                      <strong>
+                        <p class="mb-0">(including TAX)</p>
+                      </strong>
+                    </div>
+                    <span><strong>{{total_descounted_price}}0 INR</strong></span>
+                  </li>
+                </ul>
+                {% if not cartCount is 0 %}
+                  <button type="button" class="btnDesign2 btn-block">
+                    Checkout
+                  </button>
+                {% endif %}
               </div>
             </div>
+          </div>
+      </div>
     </div>
 
 {%endblock body%}

@@ -47,7 +47,7 @@
 .card-pro .description {
   padding: 20px;
   float: left;
-  width: 55%;
+  /* width: 55%; */
   border-left: 2px solid #efefef;
   display: flex;
   flex-direction: column;
