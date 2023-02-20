@@ -142,6 +142,7 @@ def handleAddToCart(request, proj_id):
                 price = proj.discounted_price
             else :
                 price = proj.price
+            
             user_id= request.user.id
             cart= Cart.objects.create(project = proj,user_id = user_id, price =price)
             cart.save()
@@ -163,12 +164,13 @@ def cart(request):
     if request.user.is_authenticated:
         user_id=request.user.id
         cart= Cart.objects.filter(user_id=user_id)
-        # print(cart)
-        sum=0
+        total_price = 0
         for i in cart:
-            sum = sum +i.price
-          
-        params={"cart": cart, "cartCount": cartCount(user_id), "totalPrice":sum}
+            total_price += i.project.price
+        
+        print(total_price)
+
+        params={"cart": cart, "cartCount": cartCount(user_id), "total_price": total_price}
         return render(request,"user/cart.html", params)
     else :
         return redirect('/')
