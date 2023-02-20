@@ -73,7 +73,7 @@ class Cart(models.Model):
     cart_id= models.BigAutoField(primary_key=True)
     project= models.ForeignKey(Project, on_delete=models.CASCADE)
     user_id= models.IntegerField()
-    price = models.FloatField()
+    # price = models.FloatField()
     
 class Order(models.Model):
     order_id= models.BigAutoField(primary_key=True)

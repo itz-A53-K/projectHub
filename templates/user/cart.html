@@ -49,15 +49,21 @@
                                 <p>{{i.project.full_Desc|title | truncatechars:150}}</p>
                                 
                                 {% comment %} <h4>Popular House Plant</h4> {% endcomment %}
-                                <h1 class="mb-4 p-0">{% if  i.price == 0 %}
+                                <h1 class="mb-4 p-0">
+                                  {% if  i.project.free %}
                                     <span class="fw-semibold fs-5">Free</span>
                                     <span class="text-decoration-line-through"> {{i.project.price}}0</span>
                                     <input type="hidden" id="price" value="0"/>
-                                {% else%}
-                                    <span class="fw-semibold fs-5">₹ {{i.price}}0</span> 
+                                {% elif i.project.discounted_price %}
+                                    <span class="fw-semibold fs-5">₹ {{i.project.discounted_price}}0</span> 
                                     <span class="text-decoration-line-through"> {{i.project.price}}0</span>
-                                    <input type="hidden" id="price" value="{{i.project.discounted_price}}"/>
-                                {%endif%}</h1>
+                                    <input type="hidden" id="price" value="{{i.discounted_price}}"/>
+                                {%else%}
+                                    <span class="fw-semibold fs-5"> ₹ {{i.project.price}}0</span>
+                                    <input type="hidden" id="price" value="{{i.price}}"/>
+                                {%endif%}
+                                 
+                              </h1>
                                 
                             </div>
                             <div class="card-footer mx-3">
