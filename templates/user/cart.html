@@ -1,31 +1,52 @@
 {% extends 'user/basic.html' %}
-{%load static %} 
-
-{%block title%}Project-Hub - Cart{%endblock%}
-
-{%block csslink%} 
-{%endblock csslink%}
+{%load static %}
+{%block title%}Project-Hub - Carts Available{%endblock%}
+{%block csslink%}
+<link rel="stylesheet" href="{% static 'user/css/project-cards.css'%}" />
+{%endblock%}
 
 {%block body%}
 
     <div class="container text-center">
         <div class="row">
-        <div class="col">
-            Column
+        <div class="col-8">
+            {% for i in cart %}
+                <div class="card-pro">
+                        <div class="photo">
+                            <a href="/projects/{{i.project.proj_id}}"><img src="/media/{{i.project.default_image}}" onclick="redirectHandlerProject()" style="width: 100%; height: 100%; border-radius: 10px; cursor:pointer;" ></a>
+                        </div>
+                        <div class="description">
+                            <div>
+                                <h2>{{i.project.title}} {% if i.project.short_Desc %}<span> ( {{i.project.short_Desc}} )</span>{% endif %}</h2>
+                                {% comment %} <h4>Popular House Plant</h4> {% endcomment %}
+                                <h1 >{% if  i.project.free %}
+                                    <span class="fw-semibold fs-5">Free</span>
+                                    <span class="text-decoration-line-through"> {{i.project.price}}0</span>
+                                    <input type="hidden" id="price" value="0"/>
+                                {% elif i.project.discounted_price %}
+                                    <span class="fw-semibold fs-5">₹ {{i.project.discounted_price}}0</span> 
+                                    <span class="text-decoration-line-through"> {{i.project.price}}0</span>
+                                    <input type="hidden" id="price" value="{{i.project.discounted_price}}"/>
+                                {%else%}
+                                    <span class="fw-semibold fs-5"> ₹ {{i.project.price}}0</span>
+                                    <input type="hidden" id="price" value="{{i.project.price}}"/>
+                                {%endif%}</h1>
+                                <p>{{i.project.full_Desc|title | truncatechars:150}}</p>
+                            </div>
+                            {% comment %} <div class="card-footer">
+                                <input type="hidden" id="pro_id" value="{{i.project.proj_id}}"/>
+                                <button onclick="addToCart({{i.project.proj_id}}, {% if  i.free %}0{% elif i.discounted_price %}{{i.discounted_price}}{%else%}{{i.price}}{%endif%})" id="{{i.proj_id}}">Add to Cart</button>
+                                <a href="/projects/{{i.proj_id}}"><button >View</button></a>
+                            </div> {% endcomment %}
+                        </div>
+                </div>
+            {% endfor %}
         </div>
-        <div class="col">
+        <div class="col-4">
             Column
         </div>
         
         
     </div>
-
-    {% for item in cart%}
-        {{item.project}}<br>
-        {{item.project.short_Desc}}<br>
-        {{item.price}}<br>
-    {% endfor %}
-
-
 
 {%endblock body%}
