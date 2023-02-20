@@ -20,14 +20,21 @@
   /* border: 2px solid #137ae1; */
   border: 2px solid #cb148ba8;
   color: #c81812a8;
+  background-color:white;
 }
 .btnDesign2:hover{
   transition: .3s ease-in-out;
   border: 2px solid #cb148ba8;
-  /* background: linear-gradient(100deg ,  #cb148ba8 ,#8912e48c,#137ae1) ; */
+  /* background: linear-gradient(100deg ,  #cb148ba8 ,#8912e48c,) ; */
   background: #c81812a8 ;
   color: #e7efef;
 }
+
+#removeItemBtn:hover{
+ color:#2874f0;
+ cursor: pointer;
+}
+
 {%endblock%}
 
 {%block body%}
@@ -67,7 +74,32 @@
                                 
                             </div>
                             <div class="card-footer mx-3">
-                              <a href="#" id="removeItemBtn">Remove</a>
+
+                                <!-- Button trigger modal -->
+                              <a class="fw-semibold" data-bs-toggle="modal" data-bs-target="#removeItemModal" id="removeItemBtn">REMOVE</a>
+                              
+
+                              <!-- Modal -->
+                              <div class="modal fade" id="removeItemModal" tabindex="-1" aria-labelledby="removeItemModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h1 class="modal-title fs-5 fw-semibold" id="removeItemModalLabel">Remove Item</h1>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                      Are you sure you want to remove this item from your cart?
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-outline-dark px-4" data-bs-dismiss="modal">Cancle</button>
+                                      <a href="/remove/{{i.cart_id}}"><button type="button" class="btn btn-outline-success px-4">Remove</button></a>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+
+                              
                              
                             </div>
                         </div>
@@ -130,3 +162,8 @@
     </div>
 
 {%endblock body%}
+
+{% block JS %}
+
+
+{% endblock JS %}

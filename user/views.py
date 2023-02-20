@@ -138,9 +138,15 @@ def handleAddToCart(request, proj_id):
             
             user_id= request.user.id
             
-            cart= Cart.objects.create(project = proj,user_id = user_id)
-            cart.save()
-            return JsonResponse({'success': True,
+            itemInCart= Cart.objects.filter(project= proj, user_id=user_id)
+            if not itemInCart.count() is 0:
+                return JsonResponse({'success': True,
+                         'msg': "Unable to add! Item already in cart.", "tag": "danger"
+                         , "cartCount": cartCount(request.user.id)})
+            else:
+                cart= Cart.objects.create(project = proj,user_id = user_id)
+                cart.save()
+                return JsonResponse({'success': True,
                          'msg': "Item added to cart successfully.", "tag": "success"
                          , "cartCount": cartCount(request.user.id)})
             # messages.success(request, "1 Item added to cart successfully.")
@@ -190,5 +196,17 @@ def search(request):
         
         params={"srcResult": srcResult, "src": "true", "src_query":src_query}
         return render(request, "user/projects.html", params)
+    else:
+        return redirect("/")
+    
+
+
+def removeFromCart(request , cart_id):
+    if request.user.is_authenticated:
+        # cart_id= cart_id
+        cart= Cart.objects.filter(cart_id= cart_id)
+        cart.delete()
+        
+        return redirect("/cart/")
     else:
         return redirect("/")

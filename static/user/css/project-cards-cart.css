@@ -91,25 +91,6 @@
 justify-self: flex-end;
 
 }
-.card-pro .description .card-footer button {
-  outline: 0;
-  border: 0;
-  background: none;
-  border: 1px solid #d9d9d9;
-  padding: 8px 0px;
-  color: #515151;
-  text-transform: uppercase;
-  width: 125px;
-  font-family: inherit;
-  margin-right: 5px;
-  transition: all 0.3s ease;
-  font-weight: 500;
-}
-.card-pro .description button:hover {
-  border: 1px solid #3cc02d;
-  color: #3cc02d;
-  cursor: pointer;
-}
 
 .card-pro .description button a {
     text-decoration: none;
