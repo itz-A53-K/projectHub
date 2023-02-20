@@ -51,7 +51,7 @@
                                 </div>
                                 <div class="card-footer">
                                     <input type="hidden" id="pro_id" value=""/>
-                                    <button onclick="addToCart({{i.proj_id}}, {% if  i.free %}0{% elif i.discounted_price %}{{i.discounted_price}}{%else%}{{i.price}}{%endif%})" id="{{i.proj_id}}">Add to Cart</button>
+                                    <button onclick="addToCart({{i.proj_id}})">Add to Cart</button>
                                     <a href="/projects/{{i.proj_id}}"><button >View</button></a>
                                 </div>
                             </div>
@@ -100,13 +100,10 @@
     {% comment %} const addToCartBtn = document.getElementById("addCartHandler"); {% endcomment %}
 
 
-    function addToCart(projectId, amount) {
-        console.log("Price: "+projectId+"\nAmount: " + amount);
+    function addToCart(projectId) {
         // Creating post form data to update cart
         let formData = new FormData();
         formData.append("csrfmiddlewaretoken", "{{ csrf_token }}")
-        formData.append("price", amount)
-        
         // Assining the price to post data, letter we need to encrypt this transmition
 
         let postData = {

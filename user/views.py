@@ -130,15 +130,19 @@ def order(request):
         return redirect("/")
     
 
-
     
 def handleAddToCart(request, proj_id):
     if request.method =='POST':
         if request.user.is_authenticated:
-
-            proj = Project.objects.get(proj_id= proj_id)
+            proj = Project.objects.get(proj_id=proj_id)
+            price = 0
+            if proj.free :
+                price = 0
+            elif proj.discounted_price :
+                price = proj.discounted_price
+            else :
+                price = proj.price
             user_id= request.user.id
-            price = request.POST.get("price")
             cart= Cart.objects.create(project = proj,user_id = user_id, price =price)
             cart.save()
             # messages.success(request, "1 Item added to cart successfully.")
