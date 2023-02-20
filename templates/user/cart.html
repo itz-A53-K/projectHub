@@ -3,6 +3,7 @@
 {%block title%}Project-Hub - Carts Available{%endblock%}
 {%block csslink%}
 <link rel="stylesheet" href="{% static 'user/css/project-cards.css'%}" />
+<link rel="stylesheet" href="{% static 'user/css/cart.css'%}" />
 {%endblock%}
 
 {%block body%}
@@ -33,11 +34,26 @@
                                 {%endif%}</h1>
                                 <p>{{i.project.full_Desc|title | truncatechars:150}}</p>
                             </div>
-                            {% comment %} <div class="card-footer">
-                                <input type="hidden" id="pro_id" value="{{i.project.proj_id}}"/>
-                                <button onclick="addToCart({{i.project.proj_id}}, {% if  i.free %}0{% elif i.discounted_price %}{{i.discounted_price}}{%else%}{{i.price}}{%endif%})" id="{{i.proj_id}}">Add to Cart</button>
-                                <a href="/projects/{{i.proj_id}}"><button >View</button></a>
-                            </div> {% endcomment %}
+                            <div class="card-footer">
+                                {% comment %} <button onclick="addToCart({{i.project.proj_id}}, {% if  i.free %}0{% elif i.discounted_price %}{{i.discounted_price}}{%else%}{{i.price}}{%endif%})" id="{{i.proj_id}}">Add to Cart</button>
+                                <a href="/projects/{{i.proj_id}}"><button >View</button></a> {% endcomment %}
+
+                                <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                                    <button class="btn btn-link px-2"
+                                      onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                                      <i class="fas fa-minus"></i>
+                                    </button>
+              
+                                    <input id="form1" min="0" name="quantity" value="1" type="number"
+                                      class="form-control form-control-sm mx-3" style="width: 60px;"  readonly />
+              
+                                    <button class="btn btn-link px-2"
+                                      onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                                      <i class="fas fa-plus"></i>
+                                    </button>
+                                  </div>
+
+                            </div>
                         </div>
                 </div>
             {% endfor %}
