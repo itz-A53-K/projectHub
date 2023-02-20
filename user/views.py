@@ -130,20 +130,24 @@ def order(request):
         return redirect("/")
     
 
-
     
 def handleAddToCart(request, proj_id):
     if request.method =='POST':
         if request.user.is_authenticated:
-
-            proj = Project.objects.get(proj_id= proj_id)
+            proj = Project.objects.get(proj_id=proj_id)
+            
+            if proj.free :
+                price = 0
+            elif proj.discounted_price :
+                price = proj.discounted_price
+            else :
+                price = proj.price
             user_id= request.user.id
-            price = request.POST.get("price")
             cart= Cart.objects.create(project = proj,user_id = user_id, price =price)
             cart.save()
             # messages.success(request, "1 Item added to cart successfully.")
             return JsonResponse({'success': True,
-                         'msg': "1 Item added to cart successfully.", "tag": "success"
+                         'msg': "Item added to cart successfully.", "tag": "success"
                          , "cartCount": cartCount(request.user.id)})
         else:
             # messages.error(request, "Please Login First To Continue")
