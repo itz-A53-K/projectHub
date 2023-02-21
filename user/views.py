@@ -121,10 +121,9 @@ def order(request):
     if request.user.is_authenticated:
         user_id= request.user.id
         account= User_detail.objects.get(user_id= user_id)
-        # order= Order.objects.get(user_id= user_id)
-        # print(order)
+        orders= Cart.objects.filter(user_id= user_id).order_by('-cart_id')
         
-        params={'User_detail' : account, "activeOrder" : "activeOrder", "orders": "order", "cartCount": cartCount(request.user.id)}
+        params={'User_detail' : account, "activeOrder" : "activeOrder", "orders": orders, "cartCount": cartCount(request.user.id)}
         return render(request, "user/profile.html", params)
     else:
         return redirect("/")
@@ -163,7 +162,8 @@ def handleAddToCart(request, proj_id):
 def cart(request):
     if request.user.is_authenticated:
         user_id=request.user.id
-        cart= Cart.objects.filter(user_id=user_id)
+        cart= Cart.objects.filter(user_id=user_id).order_by('-cart_id')
+        
         total_original_price = 0
         total_descounted_price = 0
         for i in cart:

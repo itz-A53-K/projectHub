@@ -47,6 +47,27 @@ height:auto;
 }
 
 
+.orderCard{
+    display: flex;
+    width: 100%;
+    margin: 10px 0 0 0;
+    padding: .5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(137, 135, 135, 0.683);
+}
+.orderCard .orderImg{
+    width: 40%;
+    height: 12rem;
+}
+.orderCard .orderDetails{
+    width: 60%;
+    margin: 0 1rem;
+}
+.orderCard .orderDetails h5{
+    color: rgba(54, 53, 53, 0.82);
+
+}
+
 {%endblock css%}
 
 {%block title%}
@@ -166,9 +187,45 @@ height:auto;
         </div>
 
         <div class="container d-flex flex-column align-items-center order {% if not activeOrder %} visually-hidden{% endif %}" id="order"  style="min-height:80vh;">
-            
-            {% comment %} orderpage code  {% endcomment %}
+        {% comment %} <h2 class="align-self-start">My Orders</h2> {% endcomment %}
 
+        {% if orders%}
+            {% for i in orders %}
+                {% comment %} orderpage code  {% endcomment %}
+                <div class=" orderCard flex-row">
+                    <div class="orderImg">
+                        <img src="/media/{{i.project.default_image}}" alt="" srcset="" style="width:100%; height:100%;">
+                    </div>
+                    <div class="orderDetails">
+                        <div>
+                            <h5>{{i.project.title}}
+                                {% if i.project.short_Desc %}
+                                    <span> (
+                                        {{i.project.short_Desc}} )
+                                    </span>
+                                {% endif %}
+                            </h5>
+                        </div>
+                        <div>
+                            <p class=" mt-3 mb-0" id="buyDate">Purchased on </p>
+                            <p class="mb-0" style="font-size:.75rem;">Order id : <em>OD{{i.cart_id}}</em></p>
+                            <p class="mb-2" style="font-size:.75rem;">Transaction id : <em>jggjkjh</em></p>
+                            <h6 class="price fs-5">₹ {{i.project.price}}</h6>
+                        </div>
+                        <div class="btns mt-4">
+                            <a href="/projects/{{i.project.proj_id}}" class="btn btn-outline-dark mx-1 px-4">View</a>
+                            <a href="" class="btn btn-warning mx-1 px-4">Download</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="d-flex  flex-column justify-content-center align-items-center h-100">
+                <h5>Your order list is empty!☹</h5>
+                <p>Explore our wide collection of projects and find something you need😀</p>
+                <a href="/projects/" class="btn btn-outline-dark">Find projects</a>
+            </div>
+        {% endif %}
         </div>
     </div>
 
