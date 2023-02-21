@@ -1,12 +1,13 @@
 from django.shortcuts import render,HttpResponse, redirect
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from django.http import JsonResponse
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
+from django.http import JsonResponse, Http404
 from user.form import ImageForm
 from django.db.models import Q
 
 from user.models import Project,Proj_image,Cart,Order,User_detail
+
 
 def cartCount(user_id):
     cart= Cart.objects.filter(user_id = user_id)
@@ -210,3 +211,12 @@ def removeFromCart(request , cart_id):
         return redirect("/cart/")
     else:
         return redirect("/")
+    
+
+def download(request):
+    if request.user.is_authenticated and request.method=="POST":
+        order_id=request.POST.get("ord_id")
+        print(order_id)
+        order=Order.objects.get(order_id=order_id, user_id= request.user.id)
+        return HttpResponse("njhfkjdhfh")
+     

@@ -12,7 +12,7 @@ color:#2874f0;
 }
 
 
-#removeItemBtn:hover{
+.removeItemBtn:hover{
 color:#2874f0;
 cursor: pointer;
 }
@@ -26,73 +26,67 @@ cursor: pointer;
     <div class="col-8 cartItems mb-4">
       {% if cart %}
         {% for i in cart %}
-          <div class="card-pro">
-            <div class="photo">
-              <a href="/projects/{{i.project.proj_id}}"><img src="/media/{{i.project.default_image}}"
-                  onclick="redirectHandlerProject()"
-                  style="width: 100%; height: 100%; border-radius: 10px; cursor:pointer;"></a>
-            </div>
-            <div class="description">
-              <div>
-                <div id="titleDiv">
-                  <h5><a href="/projects/{{i.project.proj_id}}">{{i.project.title}} {% if i.project.short_Desc %}<span> (
-                        {{i.project.short_Desc}} )</span>{% endif %}</a></h5>
-                </div>
-                <p>{{i.project.full_Desc|title | truncatechars:150}}</p>
-
-                {% comment %} <h4>Popular House Plant</h4> {% endcomment %}
-                <h1 class="mb-4 p-0">
-                  {% if i.project.free %}
-                    <span class="fw-semibold fs-5">Free</span>
-                    <span class="text-decoration-line-through"> {{i.project.price}}0</span>
-                    <input type="hidden" id="price" value="0" />
-                  {% elif i.project.discounted_price %}
-                    <span class="fw-semibold fs-5">₹ {{i.project.discounted_price}}0</span>
-                    <span class="text-decoration-line-through"> {{i.project.price}}0</span>
-                    <input type="hidden" id="price" value="{{i.discounted_price}}" />
-                  {%else%}
-                    <span class="fw-semibold fs-5"> ₹ {{i.project.price}}0</span>
-                    <input type="hidden" id="price" value="{{i.price}}" />
-                  {%endif%}
-
-                </h1>
-
+        <div class="card-pro">
+          <div class="photo">
+            <a href="/projects/{{i.project.proj_id}}"><img src="/media/{{i.project.default_image}}"
+                style="width: 100%; height: 100%; border-radius: 10px; cursor:pointer;"></a>
+          </div>
+          <div class="description">
+            <div>
+              <div id="titleDiv">
+                <h5><a href="/projects/{{i.project.proj_id}}">{{i.project.title}} {% if i.project.short_Desc %}<span> ( {{i.project.short_Desc}} )</span>{% endif %}</a></h5>
               </div>
-              <div class="card-footer mx-3">
+              <p>{{i.project.full_Desc|title | truncatechars:150}}</p>
 
-                <!-- Button trigger modal -->
-                <a class="fw-semibold" data-bs-toggle="modal" data-bs-target="#removeItemModal"
-                  id="removeItemBtn">REMOVE</a>
+              {% comment %} <h4>Popular House Plant</h4> {% endcomment %}
+              <h1 class="mb-4 p-0">
+                {% if i.project.free %}
+                <span class="fw-semibold fs-5">Free</span>
+                <span class="text-decoration-line-through"> {{i.project.price}}0</span>
+                <input type="hidden" id="price" value="0" />
+                {% elif i.project.discounted_price %}
+                <span class="fw-semibold fs-5">₹ {{i.project.discounted_price}}0</span>
+                <span class="text-decoration-line-through"> {{i.project.price}}0</span>
+                <input type="hidden" id="price" value="{{i.discounted_price}}" />
+                {%else%}
+                <span class="fw-semibold fs-5"> ₹ {{i.project.price}}0</span>
+                <input type="hidden" id="price" value="{{i.price}}" />
+                {%endif%}
 
+              </h1>
 
-                <!-- Modal -->
-                <div class="modal fade" id="removeItemModal" tabindex="-1" aria-labelledby="removeItemModalLabel"
-                  aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h1 class="modal-title fs-5 fw-semibold" id="removeItemModalLabel">Remove Item</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                        Are you sure you want to remove this item from your cart?
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-dark px-4" data-bs-dismiss="modal">Cancle</button>
-                        <a href="/remove/{{i.cart_id}}"><button type="button"
-                            class="btn btn-outline-success px-4">Remove</button></a>
-                      </div>
+            </div>
+            <div class="card-footer mx-3">
+
+              <!-- Button trigger modal -->
+              <a class="fw-semibold removeItemBtn" data-bs-toggle="modal" data-bs-target="#removeItemModal{{i.cart_id}}" id="removeItemBtn{{i.cart_id}}">REMOVE</a>
+
+              <!-- Modal -->
+              <div class="modal fade" id="removeItemModal{{i.cart_id}}" tabindex="-1" aria-labelledby="removeItemModal{{i.cart_id}}Label"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5 fw-semibold" id="removeItemModalLabel">Remove Item</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      Are you sure you want to remove this item from your cart?
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-outline-dark px-4" data-bs-dismiss="modal">Cancle</button>
+                      <a href="/remove/{{i.cart_id}}">
+                      <button type="button" class="btn btn-outline-success px-4 removeItem"  id="{{i.cart_id}}">Remove</button></a>
                     </div>
                   </div>
                 </div>
-
-
-
-
               </div>
+
             </div>
           </div>
+        </div>
         {% endfor %}
+
         <div class="d-flex align-items-center justify-content-end p-4">
           <button type="button" class=" btnDesign2 mx-5">
             Checkout
@@ -106,7 +100,7 @@ cursor: pointer;
         </div>
       {% endif %}
     </div>
-    <div class="col-4" style="font-family: ;">
+    <div class="col-4" style="">
       <div class="card mb-4 text-center">
         <div class="card-header py-3">
           <h5 class="mb-0">Summary</h5>
