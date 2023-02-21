@@ -94,3 +94,24 @@ a{
     border: 2px solid #ce6565;
     /* border: none; */
 }
+
+
+.btnDesign2 {
+    padding: 5px 30px;
+    margin: 2px;
+    font-size: 1.3rem;
+    border-radius: 2px;
+    font-weight: 500;
+    /* border: 2px solid #137ae1; */
+    border: 2px solid #cb148ba8;
+    color: #c81812a8;
+    background-color:white;
+
+}
+.btnDesign2:hover{
+    transition: .3s ease-in-out;
+    border: 2px solid #cb148ba8;
+    /* background: linear-gradient(100deg , #cb148ba8 ,#8912e48c,) ; */
+    background: #c81812a8 ;
+    color: #e7efef;
+}
