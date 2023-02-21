@@ -4,7 +4,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.http import JsonResponse
 from user.form import ImageForm
-
 from django.db.models import Q
 
 from user.models import Project,Proj_image,Cart,Order,User_detail
@@ -120,9 +119,10 @@ def profile(request):
 def order(request):
     if request.user.is_authenticated:
         user_id= request.user.id
-        account= User_detail.objects.get(user_id= user_id)
-        orders= Cart.objects.filter(user_id= user_id).order_by('-cart_id')
+        # print(user_id)
         
+        account= User_detail.objects.get(user_id= user_id)
+        orders= Order.objects.filter(user_id= user_id).order_by('-order_id')
         params={'User_detail' : account, "activeOrder" : "activeOrder", "orders": orders, "cartCount": cartCount(request.user.id)}
         return render(request, "user/profile.html", params)
     else:

@@ -1,4 +1,5 @@
 from django.db import models
+import datetime
 
 # Create your models here.
 
@@ -81,7 +82,7 @@ class Order(models.Model):
     user_id= models.IntegerField()
     price = models.FloatField()
     transaction_id= models.CharField(max_length=300)
-    order_time = models.DateTimeField(auto_now_add=True)
+    order_time = models.DateTimeField(default=datetime.datetime.now())
     
 class User_detail(models.Model):
     id=models.BigAutoField(primary_key=True)
