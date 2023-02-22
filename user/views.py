@@ -26,7 +26,7 @@ def projects(request):
 
 def projView(request, proj_id):
     project= Project.objects.get(proj_id = proj_id)
-    images=Proj_image.objects.filter(proj_id=proj_id)
+    images=Proj_image.objects.filter(project=proj_id)
     params={'project': project, "cartCount": cartCount(request.user.id), "images":images}
     return render(request, 'user/projView.html' , params)
 

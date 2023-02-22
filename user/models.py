@@ -64,8 +64,8 @@ class Project(models.Model):
     
 class Proj_image(models.Model):
     id= models.BigAutoField(primary_key=True)
-    image= models.ImageField(upload_to="Project_Image/")
-    proj_id = models.ForeignKey( Project, on_delete=models.CASCADE)
+    image_url= models.ImageField(upload_to="Project_Image/")
+    project = models.ForeignKey( Project, on_delete=models.CASCADE)
 
     # def __str__(self):
     #     return self.id
