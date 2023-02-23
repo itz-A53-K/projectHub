@@ -27,7 +27,10 @@ def projects(request):
 def projView(request, proj_id):
     project= Project.objects.get(proj_id = proj_id)
     images=Proj_image.objects.filter(project=proj_id)
-    params={'project': project, "cartCount": cartCount(request.user.id), "images":images}
+    itemInCart=False
+    itemInCart= Cart.objects.filter(project= proj_id, user_id=request.user.id).exists()
+    
+    params={'project': project, "cartCount": cartCount(request.user.id), "images":images, "itemInCart":itemInCart}
     return render(request, 'user/projView.html' , params)
 
 def handleLogin(request):
@@ -138,15 +141,10 @@ def handleAddToCart(request, proj_id):
             
             user_id= request.user.id
             
-            itemInCart= Cart.objects.filter(project= proj, user_id=user_id)
-            if not itemInCart.count() is 0:
-                return JsonResponse({'success': True,
-                         'msg': "Unable to add! Item already in cart.", "tag": "danger"
-                         , "cartCount": cartCount(request.user.id)})
-            else:
-                cart= Cart.objects.create(project = proj,user_id = user_id)
-                cart.save()
-                return JsonResponse({'success': True,
+           
+            cart= Cart.objects.create(project = proj,user_id = user_id)
+            cart.save()
+            return JsonResponse({'success': True,
                          'msg': "Item added to cart successfully.", "tag": "success"
                          , "cartCount": cartCount(request.user.id)})
             # messages.success(request, "1 Item added to cart successfully.")

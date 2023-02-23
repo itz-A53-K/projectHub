@@ -1,13 +1,206 @@
 {% extends 'user/basic.html' %}
 {%block title%}Project-Hub {%endblock%}
+{%block css%}
+.btnDesign2{
+    background-color:#a11b1bd6;
+    border: 2px solid #a11b1bd6;
+    color: aliceblue;
+    transition: 0s;
+}
+.imagesDiv{
+    border: 1px solid rgb(183, 181, 181);
+    padding: 5px;
+    width:fit-content;
+    display:flex;
+}
+#mainImg{
+    margin: 0 10px;
+    height:60vh;
+    width:50rem;
+    object-fit: fill;
+}
+
+.allImg {
+    display:flex;
+    flex-direction:column;
+    height:fit-content;
+    height:95%;
+    overflow-y: scroll;
+    margin: 10px;
+}
+.allImg img{
+    cursor:pointer;
+    height:8vh;
+    width: 8vh;
+    margin: 10px;
+}
+.bord2px{
+    border: 2px solid rgb(24, 87, 215);
+}
+.card-price{
+    width:25%;
+    margin: 5px 10px;
+}
+
+.card-price .card-priceDiv{
+    width:19rem;
+    padding:5px;
+    border: 1px solid rgb(116, 114, 114);
+    top:10vh;
+}
+
+a{
+    color: rgba(var(--bs-link-color-rgb),var(--bs-link-opacity,1));
+    text-decoration: underline;
+}
+{%endblock css%}
+
 
 {% block body %}
-    {{project.title}}<br>
+    {% comment %} <br>
     {{project.short_Desc}} 
 
-    {% for img in images %}
-        <img src="/media/{{img.image_url}}" alt="" srcset="">
+    {% endcomment %}
+<div class="py-2">
+    <div class="container d-flex  py-3 " style="background:var(--dk-gray-100)" >
+        <div class="projBody m-1 w-75" >
+            <div class="imagesDiv m-1" >
+                <div class="allImg ">
+                    {% for img in images %}
+                        <img class="projImg" src="/media/{{img.image_url}}" alt="" srcset="">
+                    {% endfor %}   
+                </div>
+                <div class="mainImgDiv">
+                    <img id="mainImg" src="/media/{{images.0.image_url}}" alt="" srcset="">
+                </div>
+            </div>
+            <div class="descBody m-3">
+                <section aria-label="breadcrumb" style="font-size:15px;">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/projects/">Projects</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{project.title| truncatechars:150}}</li>
+                    </ol>
+                </section>
+                <div class="title">
+                    <h5> {{project.title}}{% if project.short_Desc %}<span> ( {{project.short_Desc}} )</span>{% endif %}</h5>
+                </div>
+                <div class=" my-3">
+                
+                    <h4 >{% if  project.free %}
+                        <span class="fw-semibold fs-5">Free</span>
+                        <span class="text-decoration-line-through"> {{project.price}}0</span>
+                        <input type="hidden" id="price" value="0"/>
+                    {% elif project.discounted_price %}
+                        <span class="fw-semibold fs-5">₹ {{project.discounted_price}}0</span> 
+                        <span class="text-decoration-line-through"> {{project.price}}0</span>
+                        <input type="hidden" id="price" value="{{project.discounted_price}}"/>
+                    {%else%}
+                        <span class="fw-semibold fs-5"> ₹ {{project.price}}0</span>
+                        <input type="hidden" id="price" value="{{project.price}}"/>
+                    {%endif%}</h4>
+                </div>
+                <div>
+                    <h5 class="my-3 ">Category: <em class="fs-6">{{project.category}}</em> </h5>
+                </div>
+                <div>
+                    <h5 class="my-3 ">Languages Used: <em class="fs-6">{{project.used_language}}</em> </h5>
+                </div>
+                <div>
+                    <p class="my-3 ">Date of publish: <em class="fs-6">{{project.publish_date| truncatechars:12}}</em> </p>
+                </div>
+                <div class="descDiv my-2" id="descDiv">
+                    <h4>About this project </h4>
+                    <p class="d-none mx-1" id="more">{{project.full_Desc|title }} <span class="btn btn-outline-dark" id="hidebtn">Show less</span></p>
+                    <p class=" mx-1" id="less">{{project.full_Desc|title | truncatechars:550}} 
+                        {% if  project.full_Desc|length > 550 %}<span class="btn btn-outline-dark" id="showbtn">Show more</span></p>{% endif %}
+                </div>
+                <div class="d-grid gap-2 d-md-block my-3">
+                    {% if itemInCart %}
+                        <button class="btn btn-warning py-2 mx-3 my-1" >Go to cart</button>
+                    {% else %}
+                        <button class="btn btnDesign2 mx-3 my-1" >Add to cart</button>
+                    {% endif %}
+                    <button class="btn btnDesign3 mx-3 my-1">Buy now</button><br>
+                </div>
+            </div>
+        </div>
+        <div class="card-price mx-3 my-3 py-2" style="background:var(--dk-gray-100); ">
+            <div class="sticky-top card-priceDiv" >
+                
+                <div class="price m-3">
+                
+                    <h4 >{% if  project.free %}
+                        <span class="fw-semibold fs-5">Free</span>
+                        <span class="text-decoration-line-through"> {{project.price}}0</span>
+                        <input type="hidden" id="price" value="0"/>
+                    {% elif project.discounted_price %}
+                        <span class="fw-semibold fs-5">₹ {{project.discounted_price}}0</span> 
+                        <span class="text-decoration-line-through"> {{project.price}}0</span>
+                        <input type="hidden" id="price" value="{{project.discounted_price}}"/>
+                    {%else%}
+                        <span class="fw-semibold fs-5"> ₹ {{project.price}}0</span>
+                        <input type="hidden" id="price" value="{{project.price}}"/>
+                    {%endif%}</h4>
+                </div>
+                
+                <div class="d-grid gap-2 mx-auto ">
+                    {% if itemInCart %}
+                        <button class="btn btn-warning py-2 mx-3 my-1" >Go to cart</button>
+                    {% else %}
+                        <button class="btn btnDesign2 mx-3 my-1" >Add to cart</button>
+                    {% endif %}
+                    <button class="btn btnDesign3 mx-3 my-1">Buy now</button>
+                </div>
+                <div >
+                    <p class="text-center mb-0">Full Lifetime Access</p>
+                </div>
+            </div>
+        </div>
        
-    {% endfor %}
+        
+    </div>
+</div>
+
+<div class="container py-2" style="background:var(--dk-gray-100)">
+    <h4 class="my-2">Similar Projects</h4>
+    <div class="container">
+       um cum repellat voluptatem non placeat similique magni dicta ab veniam minus porro distinctio expedita aspernatur consequuntur quia pariatur doloribus vero est ipsam asperiores possimus dolorum! Eius ducimus autem debitis totam? Mollitia eaque iste illum consectetur debitis, vero quam tempora dicta qui dolores dignissimos corrupti laborum eveniet sapiente ducimus in consequuntur aliquam beatae expedita praesentium explicabo facere aperiam! Sunt esse facere corrupti exercitationem omnis at architecto magnam recusandae, ut facilis vel dolor praesentium commodi vero illo! Inventore aliquid eligendi, commodi id, eos laudantium molestiae odit vitae esse vel maiores! Voluptatem deleniti minima beatae nesciunt quis! Fugiat quibusdam tempora odio numquam cumque obcaecati, dicta debitis autem architecto veritatis eaque earum perferendis, reiciendis cum tempore laboriosam. Voluptate, voluptatum. Totam, laudantium vel id sed accusamus, fuga consectetur commodi enim possimus est reiciendis voluptatem hic sequi dolorum tempore exercitationem corporis! Nesciunt culpa iusto accusamus odio veritatis eos!
+        uyukiug Lorem ipsum dolor sit amet consectetur, adipisicing elit. Deserunt eaque sunt minima qui numquam laudantium quaerat assumenda aliquam eius temporibus, laboriosam sint quos rem, debitis nesciunt exercitationem ut, nostrum ullam molestias accusamus reprehenderit! Unde, minima! Quis ea aperiam dicta quibusdam maxime magni, saepe dignissimos tempore ducimus doloremque esse, explicabo architecto vel suscipit deserunt, doloribus dolorem eos accusamus aliquid ab. Laudantium officiis quidem nihil itaque explicabo, facilis saepe ipsum ducimus sint libero cumque fuga commodi vero? m quas. Quibusdam ab voluptatum sequi impedit neque? Natus culpa doloremque iste minima praesentium debitis voluptatum illum quidem aliquam omnis consequatur maxime neque incidunt fugit enim quibusdam, itaque rerum suscipit? Necessitatibus molestiae doloribus possimus ad aperiam sed, voluptatum illum eos eligendi totam. Libero, repellendus deserunt suscipit a debitis quisquam eum. Porro quasi minima dolores ut autem incidunt ipsam nisi ratione accusantium, earum quae eum atque neque aut nulla. Eius, est unde vel aut, accusamus laboriosam recusandae facilis dolore alias quia iure minus atque asperiores sed tempora sint explicabo adipisci ab. Illo?
+    </div>
+</div>
+    
     
 {% endblock body %}
+
+{% block JS %}
+<script>
+    projImg= document.querySelectorAll(".projImg")
+    projImg[0].classList.add("bord2px")
+    
+    projImg.forEach(img => {
+        img.addEventListener('click', function () {
+        document.getElementById("mainImg").src=img.src
+        classRemove()
+        img.classList.add("bord2px")
+
+        });
+    });
+    function classRemove(){
+        projImg.forEach(i =>{
+            i.classList.remove("bord2px")
+        })
+    }
+
+    document.getElementById("hidebtn").addEventListener('click',function () {
+        document.getElementById('more').classList.add("d-none")
+        document.getElementById('less').classList.remove("d-none")
+    })
+    document.getElementById("showbtn").addEventListener('click',function () {
+    document.getElementById('less').classList.add("d-none")
+    document.getElementById('more').classList.remove("d-none")
+    
+       
+    })
+</script>
+{% endblock JS %}

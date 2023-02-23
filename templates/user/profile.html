@@ -104,7 +104,7 @@ height:auto;
     </div>
     <div class=" w-75 p-4 card ">
         
-        <div class="container d-flex flex-column align-items-center profile_info {% if not activeProfile %} visually-hidden{% endif %}" id="profile_info">
+        <div class="container d-flex flex-column align-items-center profile_info {% if not activeProfile %} d-none{% endif %}" id="profile_info">
             <!-- <div>
                     <h4>Persional Information</h4>
                     <span>Edit</span>
@@ -186,7 +186,7 @@ height:auto;
             </div>
         </div>
 
-        <div class="container d-flex flex-column align-items-center order {% if not activeOrder %} visually-hidden{% endif %}" id="order"  style="min-height:80vh;">
+        <div class="container d-flex flex-column align-items-center order {% if not activeOrder %} d-none{% endif %}" id="order"  style="min-height:80vh;">
         {% comment %} <h2 class="align-self-start">My Orders</h2> {% endcomment %}
 
         {% if orders%}

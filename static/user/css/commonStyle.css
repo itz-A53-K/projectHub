@@ -1,3 +1,28 @@
+@import 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet';
+
+:root {
+	--dk-gray-100: #F3F4F6;
+	--dk-gray-200: #E5E7EB;
+	--dk-gray-300: #D1D5DB;
+	--dk-gray-400: #9CA3AF;
+	--dk-gray-500: #6B7280;
+	--dk-gray-600: #4B5563;
+	--dk-gray-700: #374151;
+	--dk-gray-800: #1F2937;
+	--dk-gray-900: #111827;
+	--dk-dark-bg: #313348;
+	--dk-darker-bg: #2a2b3d;
+	--navbar-bg-color: #6f6486;
+	--sidebar-bg-color: #252636;
+	--sidebar-width: 250px;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
 body {
     background: linear-gradient(45deg, #fbda61, #ff5acd);
     scroll-behavior: smooth;
@@ -106,12 +131,32 @@ a{
     border: 2px solid #cb148ba8;
     color: #c81812a8;
     background-color:white;
+    transition: .3s ease-in-out;
 
 }
 .btnDesign2:hover{
-    transition: .3s ease-in-out;
     border: 2px solid #cb148ba8;
     /* background: linear-gradient(100deg , #cb148ba8 ,#8912e48c,) ; */
     background: #c81812a8 ;
+    color: #e7efef;
+}
+
+.btnDesign3 {
+    padding: 5px 30px;
+    margin: 2px;
+    font-size: 1.3rem;
+    border-radius: 2px;
+    font-weight: 500;
+    /* border: 2px solid #137ae1; */
+    border: 2px solid #1a1a1a;
+    color: #1a1a1a;
+    background-color:white;
+
+}
+.btnDesign3:hover{
+    transition: .3s ease-in-out;
+    border: 2px solid #1a1a1a;
+    /* background: linear-gradient(100deg , #cb148ba8 ,#8912e48c,) ; */
+    background: #1a1a1a ;
     color: #e7efef;
 }

@@ -6,34 +6,68 @@
 {%endblock%}
 
 {%block body%}
-<div class="container">
+    <div class="container">
 
-    <div id="alert-section" class="fixed-top w-100 fw-semibold" style="top:9.5vh;"></div> {% comment %} Alert Message Dialog{% endcomment %}
-    <div class="project-card-placeholder">
-        {% if src  %}
-            {% if srcResult.count is 0 %}
-                <div class="column m-4" style="color:black;">
-                    <h2>No results found for : {{src_query}}</h2>
-                    <h4>Suggestions:</h4>
-                    <ul>
-                        <li class="fw-semibold">Make sure that all words are spelled correctly.</li>
-                        <li class="fw-semibold">Try different keywords.</li>
-                        <li class="fw-semibold">Try more general keywords.</li>
-                    </ul>
-                    <a href="/" class=" btn btn-outline-dark"><b>Go to home</b></a>
-                </div>
+        <div id="alert-section" class="fixed-top w-100 fw-semibold" style="top:9.5vh;"></div> {% comment %} Alert Message Dialog{% endcomment %}
+        <div class="project-card-placeholder">
+            {% if src  %}
+                {% if srcResult.count is 0 %}
+                    <div class="column m-4" style="color:black;">
+                        <h2>No results found for : {{src_query}}</h2>
+                        <h4>Suggestions:</h4>
+                        <ul>
+                            <li class="fw-semibold">Make sure that all words are spelled correctly.</li>
+                            <li class="fw-semibold">Try different keywords.</li>
+                            <li class="fw-semibold">Try more general keywords.</li>
+                        </ul>
+                        <a href="/" class=" btn btn-outline-dark"><b>Go to home</b></a>
+                    </div>
+                {% else %}
+                <h2 class="">Search results for : <em>{{src_query}}</em></h2><br>
+                    {% for i in srcResult %}
+                        <div class="card-pro">
+                                <div class="photo">
+                                    <a href="/projects/{{i.proj_id}}"><img src="/media/{{i.default_image}}" alt="{{i.title}} Image" style="width: 100%; height: 100%; border-radius: 10px; cursor:pointer;" ></a>
+                                </div>
+                                <div class="description">
+                                    <div>
+                                        <h2>{{i.title}} {% if i.short_Desc %}<span> ( {{i.short_Desc}} )</span>{% endif %}</h2>
+                                        <p>{{i.full_Desc|title | truncatechars:150}}</p>
+                                        <h1 >{% if  i.free %}
+                                            <span class="fw-semibold fs-5">Free</span>
+                                            <span class="text-decoration-line-through"> {{i.price}}0</span>
+                                            <input type="hidden" id="price" value="0"/>
+                                        {% elif i.discounted_price %}
+                                            <span class="fw-semibold fs-5">₹ {{i.discounted_price}}0</span> 
+                                            <span class="text-decoration-line-through"> {{i.price}}0</span>
+                                            <input type="hidden" id="price" value="{{i.discounted_price}}"/>
+                                        {%else%}
+                                            <span class="fw-semibold fs-5"> ₹ {{i.price}}0</span>
+                                            <input type="hidden" id="price" value="{{i.price}}"/>
+                                        {%endif%}</h1>
+                                        
+
+                                    </div>
+                                    <div class="card-footer">
+                                        <input type="hidden" id="pro_id" value=""/>
+                                        <button onclick="addToCart({{i.proj_id}})">Add to Cart</button>
+                                        <a href="/projects/{{i.proj_id}}"><button >View</button></a>
+                                    </div>
+                                </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
             {% else %}
-            <h2 class="">Search results for : <em>{{src_query}}</em></h2><br>
-                {% for i in srcResult %}
+                {% for i in proj %}
                     <div class="card-pro">
                             <div class="photo">
-                                <a href="/projects/{{i.proj_id}}"><img src="/media/{{i.default_image}}" onclick="redirectHandlerProject()" style="width: 100%; height: 100%; border-radius: 10px; cursor:pointer;" ></a>
+                                <a href="/projects/{{i.proj_id}}"><img src="/media/{{i.default_image}}" alt="{{i.title}} Image" style="width: 100%; height: 100%; border-radius: 10px; cursor:pointer;" ></a>
                             </div>
-                            <div class="description">
+                            <div class="description pt-0">
                                 <div>
                                     <h2>{{i.title}} {% if i.short_Desc %}<span> ( {{i.short_Desc}} )</span>{% endif %}</h2>
-                                    {% comment %} <h4>Popular House Plant</h4> {% endcomment %}
-                                    <h1 >{% if  i.free %}
+                                    <p>{{i.full_Desc|title | truncatechars:150}}</p>
+                                    <h1 class="pt-0">{% if  i.free %}
                                         <span class="fw-semibold fs-5">Free</span>
                                         <span class="text-decoration-line-through"> {{i.price}}0</span>
                                         <input type="hidden" id="price" value="0"/>
@@ -45,53 +79,22 @@
                                         <span class="fw-semibold fs-5"> ₹ {{i.price}}0</span>
                                         <input type="hidden" id="price" value="{{i.price}}"/>
                                     {%endif%}</h1>
-                                    <p>{{i.full_Desc|title | truncatechars:150}}</p>
-
+                                
                                 </div>
-                                <div class="card-footer">
-                                    <input type="hidden" id="pro_id" value=""/>
-                                    <button onclick="addToCart({{i.proj_id}})">Add to Cart</button>
+                                <div class="card-footer mt-3">
+                                    <input type="hidden" id="pro_id" value="{{i.proj_id}}"/>
+                                        {% comment %} <button class" btn btn-outline-warning" id="{{i.proj_id}}">Go to cart</button> {% endcomment %}
+                                        <button onclick="addToCart({{i.proj_id}})" id="{{i.proj_id}}">Add to Cart</button>
                                     <a href="/projects/{{i.proj_id}}"><button >View</button></a>
                                 </div>
                             </div>
                     </div>
                 {% endfor %}
             {% endif %}
-        {% else %}
-            {% for i in proj %}
-                <div class="card-pro">
-                        <div class="photo">
-                            <a href="/projects/{{i.proj_id}}"><img src="/media/{{i.default_image}}" onclick="redirectHandlerProject()" style="width: 100%; height: 100%; border-radius: 10px; cursor:pointer;" ></a>
-                        </div>
-                        <div class="description pt-0">
-                            <div>
-                                <h2>{{i.title}} {% if i.short_Desc %}<span> ( {{i.short_Desc}} )</span>{% endif %}</h2>
-                                {% comment %} <h4>Popular House Plant</h4> {% endcomment %}
-                                <h1 class="">{% if  i.free %}
-                                    <span class="fw-semibold fs-5">Free</span>
-                                    <span class="text-decoration-line-through"> {{i.price}}0</span>
-                                    <input type="hidden" id="price" value="0"/>
-                                {% elif i.discounted_price %}
-                                    <span class="fw-semibold fs-5">₹ {{i.discounted_price}}0</span> 
-                                    <span class="text-decoration-line-through"> {{i.price}}0</span>
-                                    <input type="hidden" id="price" value="{{i.discounted_price}}"/>
-                                {%else%}
-                                    <span class="fw-semibold fs-5"> ₹ {{i.price}}0</span>
-                                    <input type="hidden" id="price" value="{{i.price}}"/>
-                                {%endif%}</h1>
-                               <p>{{i.full_Desc|title | truncatechars:150}}</p>
-                            </div>
-                            <div class="card-footer">
-                                <input type="hidden" id="pro_id" value="{{i.proj_id}}"/>
-                                <button onclick="addToCart({{i.proj_id}})" id="{{i.proj_id}}">Add to Cart</button>
-                                <a href="/projects/{{i.proj_id}}"><button >View</button></a>
-                            </div>
-                        </div>
-                </div>
-            {% endfor %}
-        {% endif %}
+        </div>
     </div>
-</div>
+
+{%endblock body%}
 
 {%block JS%}
 <script>
@@ -130,6 +133,4 @@
         document.getElementById("alert-section").innerHTML ="";
       }
 </script>
-{%endblock%}
-
-{%endblock%}
+{%endblock JS%}
