@@ -21,6 +21,15 @@ cursor: pointer;
 
 {%block body%}
 
+{% if messages %}
+  {% for message in messages %}
+    <div {%if message.tags%}class="alert m-auto fixed-bottom mb-1 border-{{ message.tags }} alert-dismissible fade show alert-{{ message.tags }} myAlert"{%endif%} role="alert" style="width:fit-content;bottom:10vh;">
+      <b>{{ message}}</b>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+{% endif %}
+
 <div class="container">
   <div class="row pt-4">
     <div class="col-8 cartItems mb-4">

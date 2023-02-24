@@ -57,21 +57,29 @@ a{
 
 
 {% block body %}
-    {% comment %} <br>
-    {{project.short_Desc}} 
+{% if messages %}
+  {% for message in messages %}
+    <div {%if message.tags%}class="alert m-auto fixed-bottom mb-1 border-{{ message.tags }} alert-dismissible fade show alert-{{ message.tags }} myAlert"{%endif%} role="alert" style="width:fit-content;bottom:10vh;">
+      <b>{{ message}}</b>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+{% endif %} 
 
-    {% endcomment %}
+{% comment %} <div id="alert-section" class="fixed-bottom m-auto fw-semibold" style="bottom:10vh;width:fit-content;"></div>  {% endcomment %}
+
 <div class="py-2">
     <div class="container d-flex  py-3 " style="background:var(--dk-gray-100)" >
         <div class="projBody m-1 w-75" >
             <div class="imagesDiv m-1" >
                 <div class="allImg ">
+                    <img class="projImg" src="/media/{{project.default_image}}" alt="" srcset="">
                     {% for img in images %}
                         <img class="projImg" src="/media/{{img.image_url}}" alt="" srcset="">
                     {% endfor %}   
                 </div>
                 <div class="mainImgDiv">
-                    <img id="mainImg" src="/media/{{images.0.image_url}}" alt="" srcset="">
+                    <img id="mainImg" src="/media/{{project.default_image}}" alt="" srcset="">
                 </div>
             </div>
             <div class="descBody m-3">
@@ -117,9 +125,9 @@ a{
                 </div>
                 <div class="d-grid gap-2 d-md-block my-3">
                     {% if itemInCart %}
-                        <button class="btn btn-warning py-2 mx-3 my-1" >Go to cart</button>
+                        <a href="/cart/" class="btn btn-warning py-2 mx-3 my-1 px-5" >Go to cart</a>
                     {% else %}
-                        <button class="btn btnDesign2 mx-3 my-1" >Add to cart</button>
+                        <button class="btn btnDesign2 mx-3 my-1 addToCart">Add to cart</button>
                     {% endif %}
                     <button class="btn btnDesign3 mx-3 my-1">Buy now</button><br>
                 </div>
@@ -146,11 +154,12 @@ a{
                 
                 <div class="d-grid gap-2 mx-auto ">
                     {% if itemInCart %}
-                        <button class="btn btn-warning py-2 mx-3 my-1" >Go to cart</button>
+                        <a href="/cart/"  class="btn btn-warning py-2 mx-3 my-1" >Go to cart</a>
                     {% else %}
-                        <button class="btn btnDesign2 mx-3 my-1" >Add to cart</button>
+                        <button class="btn btnDesign2 mx-3 my-1 addToCart">Add to cart</button>
                     {% endif %}
                     <button class="btn btnDesign3 mx-3 my-1">Buy now</button>
+                    <input type="hidden" id="projectId" name="projectId" value="{{project.proj_id}}">
                 </div>
                 <div >
                     <p class="text-center mb-0">Full Lifetime Access</p>
@@ -162,11 +171,10 @@ a{
     </div>
 </div>
 
-<div class="container py-2" style="background:var(--dk-gray-100)">
+<div class="container py-2 my-3" style="background:var(--dk-gray-100)">
     <h4 class="my-2">Similar Projects</h4>
     <div class="container">
-       um cum repellat voluptatem non placeat similique magni dicta ab veniam minus porro distinctio expedita aspernatur consequuntur quia pariatur doloribus vero est ipsam asperiores possimus dolorum! Eius ducimus autem debitis totam? Mollitia eaque iste illum consectetur debitis, vero quam tempora dicta qui dolores dignissimos corrupti laborum eveniet sapiente ducimus in consequuntur aliquam beatae expedita praesentium explicabo facere aperiam! Sunt esse facere corrupti exercitationem omnis at architecto magnam recusandae, ut facilis vel dolor praesentium commodi vero illo! Inventore aliquid eligendi, commodi id, eos laudantium molestiae odit vitae esse vel maiores! Voluptatem deleniti minima beatae nesciunt quis! Fugiat quibusdam tempora odio numquam cumque obcaecati, dicta debitis autem architecto veritatis eaque earum perferendis, reiciendis cum tempore laboriosam. Voluptate, voluptatum. Totam, laudantium vel id sed accusamus, fuga consectetur commodi enim possimus est reiciendis voluptatem hic sequi dolorum tempore exercitationem corporis! Nesciunt culpa iusto accusamus odio veritatis eos!
-        uyukiug Lorem ipsum dolor sit amet consectetur, adipisicing elit. Deserunt eaque sunt minima qui numquam laudantium quaerat assumenda aliquam eius temporibus, laboriosam sint quos rem, debitis nesciunt exercitationem ut, nostrum ullam molestias accusamus reprehenderit! Unde, minima! Quis ea aperiam dicta quibusdam maxime magni, saepe dignissimos tempore ducimus doloremque esse, explicabo architecto vel suscipit deserunt, doloribus dolorem eos accusamus aliquid ab. Laudantium officiis quidem nihil itaque explicabo, facilis saepe ipsum ducimus sint libero cumque fuga commodi vero? m quas. Quibusdam ab voluptatum sequi impedit neque? Natus culpa doloremque iste minima praesentium debitis voluptatum illum quidem aliquam omnis consequatur maxime neque incidunt fugit enim quibusdam, itaque rerum suscipit? Necessitatibus molestiae doloribus possimus ad aperiam sed, voluptatum illum eos eligendi totam. Libero, repellendus deserunt suscipit a debitis quisquam eum. Porro quasi minima dolores ut autem incidunt ipsam nisi ratione accusantium, earum quae eum atque neque aut nulla. Eius, est unde vel aut, accusamus laboriosam recusandae facilis dolore alias quia iure minus atque asperiores sed tempora sint explicabo adipisci ab. Illo?
+       
     </div>
 </div>
     
@@ -203,4 +211,40 @@ a{
        
     })
 </script>
-{% endblock JS %}
+
+<script>
+    
+    const addToCart=document.querySelectorAll(".addToCart")
+    addToCart.forEach(btn =>{
+        btn.addEventListener('click', function () {
+            projectId=document.getElementById("projectId").value
+
+            let formData = new FormData();
+            formData.append("csrfmiddlewaretoken", "{{ csrf_token }}")
+            // Assining the price to post data, letter we need to encrypt this transmition
+
+            let postData = {
+                body: formData,
+                method: "post",
+            }
+            // Sending request to server
+            {% comment %} document.getElementById("alert-section").innerHTML ="" {% endcomment %}
+            fetch("/handleAddToCart/"+projectId, postData).then(res=>res.json()).then(data => {
+                
+                location.reload();
+                document.getElementById("cartCount").innerHTML= data.cartCount
+                
+                setTimeout(() => {
+                    document.getElementById("alert-section").innerHTML =""
+                }, 5000);
+  
+
+            });
+        
+        })
+    })
+    function removeAlert() {
+        document.getElementById("alert-section").innerHTML ="";
+      }
+</script>
+{%endblock JS%}

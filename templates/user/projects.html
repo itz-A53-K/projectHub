@@ -8,7 +8,7 @@
 {%block body%}
     <div class="container">
 
-        <div id="alert-section" class="fixed-top w-100 fw-semibold" style="top:9.5vh;"></div> {% comment %} Alert Message Dialog{% endcomment %}
+        {% comment %} <div id="alert-section" class="fixed-bottom m-auto fw-semibold" style="bottom:10vh;width:fit-content;"></div> Alert Message Dialog {% endcomment %}
         <div class="project-card-placeholder">
             {% if src  %}
                 {% if srcResult.count is 0 %}
@@ -33,7 +33,7 @@
                                     <div>
                                         <h2>{{i.title}} {% if i.short_Desc %}<span> ( {{i.short_Desc}} )</span>{% endif %}</h2>
                                         <p>{{i.full_Desc|title | truncatechars:150}}</p>
-                                        <h1 >{% if  i.free %}
+                                        <h1 class="pt-0">{% if  i.free %}
                                             <span class="fw-semibold fs-5">Free</span>
                                             <span class="text-decoration-line-through"> {{i.price}}0</span>
                                             <input type="hidden" id="price" value="0"/>
@@ -48,9 +48,8 @@
                                         
 
                                     </div>
-                                    <div class="card-footer">
-                                        <input type="hidden" id="pro_id" value=""/>
-                                        <button onclick="addToCart({{i.proj_id}})">Add to Cart</button>
+                                    <div class="card-footer mt-3">
+                                        <a ><button >Buy now</button></a>
                                         <a href="/projects/{{i.proj_id}}"><button >View</button></a>
                                     </div>
                                 </div>
@@ -82,9 +81,7 @@
                                 
                                 </div>
                                 <div class="card-footer mt-3">
-                                    <input type="hidden" id="pro_id" value="{{i.proj_id}}"/>
-                                        {% comment %} <button class" btn btn-outline-warning" id="{{i.proj_id}}">Go to cart</button> {% endcomment %}
-                                        <button onclick="addToCart({{i.proj_id}})" id="{{i.proj_id}}">Add to Cart</button>
+                                    <a ><button >Buy now</button></a>
                                     <a href="/projects/{{i.proj_id}}"><button >View</button></a>
                                 </div>
                             </div>
@@ -97,40 +94,5 @@
 {%endblock body%}
 
 {%block JS%}
-<script>
-    // Getting the button and listening to clicks
-    {% comment %} const addToCartBtn = document.getElementById("addCartHandler"); {% endcomment %}
 
-
-    function addToCart(projectId) {
-        // Creating post form data to update cart
-        let formData = new FormData();
-        formData.append("csrfmiddlewaretoken", "{{ csrf_token }}")
-        // Assining the price to post data, letter we need to encrypt this transmition
-
-        let postData = {
-            body: formData,
-            method: "post",
-        }
-        // Sending request to server
-        fetch("/handleAddToCart/"+projectId, postData).then(res=>res.json()).then(data => {
-           
-            document.getElementById("alert-section").innerHTML = `<div class="alert alert-${data.tag} alert-dismissible fade show" role="alert">
-                ${data.msg}
-                <button onclick="removeAlert()" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>`;
-            document.getElementById("cartCount").innerHTML= data.cartCount
-            
-            setTimeout(() => {
-                document.getElementById("alert-section").innerHTML =""
-            }, 5000);
-  
-
-        });
-    }
-    {% comment %} // /handleAddToCart/{{i.proj_id}} {% endcomment %}
-    function removeAlert() {
-        document.getElementById("alert-section").innerHTML ="";
-      }
-</script>
 {%endblock JS%}

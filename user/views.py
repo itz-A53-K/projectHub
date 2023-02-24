@@ -14,15 +14,20 @@ def cartCount(user_id):
     cart= cart.count()
     return cart
 
+
 def home(request):
     topProjs= Project.objects.all()[:2]
     params={'topProjs':topProjs, "cartCount": cartCount(request.user.id)}
     return render(request, 'user/index.html', params)
 
+
+
 def projects(request):
     proj= Project.objects.all()
     params={'proj': proj, "cartCount": cartCount(request.user.id)}
     return render(request, 'user/projects.html', params)
+
+
 
 def projView(request, proj_id):
     project= Project.objects.get(proj_id = proj_id)
@@ -33,6 +38,8 @@ def projView(request, proj_id):
     params={'project': project, "cartCount": cartCount(request.user.id), "images":images, "itemInCart":itemInCart}
     return render(request, 'user/projView.html' , params)
 
+
+
 def handleLogin(request):
     if request.method == "POST" :
        
@@ -40,7 +47,6 @@ def handleLogin(request):
         if form == "login" :
             email = request.POST.get('email','')
             password = request.POST.get('upass','')
-            print(email,password)
             user = authenticate(request, username=email, password=password)
 
             if user is not None:
@@ -49,16 +55,13 @@ def handleLogin(request):
                 return redirect('/')
                 
             else:
-                # print('Invalid username')
                 messages.error(request, "Error! Invalid username or password")
 
         elif form =="registration" :
-            # Database Insertion Here
             email_reg = request.POST.get('email_reg')
             password = request.POST.get('password')
             f_name = request.POST.get('f_name')
             l_name = request.POST.get('l_name')
-            # print(form)
 
             try:
                 user= User.objects.create_user(username=email_reg, email=email_reg, password=password)
@@ -66,7 +69,6 @@ def handleLogin(request):
                 user.last_name= l_name
                 user.save()
                 user=User.objects.get(username=email_reg)
-                # print(u1.id)
                 name= user.first_name+" "+ user.last_name
                 account= User_detail.objects.create(user_id= user.id, name= name)
                 account.save()
@@ -81,6 +83,7 @@ def handleLogin(request):
         return render(request, 'user/login.html')
 
 
+
 def handleLogout(request):
     if request.user.is_authenticated:
         logout(request)
@@ -88,6 +91,7 @@ def handleLogout(request):
         return redirect('/')
     else:
         return redirect('/')
+
 
 
 def profile(request):
@@ -110,7 +114,7 @@ def profile(request):
             account.gender=gender
             account.phone=phone
             account.address=address
-            # account.profileImg=profileImg
+            
             account.save()
             user.save()
             return redirect("/profile/")
@@ -120,14 +124,14 @@ def profile(request):
         return redirect("/")
     
 
+
 def order(request):
     if request.user.is_authenticated:
         user_id= request.user.id
-        # print(user_id)
         
         account= User_detail.objects.get(user_id= user_id)
         orders= Order.objects.filter(user_id= user_id).order_by('-order_id')
-        params={'User_detail' : account, "activeOrder" : "activeOrder", "orders": orders, "cartCount": cartCount(request.user.id)}
+        params={'User_detail' : account, "activeOrder" : "activeOrder", "orders": orders, "cartCount": cartCount(user_id)}
         return render(request, "user/profile.html", params)
     else:
         return redirect("/")
@@ -138,20 +142,18 @@ def handleAddToCart(request, proj_id):
     if request.method =='POST':
         if request.user.is_authenticated:
             proj = Project.objects.get(proj_id=proj_id)
-            
             user_id= request.user.id
-            
-           
+                       
             cart= Cart.objects.create(project = proj,user_id = user_id)
             cart.save()
+            messages.success(request, " Item added to cart successfully.")
             return JsonResponse({'success': True,
-                         'msg': "Item added to cart successfully.", "tag": "success"
+                         'msg': "", "tag": "success"
                          , "cartCount": cartCount(request.user.id)})
-            # messages.success(request, "1 Item added to cart successfully.")
         else:
-            # messages.error(request, "Please Login First To Continue")
+            messages.error(request, "Please Login First To Continue")
             return JsonResponse({'success': False,
-                         'msg': "Please Login First To Continue", "tag": "danger"
+                         'msg': "", "tag": "danger"
                          , "cartCount": cartCount(request.user.id)})
     else :
         return redirect('/projects/')
@@ -177,7 +179,6 @@ def cart(request):
 
             total_descounted_price += price
 
-        # print(total_descounted_price)
         discount= total_original_price-total_descounted_price
 
         params={"cart": cart, "cartCount": cartCount(user_id), "total_original_price" : total_original_price, "total_descounted_price": total_descounted_price, "discount": discount}
@@ -190,7 +191,7 @@ def cart(request):
 def search(request):
     if request.method=="GET":
         src_query=request.GET.get("src_query")
-        print(src_query)
+
         srcResult=Project.objects.filter(Q(title__icontains=src_query) |Q(short_Desc__icontains=src_query)| Q(full_Desc__icontains=src_query) )
         
         params={"srcResult": srcResult, "src": "true", "src_query":src_query}
@@ -202,14 +203,14 @@ def search(request):
 
 def removeFromCart(request , cart_id):
     if request.user.is_authenticated:
-        # cart_id= cart_id
         cart= Cart.objects.filter(cart_id= cart_id)
         cart.delete()
-        
+        messages.success(request, "1 item removed successfully.")
         return redirect("/cart/")
     else:
         return redirect("/")
     
+
 
 def download(request):
     if request.user.is_authenticated and request.method=="POST":
