@@ -124,19 +124,6 @@ def profile(request):
         return redirect("/")
     
 
-
-def order(request):
-    if request.user.is_authenticated:
-        user_id= request.user.id
-        
-        account= User_detail.objects.get(user_id= user_id)
-        orders= Order.objects.filter(user_id= user_id).order_by('-order_id')
-        params={'User_detail' : account, "activeOrder" : "activeOrder", "orders": orders, "cartCount": cartCount(user_id)}
-        return render(request, "user/profile.html", params)
-    else:
-        return redirect("/")
-    
-
     
 def handleAddToCart(request, proj_id):
     if request.method =='POST':
@@ -207,6 +194,31 @@ def removeFromCart(request , cart_id):
         cart.delete()
         messages.success(request, "1 item removed successfully.")
         return redirect("/cart/")
+    else:
+        return redirect("/")
+
+
+
+def buy(request, proj_id):
+    if request.user.is_authenticated:
+        user_id= request.user.id
+        proj_id= proj_id
+
+        print ("dbkdhkjd")
+        
+        return HttpResponse("hghyjkl/")
+    else:
+        messages.error(request, "You are not logged in ! Please login first to continue.")
+        return redirect("/login")
+
+def order(request):
+    if request.user.is_authenticated:
+        user_id= request.user.id
+        
+        account= User_detail.objects.get(user_id= user_id)
+        orders= Order.objects.filter(user_id= user_id).order_by('-order_id')
+        params={'User_detail' : account, "activeOrder" : "activeOrder", "orders": orders, "cartCount": cartCount(user_id)}
+        return render(request, "user/profile.html", params)
     else:
         return redirect("/")
     
