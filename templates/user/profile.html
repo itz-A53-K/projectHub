@@ -98,7 +98,7 @@ height:auto;
             </a>
 
             <div class="card-footer d-flex justify-content-center w-100 mt-4">
-                <a href="/logout" class="btn btn-outline-info w-50">Logout</a>
+                <a class="btn btn-outline-info w-50 logout">Logout</a>
             </div>
         </div>
     </div>
@@ -153,7 +153,7 @@ height:auto;
                     <div>
                         <h4 class="mt-4">Phone Number</h4>
                         <div class="form-floating mb-3">
-                            <input type="tel" class="form-control input disabled" name="phone" id="phone" placeholder="Your phone number" value="{{User_detail.phone}}"
+                            <input type="number" class="form-control input disabled" name="phone" id="phone" placeholder="Your phone number" minlength="10" value="{{User_detail.phone}}"
                                 disabled required>
                             <label for="phone">Phone number</label>
                         </div>
@@ -236,6 +236,8 @@ height:auto;
 
 {%block JS%}
 <script>
+
+    
     genderValue=document.getElementById('genderValue').value
     document.getElementById(genderValue).checked=true
 

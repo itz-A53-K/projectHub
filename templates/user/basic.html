@@ -78,7 +78,7 @@
                 <li><a class="dropdown-item itemLink" href="/order/">My Orders</a></li>
 
                 <li><hr class="dropdown-divider"></li>
-                <li><center><a href="/logout" class="btn btn-outline-info ">Logout</a></center></li>
+                <li><center><button class="btn btn-outline-info logout ">Logout</button></center></li>
                 
               </ul>
             </li>
@@ -158,6 +158,11 @@
           link.classList.add("activePage");
         }
       });
+
+      $('.logout').click(function(){
+        if(confirm("Do you really want to logout?")) document.location = '/logout/';
+        
+      })
 
       setTimeout(() => {
         const alert = bootstrap.Alert.getOrCreateInstance(".myAlert");
