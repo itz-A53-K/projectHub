@@ -191,8 +191,10 @@ def search(request):
 def removeFromCart(request , cart_id):
     if request.user.is_authenticated:
         cart= Cart.objects.filter(cart_id= cart_id)
+        for i in cart:
+            title= i.project.title
         cart.delete()
-        messages.success(request, "1 item removed successfully.")
+        messages.success(request, "Successfully removed '"+ title +"' from your cart !")
         return redirect("/cart/")
     else:
         return redirect("/")
