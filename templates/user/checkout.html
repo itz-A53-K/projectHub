@@ -1,0 +1,36 @@
+{% extends 'user/basic.html' %}
+{%load static %}
+{%block title%}{%endblock%}
+{%block csslink%}
+<link rel="stylesheet" href="{% static 'user/css/authstyle.css'%}" />
+{%endblock%}
+
+{%block css%}
+
+{%endblock%}
+
+{%block body%}
+
+<form action={{ action }} method="post" name="payuForm">
+    <!-- <form method="post" action = "{% url "order:payment" token=order.token %}" class="payment-method-form radio"> -->
+    {% csrf_token %}
+    <!-- {{ payment_form }} -->
+    {% block form_submit %}
+    <input type="hidden" name="key" value="{{ MERCHANT_KEY }}" />
+    <input type="hidden" name="hash_string" value="{{ hash_string }}" />
+    <input type="hidden" name="hash" value="{{ hashh }}"/>
+    <input type="hidden" name="posted" value="{{ posted }}"/>
+    <input type="hidden" name="txnid" value="{{ txnid }}" />
+    <input type="hidden" name="surl" value="{{ posted.surl }}" size="64" />
+    <input type="hidden" name="furl" value="{{ posted.furl }}" size="64" />
+    <input type="hidden" name="email" id="email" value="{{ posted.email|default:'' }}" />
+    <input type="hidden" name="productinfo" value="{{ posted.productinfo|default:'' }}"/>
+    <input type="hidden" name="amount" value="{{ posted.amount|default:'' }}" />
+    <input type="hidden" name="phone" value="{{ posted.phone|default:'' }}" />
+    <input type="hidden" name="firstname" id="firstname" value="{{ posted.firstname}}" />
+    <button type="submit" class="btn primary">
+    {% trans "Proceed to payment" context "Payment details primary action" %}
+    </button>
+    {% endblock %}
+    </form>
+    {%endblock%}
