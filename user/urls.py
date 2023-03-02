@@ -15,4 +15,5 @@ urlpatterns = [
     path('buy/<proj_id>', views.buy, name="buy"),
     path('order/', views.order, name="order"),
     path('download/', views.download, name="download"),
+    path('handelPaymentRequest/', views.handelPaymentRequest, name="handelPaymentRequest"),
 ]

@@ -5,8 +5,12 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse, Http404
 from user.form import ImageForm
 from django.db.models import Q
-import hashlib
+from django.views.decorators.csrf import csrf_exempt
+from paytm import PaytmChecksum
+import pandas
 
+
+MERCHANT_Key="kbzk1DSbJiV_03p5"
 from user.models import Project, Proj_image, Cart, Order, User_detail
 
 
@@ -200,54 +204,6 @@ def removeFromCart(request, cart_id):
         return redirect("/")
 
 
-def buy(request, proj_id):
-    if request.user.is_authenticated:
-        user_id = request.user.id
-        proj_id = proj_id
-
-        PAYU_BASE_URL = "https://secure.payu.in/_payment"
-        action = ''
-        posted = {}
-        token = ""
-        SALT = "72toOcfuXCBizlYLEGqvVYeIUnXLOGsY"
-        hash_object = hashlib.sha256(token.encode('utf-8'))
-        print(token)
-        txnid = hash_object.hexdigest()[0:20]
-        hashh = ''
-        print('Came here')
-        posted['key'] = "CY4YAH"
-        posted['txnid'] = txnid
-        posted['amount'] = 234
-        posted['productinfo'] = "None"
-        posted['firstname'] = "Nishal"
-        posted['phone'] = "9101114906"
-        posted['email'] = "nishalbarman@gmail.com"
-        posted['surl'] = 'http://127.0.0.1:8000/success/'
-        print(posted['surl'])
-        posted['furl'] = 'http://127.0.0.1:8000/fail/'
-        hashSequence = "key|txnid|amount|productinfo|firstname|email|udf1|udf2|udf3|udf4|udf5|udf6|udf7|udf8|udf9|udf10"
-        hash_string = ''
-        hashVarsSeq = hashSequence.split('|')
-        for i in hashVarsSeq:
-            try:
-                hash_string += str(posted[i])
-            except Exception:
-                hash_string += ''
-                hash_string += '|'
-                hash_string += SALT
-                # print(hash_string)
-                hashh = hashlib.sha512(
-                    hash_string.encode('utf-8')).hexdigest().lower()
-        action = 'https://secure.payu.in/_payment'
-        print(hashh)
-        params = "all bll"
-        return render(request, "user/checkout.html", params)
-    else:
-        messages.error(
-            request, "You are not logged in ! Please login first to continue.")
-        return redirect("/login")
-
-
 def order(request):
     if request.user.is_authenticated:
         user_id = request.user.id
@@ -267,3 +223,76 @@ def download(request):
         print(order_id)
         order = Order.objects.get(order_id=order_id, user_id=request.user.id)
         return HttpResponse("njhfkjdhfh")
+
+
+def buy(request, proj_id):
+    if request.user.is_authenticated:
+        user_id = request.user.id
+        proj_id = proj_id
+        project= Project.objects.get(proj_id=proj_id)
+        
+        # action = 'https://test.payu.in/_payment'
+       
+        # params = {"MERCHANT_KEY":key,"txnid" :txnid,"hash" :hashh, "email": request.user, "amount":amount,"f_name": request.user.first_name,"surl":surl, "furl":furl,"product_info":productinfo,"action":action}
+       
+        email= request.user
+        # cart_id= Cart.cart_id
+
+        data_dict={
+            "requestType"   : "Payment",
+            'MID':"WorldP64425807474247",
+            'ORDER_ID':"1",
+            'TXN_AMOUNT':"500.00",
+            'CUST_ID':email,
+            "INDUSTRY_TYPE_ID":"Retail",
+            "WEBSITE":"WEBSTAGING",
+            "CHANNEL_ID":"WEB",
+            'CALLBACK_URL':"http://127.0.0.1:8000/handelPaymentRequest/",
+        }
+        data_dict['CHECKSUMHASH'] = PaytmChecksum.generateSignature(data_dict, MERCHANT_Key)
+        
+        return render(request, "user/paytm.html" ,{"data_dict":data_dict})
+    else:
+        messages.error(
+            request, "You are not logged in ! Please login first to continue.")
+        return redirect("/login")
+
+@csrf_exempt
+def handelPaymentRequest(request):
+   # paytm will send us post request here
+
+    # form = request.POST
+    # response_dict = {}
+    # for i in form.keys():
+    #     response_dict[i] = form[i]
+    #     if i == 'CHECKSUMHASH':
+    #         checksum = form[i]
+    #         print(checksum)
+    # print(form)
+    # paytmParams = dict()
+    # paytmParams = form.to_dict()
+    # paytmParams = request.POST
+    # # paytmChecksum = paytmChecksum
+    # paytmChecksum = paytmParams['CHECKSUMHASH']
+    # paytmParams.pop('CHECKSUMHASH', None)
+
+    # # Verify checksum
+    # # Find your Merchant Key in your Paytm Dashboard at https://dashboard.paytm.com/next/apikeys 
+    # isVerifySignature = PaytmChecksum.verifySignature(paytmParams, MERCHANT_Key,paytmChecksum)
+    # if isVerifySignature:
+    #     print("Checksum Matched")
+    # else:
+    #     print("Checksum Mismatched")
+
+
+
+
+    #
+    # verify = PaytmChecksum.verifySignature(response_dict, MERCHANT_Key, checksum)
+    # if verify:
+    #     if response_dict['RESPCODE'] == '01':
+    #         print('order successful')
+    #     else:
+    #         print('order was not successful because' + response_dict['RESPMSG'])
+    # return render(request, 'shop/paymentstatus.html', {'response': response_dict})
+    return HttpResponse("hadfjhgdfdfudfuuyfhuifuisduifh")
