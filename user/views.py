@@ -225,37 +225,30 @@ def download(request):
         return HttpResponse("njhfkjdhfh")
 
 
-def buy(request, proj_id):
+def buy(request):
     if request.user.is_authenticated:
-        user_id = request.user.id
-        proj_id = proj_id
-        project= Project.objects.get(proj_id=proj_id)
-        
-        # action = 'https://test.payu.in/_payment'
-       
-        # params = {"MERCHANT_KEY":key,"txnid" :txnid,"hash" :hashh, "email": request.user, "amount":amount,"f_name": request.user.first_name,"surl":surl, "furl":furl,"product_info":productinfo,"action":action}
-       
-        email= request.user
-        # cart_id= Cart.cart_id
-
-        data_dict={
-            "requestType"   : "Payment",
-            'MID':"WorldP64425807474247",
-            'ORDER_ID':"1",
-            'TXN_AMOUNT':"500.00",
-            'CUST_ID':email,
-            "INDUSTRY_TYPE_ID":"Retail",
-            "WEBSITE":"WEBSTAGING",
-            "CHANNEL_ID":"WEB",
-            'CALLBACK_URL':"http://127.0.0.1:8000/handelPaymentRequest/",
-        }
-        data_dict['CHECKSUMHASH'] = PaytmChecksum.generateSignature(data_dict, MERCHANT_Key)
-        
-        return render(request, "user/paytm.html" ,{"data_dict":data_dict})
+        if request.method=="POST":
+            user_id = request.user.id
+            # proj_id = proj_id
+            price=request.POST.get('price')
+            # print(price)
+            if price == '0':
+               params={"price":price}
+               return redirect('/handleOrder', params )
+            else:
+                params={"price":price}
+                # return render(request, "user/paytm.html" ,{"data_dict":data_dict})
+                return render(request, "user/paymentPage.html", params )
     else:
         messages.error(
             request, "You are not logged in ! Please login first to continue.")
         return redirect("/login")
+
+
+
+def handleOrder(request):
+    
+    return redirect("/order")
 
 @csrf_exempt
 def handelPaymentRequest(request):

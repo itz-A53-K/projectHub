@@ -12,8 +12,10 @@ urlpatterns = [
     path('handleAddToCart/<proj_id>', views.handleAddToCart, name="handleAddToCart"),
     path('search/', views.search, name="search"),
     path('remove/<cart_id>', views.removeFromCart, name="removeFromCart"),
-    path('buy/<proj_id>', views.buy, name="buy"),
+    path('buy/', views.buy, name="buy"),
     path('order/', views.order, name="order"),
     path('download/', views.download, name="download"),
     path('handelPaymentRequest/', views.handelPaymentRequest, name="handelPaymentRequest"),
+    path('handleOrder/', views.handleOrder, name="handleOrder"),
+    # path('create-paypal-order/', views.createPaypalOrder, name="createPaypalOrder"),
 ]

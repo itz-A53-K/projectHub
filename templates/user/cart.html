@@ -97,7 +97,7 @@ cursor: pointer;
         {% endfor %}
 
         <div class="d-flex align-items-center justify-content-end p-4">
-          <button type="button" class=" btnDesign2 mx-5">
+          <button type="button" class=" btnDesign2 mx-5 checkout">
             Checkout
           </button>
         </div>
@@ -135,11 +135,12 @@ cursor: pointer;
                   <p class="mb-0">(including TAX)</p>
                 </strong>
               </div>
-              <span><strong>{{total_descounted_price}}0 INR</strong></span>
+              <span  id="total_descounted_price"><strong>{{total_descounted_price}}0 INR</strong></span>
             </li>
           </ul>
           {% if not cartCount is 0 %}
-          <button type="button" class="btnDesign2 btn-block">
+          
+          <button type="button" class="btnDesign2 btn-block checkout">
             Checkout
           </button>
           {% endif %}
@@ -148,10 +149,34 @@ cursor: pointer;
     </div>
   </div>
 </div>
-
+<form action="/buy/" method="post" id="checkoutForm">
+  {% csrf_token %}
+  <input type="hidden" name="price" value="{{total_descounted_price}}">  
+</form>
 {%endblock body%}
 
 {% block JS %}
-
-
+  <script>
+    checkout=document.querySelectorAll('.checkout')
+    checkout.forEach(btn =>{
+      btn.addEventListener('click', function () {
+        price=document.getElementById("total_descounted_price").value
+        
+          document.getElementById('checkoutForm').submit();
+          
+          {% comment %} $.ajax({
+              type:"POST",
+              url:"/buy/",
+              data:{
+                  price : price,
+                  csrfmiddlewaretoken:'{{ csrf_token }}',
+              },
+              success: function(data){
+                  console.log(data)
+                  // window.location.href = "/gr";
+              }
+          }) {% endcomment %}
+      })
+    })
+  </script>
 {% endblock JS %}
