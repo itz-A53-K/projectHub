@@ -6,8 +6,7 @@ from django.http import JsonResponse, Http404
 from user.form import ImageForm
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
-from paytm import PaytmChecksum
-import pandas
+
 
 
 MERCHANT_Key="kbzk1DSbJiV_03p5"
