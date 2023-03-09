@@ -43,6 +43,24 @@ def projView(request, proj_id):
     return render(request, 'user/projView.html', params)
 
 
+
+def templates(request):
+    proj = Project.objects.all()
+    params = {'templates': proj, "cartCount": cartCount(request.user.id)}
+    return render(request, 'user/templates.html', params)
+
+
+def tempView(request, temp_id):
+    project = Project.objects.get(proj_id=temp_id)
+    images = Proj_image.objects.filter(project=temp_id)
+    itemInCart = False
+    itemInCart = Cart.objects.filter(project=temp_id, user_id=request.user.id).exists()
+
+    params = {'template': project, "cartCount": cartCount(
+        request.user.id), "images": images, "itemInCart": itemInCart}
+    return render(request, 'user/projView.html', params)
+
+
 def handleLogin(request):
     if request.method == "POST":
 

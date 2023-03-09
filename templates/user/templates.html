@@ -1,0 +1,138 @@
+{% extends 'user/basic.html' %}
+{%load static %}
+{%block title%}Project-Hub - Projects Available{%endblock%}
+{%block csslink%}
+<link rel="stylesheet" href="{% static 'user/css/project-cards.css'%}" />
+{%endblock%}
+
+{%block css%}
+    body{
+        /* background:#d6d8db; */
+    }
+    .filters{
+        height:fit-content;
+        width: 20%;
+        top:12vh;
+        position:sticky;
+    }
+    .templets{
+        height:fit-content;
+        min-height:30rem;
+        width: 60%;
+        top:12vh;
+        position:sticky;
+    }
+
+    .form-check label {
+        min-width: 7rem;
+        cursor: pointer;
+    }
+    .form-check input[type=radio] {
+        border: 1px solid rgb(173, 169, 169);
+        cursor: pointer;
+    }
+{%endblock%}
+
+{%block body%}
+    <div class="container-fluid d-flex ">
+
+        {% comment %} <div id="alert-section" class="fixed-bottom m-auto fw-semibold" style="bottom:10vh;width:fit-content;"></div> Alert Message Dialog {% endcomment %}
+        
+        <div class="container me-2 bg-light p-0 filters">
+            <div class="border-bottom border-dark-subtle">
+                <h4 class=" m-2">
+                    <span>Filters</span>
+                </h4>
+            </div>
+            <div class="">
+                <div class="accordion" id="accordionExample">
+                    <div class="accordion-item">
+                      <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                          PRICE
+                        </button>
+                      </h2>
+                      <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="price" value="alltem" id="alltem" checked>
+                                <label class="form-check-label" for="alltem">
+                                 All
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="price" value="under99" id="under99">
+                                <label class="form-check-label" for="under99">
+                                  Under Rs. 999
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="price" value="above999" id="above999">
+                                <label class="form-check-label" for="above999">
+                                  Above Rs. 999
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="price" value="free" id="free">
+                                <label class="form-check-label" for="free">
+                                  Free
+                                </label>
+                            </div>
+                            
+                        </div>
+                      </div>
+                    </div>
+                    
+                  </div>
+            </div>
+            <div class="p-3 d-flex">
+                <a href="/logout" class="btn btn-outline-info w-50 mx-auto">Logout</a>
+            </div>
+            
+        </div>
+        <div class="container p-2 bg-light templets ">
+            <h3 class="py-2 mb-3 border-bottom border-dark-subtle">Responsive Templates ></h3>
+            {% for item in templates %}
+                <div class="card flex-row m-2 mb-4 ">
+                        <div class="imgDiv ">
+                            <a href="/templates/{{item.proj_id}}"><img src="/media/{{item.default_image}}" alt="{{item.title}}" srcset="" style="height:10rem; width:17rem;" title="{{item.title}} {% if item.short_Desc %} ( {{item.short_Desc}} ){% endif %}"></a>
+                        </div>
+                        <div class="body m-3">
+                            <a href="/templates/{{item.proj_id}}" class="title fs-4 ">{{item.title}}</a>
+                            <div class="desc">
+                                <p class="fs-6 m-0">{{item.full_Desc| truncatechars:130}}</p>
+                                <p class="fs-6">By : <span>oaohfasufuayfgufug</span> | {{item.publish_date| truncatechars:12}}</p>
+                            </div>  
+                            <div class="">
+                                <h1 class="pt-0 fs-5">
+                                    {% if  item.free %}
+                                        <span class="fw-semibold ">Free</span>
+                                        <span class="text-decoration-line-through "> {{item.price}}0</span>
+                                    {% elif item.discounted_price %}
+                                        <span class="fw-semibold fs-5">₹ {{item.discounted_price}}0</span> 
+                                        <span class="text-decoration-line-through"> {{item.price}}0</span>
+                                    {%else%}
+                                        <span class="fw-semibold fs-5"> ₹ {{item.price}}0</span>
+                                    {%endif%}
+                                </h1>
+                            </div>  
+                        </div>
+                </div>
+           {% endfor %}
+          
+           
+        </div>
+        <div class="container w-25 p-2 bg-light">
+            <div>
+                <div class="border-bottom border-dark-subtle">
+                    <p class="fs-3 px-3">Follow Us </p>
+                </div>                          
+            </div>                          
+        </div>
+    </div>
+
+{%endblock body%}
+
+{%block JS%}
+
+{%endblock JS%}
