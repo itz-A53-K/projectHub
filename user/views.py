@@ -26,7 +26,7 @@ def home(request):
 
 
 def projects(request):
-    proj = Project.objects.all()
+    proj = Project.objects.filter(category='Project')
     params = {'proj': proj, "cartCount": cartCount(request.user.id)}
     return render(request, 'user/projects.html', params)
 
@@ -35,17 +35,24 @@ def projView(request, proj_id):
     project = Project.objects.get(proj_id=proj_id)
     images = Proj_image.objects.filter(project=proj_id)
     itemInCart = False
-    itemInCart = Cart.objects.filter(
-        project=proj_id, user_id=request.user.id).exists()
+    itemInCart = Cart.objects.filter(project=proj_id, user_id=request.user.id).exists()
 
-    params = {'project': project, "cartCount": cartCount(
-        request.user.id), "images": images, "itemInCart": itemInCart}
+    params = {'project': project, "cartCount": cartCount(request.user.id),
+               "images": images, "itemInCart": itemInCart}
     return render(request, 'user/projView.html', params)
 
 
 
-def templates(request):
-    proj = Project.objects.all()
+def templates(request, data=None):
+    if data == None :
+        proj = Project.objects.filter(category='Template')
+    if data == 'under1k' :
+        proj = Project.objects.filter(Q(category='Template', discounted_price__lte = 999))
+    elif data == 'over1k' :
+        proj = Project.objects.filter(category='Template', discounted_price__gte=999, free = False)
+    elif data == 'free' :
+        proj = Project.objects.filter(category='Template', free=True)
+    
     params = {'templates': proj, "cartCount": cartCount(request.user.id)}
     return render(request, 'user/templates.html', params)
 

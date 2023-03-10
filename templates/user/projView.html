@@ -141,7 +141,7 @@ text-decoration: underline;
                     </h4>
                 </div>
                 <div>
-                    <h5 class="my-3 ">Category: <em class="fs-6">{{project.category}}</em> </h5>
+                    <h5 class="my-3 ">Category: <em class="fs-6">{{project.sub_category}}</em> </h5>
                 </div>
                 <div>
                     <h5 class="my-3 ">Languages Used: <em class="fs-6">{{project.used_language}}</em> </h5>
@@ -158,7 +158,7 @@ text-decoration: underline;
                             id="hidebtn">Show less</span></p>
                     <p class=" mx-1" id="less">{{project.full_Desc|title | truncatechars:550}}
                         <span class="btn btn-outline-dark" id="showbtn" 
-                            {% if not project.full_Desc|length > 550 %}hidden{% endif %}>
+                            {% if project.full_Desc|length < 550 %}hidden{% endif %}>
                             Show more
                         </span>
                     </p>
@@ -279,7 +279,7 @@ text-decoration: underline;
                     </div>
 
                     <div>
-                        <h5 class="my-3 ">Category: <em class="fs-6">{{template.category}}</em> </h5>
+                        <h5 class="my-3 ">Category: <em class="fs-6">{{template.sub_category}}</em> </h5>
                     </div>
 
                     <div>
@@ -304,7 +304,7 @@ text-decoration: underline;
 
                         <p class=" mx-1" id="less">{{template.full_Desc|title | truncatechars:550}}
                             <span class="btn btn-outline-dark" id="showbtn" 
-                                {% if not template.full_Desc|length > 550%}hidden{% endif %}>
+                                {% if template.full_Desc|length < 550%}hidden{% endif %}>
                                 Show more
                             </span>
                         </p>

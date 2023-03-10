@@ -6,7 +6,13 @@ import datetime
 # admin login credentials : Abinash (kjh65%ARt)
 
 class Project(models.Model):
+    
     CATEGORY=(
+        ('Project', 'Project'),
+        ('Template', 'Template'),
+    )
+
+    SUB_CATEGORY=(
         ('Web Development', (
                 ('Front-end Development', 'Front-end Development'),
                 ('JavaScript', 'JavaScript'),
@@ -41,6 +47,7 @@ class Project(models.Model):
     full_Desc= models.TextField(blank=True)
 
     category = models.CharField(max_length=100, choices=CATEGORY)
+    sub_category = models.CharField(max_length=100, choices=SUB_CATEGORY)
     
     used_language= models.CharField(max_length=500, null=True, blank=True)
 

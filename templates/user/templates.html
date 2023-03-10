@@ -23,14 +23,17 @@
         position:sticky;
     }
 
-    .form-check label {
-        min-width: 7rem;
-        cursor: pointer;
+    .prfltItm:hover{
+        {% comment %} text-decoration: underline; {% endcomment %}
+        color:rgb(227, 94, 42);
     }
-    .form-check input[type=radio] {
-        border: 1px solid rgb(173, 169, 169);
-        cursor: pointer;
+    .filterActive{
+        color:rgb(227, 94, 42);
+        /* color:aqua; */
+        font-weight:600;
+        text-decoration: underline;
     }
+    
 {%endblock%}
 
 {%block body%}
@@ -53,31 +56,16 @@
                         </button>
                       </h2>
                       <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                        <div class="accordion-body">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="price" value="alltem" id="alltem" checked>
-                                <label class="form-check-label" for="alltem">
-                                 All
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="price" value="under99" id="under99">
-                                <label class="form-check-label" for="under99">
-                                  Under Rs. 999
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="price" value="above999" id="above999">
-                                <label class="form-check-label" for="above999">
-                                  Above Rs. 999
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="price" value="free" id="free">
-                                <label class="form-check-label" for="free">
-                                  Free
-                                </label>
-                            </div>
+                        <div class="accordion-body p-0 ps-2">
+                            <div class="row m-2 prfl">
+                                <a href="/templates/" class="prfltItm" id="all">All</a>
+                            
+                                <a href="/templates/under1k" class="prfltItm" id="under1k">Under ₹1,000</a>
+                            
+                                <a href="/templates/over1k" class="prfltItm" id="over1k">Over ₹1,000</a>
+                            
+                                <a href="/templates/free" class="prfltItm" id="free">Free</a>
+                           </div>
                             
                         </div>
                       </div>
@@ -92,13 +80,14 @@
         </div>
         <div class="container p-2 bg-light templets ">
             <h3 class="py-2 mb-3 border-bottom border-dark-subtle">Responsive Templates ></h3>
-            {% for item in templates %}
-                <div class="card flex-row m-2 mb-4 ">
+            {% if templates %}
+                {% for item in templates %}
+                    <div class="card flex-row m-2 mb-4 ">
                         <div class="imgDiv ">
-                            <a href="/templates/{{item.proj_id}}"><img src="/media/{{item.default_image}}" alt="{{item.title}}" srcset="" style="height:10rem; width:17rem;" title="{{item.title}} {% if item.short_Desc %} ( {{item.short_Desc}} ){% endif %}"></a>
+                            <a href="/templates/view/{{item.proj_id}}"><img src="/media/{{item.default_image}}" alt="{{item.title}}" srcset="" style="height:10rem; width:17rem;" title="{{item.title}} {% if item.short_Desc %} ( {{item.short_Desc}} ){% endif %}"></a>
                         </div>
                         <div class="body m-3">
-                            <a href="/templates/{{item.proj_id}}" class="title fs-4 ">{{item.title}}</a>
+                            <a href="/templates/view/{{item.proj_id}}" class="title fs-4 ">{{item.title}}</a>
                             <div class="desc">
                                 <p class="fs-6 m-0">{{item.full_Desc| truncatechars:130}}</p>
                                 <p class="fs-6">By : <span>oaohfasufuayfgufug</span> | {{item.publish_date| truncatechars:12}}</p>
@@ -117,8 +106,19 @@
                                 </h1>
                             </div>  
                         </div>
-                </div>
-           {% endfor %}
+                    </div>
+                {% endfor %}
+            {% else %}
+            <div class="column m-4" style="color:black;">
+                <h3>No items were found matching this filter.</h3>
+                <h4>Suggestions:</h4>
+                <ul>
+                    <li class="fw-semibold">Try different filter.</li>
+                    <li class="fw-semibold">Use appropriate filter.</li>
+                </ul>
+                <a href="/" class=" btn btn-outline-dark"><b>Go to home</b></a>
+            </div>
+            {% endif %}
           
            
         </div>
@@ -134,5 +134,36 @@
 {%endblock body%}
 
 {%block JS%}
+<script>
 
+    var slug = window.location.pathname.split('/')[2];
+    $('.prfltItm').removeClass('activePage')
+
+    if(slug== ""){
+        $('#all').addClass('filterActive').bind('click', false);
+    }
+    else{
+        $('#'+slug).addClass('filterActive').bind('click', false);
+    }
+
+
+    {% comment %} urldata= window.location.href() {% endcomment %}
+
+    {% comment %} $('.prfltItm').click(function () {
+        slug = $(this).attr("pr")
+
+        $.ajax({
+            type: "GET",
+            url: "/templates/",
+            data: {
+                pr=slug,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function (data) {
+                console.log(data)
+            }
+        })
+
+    }) {% endcomment %}
+</script>
 {%endblock JS%}
