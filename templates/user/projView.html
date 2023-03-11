@@ -43,38 +43,39 @@ margin: 5px 10px;
 }
 
 .card-price .card-priceDiv{
-width:19rem;
-padding:5px;
-border: 1px solid rgb(116, 114, 114);
-top:10vh;
+    width:19rem;
+    padding:5px;
+    border: 1px solid rgb(116, 114, 114);
+    top:10vh;
 }
 
 a{
-color: rgba(var(--bs-link-color-rgb),var(--bs-link-opacity,1));
-text-decoration: underline;
+    color: rgba(var(--bs-link-color-rgb),var(--bs-link-opacity,1));
+    text-decoration: underline;
 }
 #downloadBox{
-background-color: rgb(245, 135, 80);
-width:60%;
-margin: 10px auto;
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 1.2rem;
-font-weight: 600;
+    background-color: rgb(245, 135, 80);
+    width:60%;
+    margin: 10px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 600;
 }
 #downloadBox span{
-margin: 15px 0;
+    margin: 15px 0;
 }
 #downloadBox a{
-text-decoration: none;
-color: rgb(27, 24, 24);
-font-size: 1.2rem;
-font-weight: 600;
-margin: 15px 0;
+    {% comment %} text-decoration: none; {% endcomment %}
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 15px 0;
+    color:green;
 }
 #downloadBox a:hover{
-text-decoration: underline;
+    color: rgb(27, 24, 24);
+    text-decoration: none;
 }
 {%endblock css%}
 
@@ -97,139 +98,148 @@ text-decoration: underline;
 </div> {% endcomment %}
 
 {% if project %}
-<div class="py-2">
-    <div class="container d-flex  py-3 " style="background:var(--dk-gray-100)">
-        <div class="projBody m-1 w-75">
-            <div class="imagesDiv m-1">
-                <div class="allImg ">
-                    <img class="projImg" src="/media/{{project.default_image}}" alt="" srcset="">
-                    {% for img in images %}
-                    <img class="projImg" src="/media/{{img.image_url}}" alt="" srcset="">
-                    {% endfor %}
+    <div class="py-2">
+        <div class="container d-flex  py-3 " style="background:var(--dk-gray-100)">
+            <div class="projBody m-1 w-75">
+                <div class="imagesDiv m-1">
+                    <div class="allImg ">
+                        <img class="projImg" src="/media/{{project.default_image}}" alt="" srcset="">
+                        {% for img in images %}
+                        <img class="projImg" src="/media/{{img.image_url}}" alt="" srcset="">
+                        {% endfor %}
+                    </div>
+                    <div class="mainImgDiv">
+                        <img id="mainImg" src="/media/{{project.default_image}}" alt="" srcset="">
+                    </div>
                 </div>
-                <div class="mainImgDiv">
-                    <img id="mainImg" src="/media/{{project.default_image}}" alt="" srcset="">
-                </div>
-            </div>
-            <div class="descBody m-3">
-                <section aria-label="breadcrumb" style="font-size:15px;">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/">Home</a></li>
-                        <li class="breadcrumb-item"><a href="/projects/">Projects</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{{project.title| truncatechars:150}}</li>
-                    </ol>
-                </section>
-                <div class="title">
-                    <h5> {{project.title}}{% if project.short_Desc %}<span> ( {{project.short_Desc}} )</span>{% endif %}
-                    </h5>
-                </div>
-                <div class=" my-3">
+                <div class="descBody m-3">
+                    <section aria-label="breadcrumb" style="font-size:15px;">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item"><a href="/projects/">Projects</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">{{project.title| truncatechars:150}}</li>
+                        </ol>
+                    </section>
+                    <div class="title">
+                        <h5> {{project.title}}{% if project.short_Desc %}<span> ( {{project.short_Desc}} )</span>{% endif %}
+                        </h5>
+                    </div>
+                    <div class=" my-3">
 
-                    <h4>
-                        {% if project.free %}
-                        <span class="fw-semibold fs-5">Free</span>
-                        <span class="text-decoration-line-through"> {{project.price}}0</span>
-                        <input type="hidden" id="price" value="0" />
-                        {% elif project.discounted_price %}
-                        <span class="fw-semibold fs-5">₹ {{project.discounted_price}}0</span>
-                        <span class="text-decoration-line-through"> {{project.price}}0</span>
-                        <input type="hidden" id="price" value="{{project.discounted_price}}" />
-                        {%else%}
-                        <span class="fw-semibold fs-5"> ₹ {{project.price}}0</span>
-                        <input type="hidden" id="price" value="{{project.price}}" />
-                        {%endif%}
-                    </h4>
-                </div>
-                <div>
-                    <h5 class="my-3 ">Category: <em class="fs-6">{{project.sub_category}}</em> </h5>
-                </div>
-                <div>
-                    <h5 class="my-3 ">Languages Used: <em class="fs-6">{{project.used_language}}</em> </h5>
-                </div>
-                <div>
-                    <p class="my-3 ">Date of publish: <em class="fs-6">{{project.publish_date| truncatechars:12}}</em>
-                    </p>
-                </div>
+                        <h4>
+                            {% if project.free %}
+                            <span class="fw-semibold fs-5">Free</span>
+                            <span class="text-decoration-line-through"> {{project.price}}0</span>
+                            <input type="hidden" id="price" value="0" />
+                            {% elif project.discounted_price %}
+                            <span class="fw-semibold fs-5">₹ {{project.discounted_price}}0</span>
+                            <span class="text-decoration-line-through"> {{project.price}}0</span>
+                            <input type="hidden" id="price" value="{{project.discounted_price}}" />
+                            {%else%}
+                            <span class="fw-semibold fs-5"> ₹ {{project.price}}0</span>
+                            <input type="hidden" id="price" value="{{project.price}}" />
+                            {%endif%}
+                        </h4>
+                    </div>
+                    <div>
+                        <h5 class="my-3 ">Category: <em class="fs-6">{{project.sub_category}}</em> </h5>
+                    </div>
+                    <div>
+                        <h5 class="my-3 ">Languages Used: <em class="fs-6">{{project.used_language}}</em> </h5>
+                    </div>
+                    <div>
+                        <p class="my-3 ">Date of publish: <em class="fs-6">{{project.publish_date| truncatechars:12}}</em>
+                        </p>
+                    </div>
 
-                <div class="descDiv my-2" id="descDiv">
-                    <h4>About this project </h4>
+                    <div>
+                        <p class="my-3 ">By: <em class="fs-6">{{project.created_by}}</em> </p>
+                    </div>
 
-                    <p class="d-none mx-1" id="more">{{project.full_Desc|title }} <span class="btn btn-outline-dark"
-                            id="hidebtn">Show less</span></p>
-                    <p class=" mx-1" id="less">{{project.full_Desc|title | truncatechars:550}}
-                        <span class="btn btn-outline-dark" id="showbtn" 
-                            {% if project.full_Desc|length < 550 %}hidden{% endif %}>
-                            Show more
-                        </span>
-                    </p>
-                </div>
+                    <div class="descDiv my-2" id="descDiv">
+                        <h4>About this project </h4>
 
-                <div class="d-grid gap-2 d-md-block my-3">
-                    {% if not project.free %}
-                    {% if itemInCart %}
-                    <a href="/cart/" class="btn btn-warning py-2 mx-3 my-1 px-5">Go to cart</a>
-                    {% else %}
-                    <button class="btn btnDesign2 mx-3 my-1 addToCart">Add to cart</button>
+                        <p class="d-none mx-1" id="more">{{project.full_Desc|title }} <span class="btn btn-outline-dark"
+                                id="hidebtn">Show less</span></p>
+                        <p class=" mx-1" id="less">{{project.full_Desc|title | truncatechars:550}}
+                            <span class="btn btn-outline-dark" id="showbtn" 
+                                {% if project.full_Desc|length < 550 %}hidden{% endif %}>
+                                Show more
+                            </span>
+                        </p>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-block my-3">
+                        {% if not project.free %}
+                            {% if not bought %}
+                                {% if itemInCart %}
+                                    <a href="/cart/" class="btn btn-warning py-2 mx-3 my-1 px-5">Go to cart</a>
+                                {% else %}
+                                    <button class="btn btnDesign2 mx-3 my-1 addToCart">Add to cart</button>
+                                {% endif %}
+                                <button class="btn btnDesign3 mx-3 my-1 buyNow" id="{{project.proj_id}}">Buy now</button><br>
+                            {%endif%}
+                        {% endif %}
+                    </div>
+                    {% if project.free  or bought%}
+                        <div id="downloadBox"></div>
                     {% endif %}
-                    <a href="/buy/{{project.proj_id}}" class="btn btnDesign3 mx-3 my-1 buyNow">Buy now</a><br>
-                    {%endif%}
                 </div>
-                {% if project.free %}
-                <div id="downloadBox"></div>
-                {% endif %}
             </div>
-        </div>
-        <div class="card-price mx-3 my-3 py-2" style="background:var(--dk-gray-100); ">
-            <div class="sticky-top card-priceDiv">
+            <div class="card-price mx-3 my-3 py-2" style="background:var(--dk-gray-100); ">
+                <div class="sticky-top card-priceDiv">
 
-                <div class="price m-3">
+                    <div class="price m-3">
 
-                    <h4>
-                        {% if project.free %}
-                        <span class="fw-semibold fs-5">Free</span>
-                        <span class="text-decoration-line-through"> {{project.price}}0</span>
-                        <input type="hidden" id="price" value="0" />
-                        {% elif project.discounted_price %}
-                        <span class="fw-semibold fs-5">₹ {{project.discounted_price}}0</span>
-                        <span class="text-decoration-line-through"> {{project.price}}0</span>
-                        <input type="hidden" id="price" value="{{project.discounted_price}}" />
+                        <h4>
+                            {% if project.free %}
+                                <span class="fw-semibold fs-5">Free</span>
+                                <span class="text-decoration-line-through"> {{project.price}}0</span>
+                                <input type="hidden" id="price" value="0" />
+                            {% elif project.discounted_price %}
+                                <span class="fw-semibold fs-5">₹ {{project.discounted_price}}0</span>
+                                <span class="text-decoration-line-through"> {{project.price}}0</span>
+                                <input type="hidden" id="price" value="{{project.discounted_price}}" />
+                            {%else%}
+                                <span class="fw-semibold fs-5"> ₹ {{project.price}}0</span>
+                                <input type="hidden" id="price" value="{{project.price}}" />
+                            {%endif%}
+                        </h4>
+                    </div>
+
+                    <div class="d-grid gap-2 mx-auto ">
+                        {% if itemInCart %}
+                            <a href="/cart/" class="btn btn-warning py-2 mx-3 my-1">Go to cart</a>
+                        {% else %}
+                            <button class="btn btnDesign2 mx-3 my-1 addToCart">Add to cart</button>
+                            <input type="hidden" id="projectId" name="projectId" value="{{project.proj_id}}">
+                        {% endif %}
+
+                        {% if project.free or bought%}
+                            <a href="#downloadBox" class="btn btnDesign3 mx-3 my-1">Download</a>
                         {%else%}
-                        <span class="fw-semibold fs-5"> ₹ {{project.price}}0</span>
-                        <input type="hidden" id="price" value="{{project.price}}" />
+                            <button class="btn btnDesign3 mx-3 my-1 buyNow" id="{{project.proj_id}}">Buy now</button>
                         {%endif%}
-                    </h4>
-                </div>
 
-                <div class="d-grid gap-2 mx-auto ">
-                    {% if itemInCart %}
-                    <a href="/cart/" class="btn btn-warning py-2 mx-3 my-1">Go to cart</a>
-                    {% else %}
-                    <button class="btn btnDesign2 mx-3 my-1 addToCart">Add to cart</button>
-                    <input type="hidden" id="projectId" name="projectId" value="{{project.proj_id}}">
-                    {% endif %}
-                    {% if project.free %}
-                    <a href="#downloadBox" class="btn btnDesign3 mx-3 my-1 buyNow">Download</a>
-                    {%else%}
-                    <a href="/buy/{{project.proj_id}}" class="btn btnDesign3 mx-3 my-1 buyNow">Buy now</a>
-                    {%endif%}
-
-                </div>
-                <div>
-                    <p class="text-center mb-0">Full Lifetime Access</p>
+                    </div>
+                    <div>
+                        <p class="text-center mb-0">Full Lifetime Access</p>
+                    </div>
                 </div>
             </div>
+
+
         </div>
-
-
     </div>
-</div>
 
-<div class="container py-2 my-3" style="background:var(--dk-gray-100)">
-    <h4 class="my-2">Similar Projects</h4>
-    <div class="container">
+    <div class="container py-2 my-3" style="background:var(--dk-gray-100)">
+        <h4 class="my-2">Similar Projects</h4>
+        <div class="container">
 
+        </div>
     </div>
-</div>
+
+
 {% elif template %}
     <div class="py-2">
         <div class="container d-flex  py-3 " style="background:var(--dk-gray-100)">
@@ -237,9 +247,11 @@ text-decoration: underline;
                 <div class="imagesDiv m-1">
                     <div class="allImg ">
                         <img class="projImg" src="/media/{{template.default_image}}" alt="" srcset="">
+
                         {% for img in images %}
                             <img class="projImg" src="/media/{{img.image_url}}" alt="" srcset="">
                         {% endfor %}
+
                     </div>
                     <div class="mainImgDiv">
                         <img id="mainImg" src="/media/{{template.default_image}}" alt="" srcset="">
@@ -292,7 +304,7 @@ text-decoration: underline;
                     </div>
 
                     <div>
-                        <p class="my-3 ">By: <em class="fs-6">{{template.}}</em> </p>
+                        <p class="my-3 ">By: <em class="fs-6">{{template.created_by}}</em> </p>
                     </div>
 
                     <div class="descDiv my-2" id="descDiv">
@@ -312,17 +324,21 @@ text-decoration: underline;
                     
                     <div class="d-grid gap-2 d-md-block my-3">
                         {% if not template.free %}
-                            {% if itemInCart %}
-                                <a href="/cart/" class="btn btn-warning py-2 mx-3 my-1 px-5">Go to cart</a>
-                            {% else %}
-                                <button class="btn btnDesign2 mx-3 my-1 addToCart">Add to cart</button>
-                            {% endif %}
-
-                            <a href="/buy/{{template.proj_id}}" class="btn btnDesign3 mx-3 my-1 buyNow">Buy now</a><br>
-                        {% else %}
-                            <div id="downloadBox"></div>
+                            {% if not bought %}
+                                {% if itemInCart %}
+                                    <a href="/cart/" class="btn btn-warning py-2 mx-3 my-1 px-5">Go to cart</a>
+                                {% else %}
+                                    <button class="btn btnDesign2 mx-3 my-1 addToCart">Add to cart</button>
+                                {% endif %}
+    
+                                <button class="btn btnDesign3 mx-3 my-1 buyNow" id="{{template.proj_id}}">Buy now</button>
+                            {%endif%}
                         {% endif %}
                     </div>
+                    {% if template.free  or bought%}
+                        <div id="downloadBox"></div>
+                    {% endif %}
+
                     
                 </div>
             </div>
@@ -346,16 +362,18 @@ text-decoration: underline;
 
                     <div class="d-grid gap-2 mx-auto ">
                         {% if itemInCart %}
-                        <a href="/cart/" class="btn btn-warning py-2 mx-3 my-1">Go to cart</a>
+                            <a href="/cart/" class="btn btn-warning py-2 mx-3 my-1">Go to cart</a>
                         {% else %}
-                        <button class="btn btnDesign2 mx-3 my-1 addToCart">Add to cart</button>
-                        <input type="hidden" id="projectId" name="projectId" value="{{template.proj_id}}">
+                            <button class="btn btnDesign2 mx-3 my-1 addToCart">Add to cart</button>
+                            <input type="hidden" id="projectId" name="projectId" value="{{template.proj_id}}">
                         {% endif %}
-                        {% if template.free %}
-                        <a href="#downloadBox" class="btn btnDesign3 mx-3 my-1 buyNow">Download</a>
+
+                        {% if template.free or bought%}
+                            <a href="#downloadBox" class="btn btnDesign3 mx-3 my-1">Download</a>
                         {%else%}
-                        <a href="/buy/{{template.proj_id}}" class="btn btnDesign3 mx-3 my-1 buyNow">Buy now</a>
+                            <button class="btn btnDesign3 mx-3 my-1 buyNow" id="{{template.proj_id}}">Buy now</button>
                         {%endif%}
+
                     </div>
                     <div>
                         <p class="text-center mb-0">Full Lifetime Access</p>
@@ -375,9 +393,37 @@ text-decoration: underline;
     </div>
 {% endif %}
 
+{% comment %} noy now form {% endcomment %}
+<form action="/buy/" method="post" id="buyNowForm">
+    {% csrf_token %}
+    <input type="hidden" name="proj_id" id="proj_idInp">
+</form>
+
 {% endblock body %}
 
 {% block JS %}
+<script>
+    $('.buyNow').click(function () {
+        proj_id = $(this).attr("id")
+        console.log(proj_id)
+        document.getElementById('proj_idInp').value=proj_id
+        document.getElementById('buyNowForm').submit()
+
+        {% comment %} $.ajax({
+            type: "POST",
+            url: "/buy/",
+            data: {
+                proj_id=proj_id,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function (data) {
+                console.log(data)
+            }
+        }) {% endcomment %}
+
+    }) 
+</script>
+
 <script>
     projImg = document.querySelectorAll(".projImg")
     projImg[0].classList.add("bord2px")

@@ -20,10 +20,14 @@ urlpatterns = [
 
     path('search/', views.search, name="search"),
 
-    path('buy/', views.buy, name="buy"),
+    path('checkout/', views.checkout, name="checkout"),
+    path('buy/', views.buyNow, name="buyNow"),
     path('handelPaymentRequest/', views.handelPaymentRequest, name="handelPaymentRequest"),
+
+    path('paymentSuccess/', views.paymentSuccess, name="paymentSuccess"),
+    path('paymentFailled/', views.paymentFailled, name="paymentFailled"),
     
-    path('order/', views.order, name="order"),
+    path('order/', views.my_order, name="order"),
     path('handleOrder/', views.handleOrder, name="handleOrder"),
 
     path('download/', views.download, name="download"),

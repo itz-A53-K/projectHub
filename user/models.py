@@ -50,6 +50,7 @@ class Project(models.Model):
     sub_category = models.CharField(max_length=100, choices=SUB_CATEGORY)
     
     used_language= models.CharField(max_length=500, null=True, blank=True)
+    created_by= models.CharField(max_length=100, null=True, blank=True, default="Team Members")
 
     price= models.FloatField( blank=True, null=True)
     discounted_price = models.FloatField( blank=True , null=True)

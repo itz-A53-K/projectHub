@@ -6,6 +6,18 @@
 {%endblock%}
 
 {%block body%}
+
+    {% for message in messages %}
+        <div {%if message.tags%}
+                class="alert m-auto fixed-bottom mb-1 border-{{ message.tags }} alert-dismissible fade show alert-{{ message.tags }} myAlert"
+            {%endif%} 
+                role="alert" style="width:fit-content;bottom:10vh;">
+
+            <b>{{ message}}</b>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+    
     <div class="container">
 
         {% comment %} <div id="alert-section" class="fixed-bottom m-auto fw-semibold" style="bottom:10vh;width:fit-content;"></div> Alert Message Dialog {% endcomment %}
@@ -55,7 +67,7 @@
 
                                     </div>
                                     <div class="card-footer mt-3">
-                                        <a href="/buy/{{i.proj_id}}"><button >Buy now</button></a>
+                                        <button class="buyNow" id="{{i.proj_id}}">Buy now</button>
 
                                         {% if i.category == "Project" %}
                                             <a href="/projects/{{i.proj_id}}"><button >View</button></a>
@@ -92,7 +104,7 @@
                                 
                                 </div>
                                 <div class="card-footer mt-3">
-                                    <a href="/buy/{{i.proj_id}}" ><button >Buy now</button></a>
+                                    <button class="buyNow" id="{{i.proj_id}}">Buy now</button>
                                     <a href="/projects/{{i.proj_id}}"><button >View</button></a>
                                 </div>
                             </div>
@@ -102,8 +114,34 @@
         </div>
     </div>
 
+    {% comment %} noy now form {% endcomment %}
+    <form action="/buy/" method="post" id="buyNowForm">
+        {% csrf_token %}
+        <input type="hidden" name="proj_id" id="proj_idInp">
+    </form>
 {%endblock body%}
 
 {%block JS%}
 
+<script>
+    $('.buyNow').click(function () {
+        proj_id = $(this).attr("id")
+        console.log(proj_id)
+        document.getElementById('proj_idInp').value=proj_id
+        document.getElementById('buyNowForm').submit()
+
+        {% comment %} $.ajax({
+            type: "POST",
+            url: "/buy/",
+            data: {
+                proj_id=proj_id,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function (data) {
+                console.log(data)
+            }
+        }) {% endcomment %}
+
+    }) 
+</script>
 {%endblock JS%}

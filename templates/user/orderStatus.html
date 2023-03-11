@@ -1,0 +1,94 @@
+{% extends 'user/basic.html' %}
+{% load static %}
+{% block css %}
+
+.box{
+    width: 100%;
+    height: 88vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.box .orderStatusbox{
+    border: 1px solid blanchedalmond;
+    padding: 1rem;
+    border-radius: 10px;
+    width: 50rem;
+    background-color: ffffff;
+    display: flex;
+    flex-direction:column;
+    align-items: center;
+}
+.orderStatusbox .img{
+    margin: auto;
+    width: 50%;
+    height: 20rem;
+    
+}
+.orderStatusbox div{
+    margin:10px;
+    display: flex;
+    flex-direction:column;
+    align-items: center;
+   
+    
+}
+
+{% endblock css %}
+{% block body %}
+
+<div class="box">
+    {% if success %}
+    <div class="orderStatusBox">
+        <img src="{%static 'user/img/success.jpg'%}" alt="" srcset="" class="img m-auto">
+        <div>
+            <h3>Thank you for your order</h3>
+            <h5 class="text-success">Your order has been confirmed.</h5>
+            <p class="fs-5">Go to <b>'My Orders'</b> section or  click <a href="/order" class="text-primary">here</a> to download the source code</p>
+            <p> You will be redirect to home page in <span id="redirect" class="text-danger">20</span> seconds.</p>
+            <a href="/"><button class="btn btn-outline-dark">Go Home Now</button></a>
+        </div>
+        
+    </div>
+    {% else %}
+    <div class="orderStatusBox">
+        <img src="{%static 'user/img/failled.jpg'%}" alt="" srcset="" class="img m-auto">
+        <div>
+            <h3>We are sorry !☹</h3>
+            <h5 class="text-danger">Your order has been failled due to some error.</h5>
+            <p class="fs-5">Please try again !</p>
+            <p> You will be redirect to home page in <span id="redirect" class="text-danger">20</span> seconds.</p>
+            <a href="/"><button class="btn btn-outline-dark">Go Home Now</button></a>
+        </div>
+        
+    </div>
+    {% endif %}
+</div>
+
+{% endblock body %}
+
+{% block JS %}
+<script>
+    window.onload = function () {
+        redirect = document.getElementById('redirect');
+
+        // timer for download link to be available
+        duration = 19;
+
+        var timer = duration, minutes, seconds;
+        var countdownInterval = setInterval(function () {
+            minutes = parseInt(timer / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+
+            time = (minutes * 60) + seconds
+            redirect.innerHTML = time ;
+
+            if (--timer < 0) {
+                clearInterval(countdownInterval);
+                window.location.href="/"
+            }
+        }, 1000);
+    }
+</script>
+
+{% endblock JS %}

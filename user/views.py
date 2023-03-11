@@ -18,6 +18,11 @@ def cartCount(user_id):
     cart = cart.count()
     return cart
 
+def bought(project,user_id):
+    bought=False
+    bought=Order.objects.filter(project=project, user_id=user_id).exists()
+    return bought
+
 
 def home(request):
     topProjs = Project.objects.all()[:2]
@@ -38,7 +43,7 @@ def projView(request, proj_id):
     itemInCart = Cart.objects.filter(project=proj_id, user_id=request.user.id).exists()
 
     params = {'project': project, "cartCount": cartCount(request.user.id),
-               "images": images, "itemInCart": itemInCart}
+               "images": images, "itemInCart": itemInCart, 'bought': bought(project,request.user.id)}
     return render(request, 'user/projView.html', params)
 
 
@@ -58,13 +63,13 @@ def templates(request, data=None):
 
 
 def tempView(request, temp_id):
-    project = Project.objects.get(proj_id=temp_id)
+    template = Project.objects.get(proj_id=temp_id)
     images = Proj_image.objects.filter(project=temp_id)
     itemInCart = False
     itemInCart = Cart.objects.filter(project=temp_id, user_id=request.user.id).exists()
 
-    params = {'template': project, "cartCount": cartCount(
-        request.user.id), "images": images, "itemInCart": itemInCart}
+    params = {'template': template, "cartCount": cartCount(
+        request.user.id), "images": images, "itemInCart": itemInCart, 'bought': bought(template,request.user.id)}
     return render(request, 'user/projView.html', params)
 
 
@@ -160,10 +165,16 @@ def handleAddToCart(request, proj_id):
             proj = Project.objects.get(proj_id=proj_id)
             user_id = request.user.id
 
-            cart = Cart.objects.create(project=proj, user_id=user_id)
-            cart.save()
-            messages.success(request, " Item added to cart successfully.")
-            return JsonResponse({'success': True,
+            checkBought= bought(proj, user_id)
+            if checkBought:
+                messages.warning(request, " Seems you already bought this project. Go to 'My Orders' section to download.")
+                return JsonResponse({'success': False,
+                                 'msg': "", "tag": "danger", "cartCount": cartCount(request.user.id)})
+            else:
+                cart = Cart.objects.create(project=proj, user_id=user_id)
+                cart.save()
+                messages.success(request, " Item added to cart successfully.")
+                return JsonResponse({'success': True,
                                  'msg': "", "tag": "success", "cartCount": cartCount(request.user.id)})
         else:
             messages.error(request, "Please Login First To Continue")
@@ -228,7 +239,7 @@ def removeFromCart(request, cart_id):
         return redirect("/")
 
 
-def order(request):
+def my_order(request):
     if request.user.is_authenticated:
         user_id = request.user.id
 
@@ -249,18 +260,20 @@ def download(request):
         return HttpResponse("njhfkjdhfh")
 
 
-def buy(request):
+def checkout(request):
     if request.user.is_authenticated:
         if request.method=="POST":
             user_id = request.user.id
             # proj_id = proj_id
-            price=request.POST.get('price')
+            totalprice=request.POST.get('price')
+
+            orderedItm= Cart.objects.filter(user_id=user_id).values('cart_id','project_id')
             # print(price)
-            if price == '0':
-               params={"price":price}
+            if totalprice == '0':
+               params={"price":totalprice}
                return redirect('/handleOrder', params )
             else:
-                params={"price":price}
+                params={"totalprice":totalprice, "cartCount": cartCount(user_id)}
                 # return render(request, "user/paytm.html" ,{"data_dict":data_dict})
                 return render(request, "user/paymentPage.html", params )
     else:
@@ -269,10 +282,92 @@ def buy(request):
         return redirect("/login")
 
 
+def buyNow(request):
+    if request.user.is_authenticated:
+        if request.method=="POST":
+            user_id = request.user.id
+            proj_id = request.POST.get('proj_id')
+
+            orderedItm= Project.objects.get(proj_id=proj_id)
+            checkBought= bought(orderedItm, user_id)
+            if checkBought:
+                messages.warning(request, " Seems you already bought this project. Go to 'My Orders' section to download.")
+                return redirect('/projects')
+            else:
+                
+                if orderedItm.free:
+                    price= 0
+                    params={"totalprice":price, "orderedItm":proj_id}
+                    # return redirect('/handleOrder', params )
+                    return HttpResponse(price)
+                
+                elif orderedItm.discounted_price is None:
+                    price=orderedItm.price
+                
+                else:
+                    price=orderedItm.discounted_price
+                params={"totalprice":price,"orderedItm":proj_id, "cartCount": cartCount(user_id)}
+                return render(request, "user/paymentPage.html", params )
+            
+    else:
+        messages.error(request, "You are not logged in ! Please login first to continue.")
+        return redirect("/login")
+
+
 
 def handleOrder(request):
     
     return redirect("/order")
+
+
+def paymentSuccess(request):
+    if request.method=="POST":
+
+        user_id= request.user.id
+        orderedItm= request.POST.get('orderedItm')
+        orderID= request.POST.get('orderID')
+
+        if orderedItm == "":
+            cartItems= Cart.objects.filter(user_id=user_id)
+            for i in cartItems:
+                
+                if i.project.free:
+                    price = 0
+                elif i.project.discounted_price:
+                    price = i.project.discounted_price
+                else:
+                    price = i.project.price
+
+                order= Order.objects.create(project=i.project, user_id=user_id, price=price,transaction_id=orderID)
+                order.save()
+                cart = Cart.objects.get(cart_id=i.cart_id)
+                cart.delete()
+            
+        else:
+            project= Project.objects.get(proj_id=orderedItm)
+            if project.free:
+                price = 0
+            elif project.discounted_price:
+                price = project.discounted_price
+            else:
+                price = project.price
+
+            order = Order.objects.create(project=project, user_id=user_id, price=price,transaction_id=orderID)
+            order.save()
+           
+        params={'success':True, "cartCount": cartCount(user_id)}
+        return render(request, 'user/orderStatus.html', params)
+            
+         
+
+def paymentFailled(request):
+
+    params={'success':False, "cartCount": cartCount(request.user.id)}
+    return render(request, 'user/orderStatus.html', params)
+
+
+
+
 
 @csrf_exempt
 def handelPaymentRequest(request):

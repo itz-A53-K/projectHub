@@ -149,7 +149,7 @@ cursor: pointer;
     </div>
   </div>
 </div>
-<form action="/buy/" method="post" id="checkoutForm">
+<form action="/checkout/" method="post" id="checkoutForm">
   {% csrf_token %}
   <input type="hidden" name="price" value="{{total_descounted_price}}">  
 </form>
@@ -166,7 +166,7 @@ cursor: pointer;
           
           {% comment %} $.ajax({
               type:"POST",
-              url:"/buy/",
+              url:"/checkout/",
               data:{
                   price : price,
                   csrfmiddlewaretoken:'{{ csrf_token }}',
