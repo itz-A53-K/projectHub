@@ -264,17 +264,23 @@ def checkout(request):
     if request.user.is_authenticated:
         if request.method=="POST":
             user_id = request.user.id
-            # proj_id = proj_id
             totalprice=request.POST.get('price')
 
-            orderedItm= Cart.objects.filter(user_id=user_id).values('cart_id','project_id')
-            # print(price)
             if totalprice == '0':
-               params={"price":totalprice}
-               return redirect('/handleOrder', params )
+                #if item is free 
+                if cartCount(user_id) == 1:
+                    messages.info(request, 'This item is free🎉🥳 for now. You can download it directly.')
+                else:
+                    messages.info(request, 'This items are free🎉🥳 for now. You can download it directly.')
+
+                cartItems= Cart.objects.filter(user_id=user_id)
+                for i in cartItems:
+                    cart = Cart.objects.get(project=i.project, user_id=user_id)
+                    cart.delete()
+                    
+                return redirect("/")
             else:
                 params={"totalprice":totalprice, "cartCount": cartCount(user_id)}
-                # return render(request, "user/paytm.html" ,{"data_dict":data_dict})
                 return render(request, "user/paymentPage.html", params )
     else:
         messages.error(
@@ -354,6 +360,12 @@ def paymentSuccess(request):
 
             order = Order.objects.create(project=project, user_id=user_id, price=price,transaction_id=orderID)
             order.save()
+
+            inCart=False
+            inCart= Cart.objects.filter(project=project, user_id=user_id).exists()
+            if inCart:
+                cart = Cart.objects.get(project=project, user_id=user_id)
+                cart.delete()
            
         params={'success':True, "cartCount": cartCount(user_id)}
         return render(request, 'user/orderStatus.html', params)
