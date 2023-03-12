@@ -13,7 +13,7 @@
             {% comment %} <h2>Payment Option</h2> {% endcomment %}
             <h4>Pay securly with paypal</h4>
             <h5>Amount : {{totalprice}}0</h5>
-            <div id="paypal-button-container" </div>
+            <div id="paypal-button-container"> </div>
         </div>
     </div>
 
@@ -28,18 +28,15 @@
 
         <script>
             const paypalButtonsComponent = paypal.Buttons({
-                // optional styling for buttons
-                // https://developer.paypal.com/docs/checkout/standard/customize/buttons-style-guide/
+               
                 style: {
                     color: "gold",
                     shape: "rect",
                     height: 40
                 },
-
-                // set up the transaction
+               
                 createOrder: (data, actions) => {
-                    // pass in any options from the v2 orders create call:
-                    // https://developer.paypal.com/api/orders/v2/#orders-create-request-body
+                    
                     const createOrderPayload = {
                         purchase_units: [
                             {
@@ -53,7 +50,6 @@
                     return actions.order.create(createOrderPayload);
                 },
 
-                // finalize the transaction
                 onApprove: (data, actions) => {
                     const captureOrderHandler = (details) => {
                         const payerName = details.payer.name.given_name;
@@ -75,84 +71,12 @@
                     ); {% endcomment %}
                     window.location.href="/paymentFailled/"
                 }
-            });
+                });
 
-            paypalButtonsComponent
-                .render("#paypal-button-container")
-                .catch((err) => {
-                    console.error(`PayPal Buttons failed to render: ${err}`);
+                paypalButtonsComponent
+                    .render("#paypal-button-container")
+                    .catch((err) => {
+                        console.error(`PayPal Buttons failed to render: ${err}`);
                 });
         </script>
 {%endblock%}
-
-
-
-
-{% comment %} <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0"/>
-    <title>Paytm payment page</title>
-</head>
-<body> {% endcomment %}
-    {% comment %} https://securegw-stage.paytm.in/theia/processTransaction {% endcomment %}
-    {% comment %} https://securegw-stage.paytm.in/v3/order/status {% endcomment %}
-    {% comment %} <form action="https://securegw-stage.paytm.in/theia/api/v1/initiateTransaction?mid={{data_dict.MID}}&orderId={{data_dict.ORDER_ID}}" method="post" id="paytm">
-        
-        {% for key, value in data_dict.items %}
-        <input type="hidden" name="{{key}}" value="{{value}}">
-        {% endfor %}
-        
-    </form>
-
-    <script>
-        document.getElementById("paytm").submit();
-
-    </script>
-</body>
-</html> {% endcomment %}
-
-{% comment %} <!DOCTYPE html>
-<html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-  </head>
-  <body>
-    <div id="paypal-button-container"></div>
-
-
-    <!-- Replace "test" with your own sandbox Business account app client ID -->
-    <script src="https://www.paypal.com/sdk/js?client-id=AR8ssVdYSqeYJo99dA984kt3cAfT62jh4vdlKqT4b9G24GA-Qi7YoJOhE-xIwsb3oxkbBcApPA22wgyZ"></script>
-
-    <script>
-        paypal.Buttons({
-            return fetch("/create-paypal-order", {
-                method: "POST",
-                headers: {
-                "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                cart: [
-                    {
-                    sku: "5",
-                    quantity: "1"
-                    }
-                ]
-                })
-            })
-            createOrder() {
-            },
-            onError(err) {
-                // For example, redirect to a specific error page
-                // window.location.href = "/gr";
-                console.log(err)
-            }
-        }).render('#paypal-button-container');
-    </script>
-    <script>
-    </script>
-  </body>
-</html> {% endcomment %}

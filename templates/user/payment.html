@@ -1,0 +1,18 @@
+{% extends 'user/basic.html' %}
+
+{% block body %}
+    <form id="payth" action="{{ payu_url }}" method="post">
+        {% for key, value in form_data.items %}
+            <input type="hidden" name="{{ key }}" value="{{ value }}">
+        {% endfor %}
+        {% comment %} <button type="submit" class="btn btn-primary">Pay Now</button> {% endcomment %}
+    </form>
+{% endblock %}
+{%block JS%}
+<script>
+    window.addEventListener("load", (event) => {
+        document.getElementById("payth").submit();
+      });
+</script>
+
+{%endblock%}

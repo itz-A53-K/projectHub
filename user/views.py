@@ -1,3 +1,4 @@
+from user.models import Project, Proj_image, Cart, Order, User_detail
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -6,11 +7,21 @@ from django.http import JsonResponse, Http404
 from user.form import ImageForm
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
+import hashlib
+from django.conf import settings
+import time
 
+# Define the payment gateway URLs
+# PAYU_BASE_URL = 'https://secure.payu.in/_payment'
+PAYU_TEST_URL = 'https://test.payu.in/_payment'
+PAYU_PRODUCTION_URL = 'https://secure.payu.in/_payment'
 
-
-MERCHANT_Key="kbzk1DSbJiV_03p5"
-from user.models import Project, Proj_image, Cart, Order, User_detail
+# Define the PayU merchant key and salt
+# MERCHANT_KEY = 'CY4YAH'
+# SALT = '72toOcfuXCBizlYLEGqvVYeIUnXLOGsY'
+MERCHANT_KEY = 'gtKFFx'
+# SALT = 'eCwWELxi'
+SALT = '4R38IvwiV57FwVpsgOvTXBdLE4tHUXFW'
 
 
 def cartCount(user_id):
@@ -18,9 +29,10 @@ def cartCount(user_id):
     cart = cart.count()
     return cart
 
-def bought(project,user_id):
-    bought=False
-    bought=Order.objects.filter(project=project, user_id=user_id).exists()
+
+def bought(project, user_id):
+    bought = False
+    bought = Order.objects.filter(project=project, user_id=user_id).exists()
     return bought
 
 
@@ -40,24 +52,26 @@ def projView(request, proj_id):
     project = Project.objects.get(proj_id=proj_id)
     images = Proj_image.objects.filter(project=proj_id)
     itemInCart = False
-    itemInCart = Cart.objects.filter(project=proj_id, user_id=request.user.id).exists()
+    itemInCart = Cart.objects.filter(
+        project=proj_id, user_id=request.user.id).exists()
 
     params = {'project': project, "cartCount": cartCount(request.user.id),
-               "images": images, "itemInCart": itemInCart, 'bought': bought(project,request.user.id)}
+              "images": images, "itemInCart": itemInCart, 'bought': bought(project, request.user.id)}
     return render(request, 'user/projView.html', params)
 
 
-
 def templates(request, data=None):
-    if data == None :
+    if data == None:
         proj = Project.objects.filter(category='Template')
-    if data == 'under1k' :
-        proj = Project.objects.filter(Q(category='Template', discounted_price__lte = 999))
-    elif data == 'over1k' :
-        proj = Project.objects.filter(category='Template', discounted_price__gte=999, free = False)
-    elif data == 'free' :
+    if data == 'under1k':
+        proj = Project.objects.filter(
+            Q(category='Template', discounted_price__lte=999))
+    elif data == 'over1k':
+        proj = Project.objects.filter(
+            category='Template', discounted_price__gte=999, free=False)
+    elif data == 'free':
         proj = Project.objects.filter(category='Template', free=True)
-    
+
     params = {'templates': proj, "cartCount": cartCount(request.user.id)}
     return render(request, 'user/templates.html', params)
 
@@ -66,10 +80,11 @@ def tempView(request, temp_id):
     template = Project.objects.get(proj_id=temp_id)
     images = Proj_image.objects.filter(project=temp_id)
     itemInCart = False
-    itemInCart = Cart.objects.filter(project=temp_id, user_id=request.user.id).exists()
+    itemInCart = Cart.objects.filter(
+        project=temp_id, user_id=request.user.id).exists()
 
     params = {'template': template, "cartCount": cartCount(
-        request.user.id), "images": images, "itemInCart": itemInCart, 'bought': bought(template,request.user.id)}
+        request.user.id), "images": images, "itemInCart": itemInCart, 'bought': bought(template, request.user.id)}
     return render(request, 'user/projView.html', params)
 
 
@@ -165,17 +180,18 @@ def handleAddToCart(request, proj_id):
             proj = Project.objects.get(proj_id=proj_id)
             user_id = request.user.id
 
-            checkBought= bought(proj, user_id)
+            checkBought = bought(proj, user_id)
             if checkBought:
-                messages.warning(request, " Seems you already bought this project. Go to 'My Orders' section to download.")
+                messages.warning(
+                    request, " Seems you already bought this project. Go to 'My Orders' section to download.")
                 return JsonResponse({'success': False,
-                                 'msg': "", "tag": "danger", "cartCount": cartCount(request.user.id)})
+                                     'msg': "", "tag": "danger", "cartCount": cartCount(request.user.id)})
             else:
                 cart = Cart.objects.create(project=proj, user_id=user_id)
                 cart.save()
                 messages.success(request, " Item added to cart successfully.")
                 return JsonResponse({'success': True,
-                                 'msg': "", "tag": "success", "cartCount": cartCount(request.user.id)})
+                                     'msg': "", "tag": "success", "cartCount": cartCount(request.user.id)})
         else:
             messages.error(request, "Please Login First To Continue")
             return JsonResponse({'success': False,
@@ -262,81 +278,87 @@ def download(request):
 
 def checkout(request):
     if request.user.is_authenticated:
-        if request.method=="POST":
+        if request.method == "POST":
             user_id = request.user.id
-            totalprice=request.POST.get('price')
+            totalprice = request.POST.get('price')
 
             if totalprice == '0':
-                #if item is free 
+                # if item is free
                 if cartCount(user_id) == 1:
-                    messages.info(request, 'This item is free🎉🥳 for now. You can download it directly.')
+                    messages.info(
+                        request, 'This item is free🎉🥳 for now. You can download it directly.')
                 else:
-                    messages.info(request, 'This items are free🎉🥳 for now. You can download it directly.')
+                    messages.info(
+                        request, 'This items are free🎉🥳 for now. You can download it directly.')
 
-                cartItems= Cart.objects.filter(user_id=user_id)
+                cartItems = Cart.objects.filter(user_id=user_id)
                 for i in cartItems:
                     cart = Cart.objects.get(project=i.project, user_id=user_id)
                     cart.delete()
-                    
+
                 return redirect("/")
             else:
-                params={"totalprice":totalprice, "cartCount": cartCount(user_id)}
-                return render(request, "user/paymentPage.html", params )
+                params = {"totalprice": totalprice,
+                          "cartCount": cartCount(user_id)}
+                return render(request, "user/paymentPage.html", params)
     else:
         messages.error(
             request, "You are not logged in ! Please login first to continue.")
         return redirect("/login")
 
 
-def buyNow(request):
+# def buyNow(request):
     if request.user.is_authenticated:
-        if request.method=="POST":
+        if request.method == "POST":
             user_id = request.user.id
             proj_id = request.POST.get('proj_id')
 
-            orderedItm= Project.objects.get(proj_id=proj_id)
-            checkBought= bought(orderedItm, user_id)
+            orderedItm = Project.objects.get(proj_id=proj_id)
+            checkBought = bought(orderedItm, user_id)
             if checkBought:
-                messages.warning(request, " Seems you already bought this project. Go to 'My Orders' section to download.")
+                messages.warning(
+                    request, " Seems you already bought this project. Go to 'My Orders' section to download.")
                 return redirect('/projects')
             else:
-                
+
                 if orderedItm.free:
-                    price= 0
-                    params={"totalprice":price, "orderedItm":proj_id}
+                    price = 0
+                    params = {"totalprice": price, "orderedItm": proj_id}
                     # return redirect('/handleOrder', params )
                     return HttpResponse(price)
-                
+
                 elif orderedItm.discounted_price is None:
-                    price=orderedItm.price
-                
+                    price = orderedItm.price
+
                 else:
-                    price=orderedItm.discounted_price
-                params={"totalprice":price,"orderedItm":proj_id, "cartCount": cartCount(user_id)}
-                return render(request, "user/paymentPage.html", params )
-            
+                    price = orderedItm.discounted_price
+                params = {"totalprice": price, "orderedItm": proj_id,
+                          "cartCount": cartCount(user_id)}
+                return render(request, "user/paymentPage.html", params)
+
     else:
-        messages.error(request, "You are not logged in ! Please login first to continue.")
+        messages.error(
+            request, "You are not logged in ! Please login first to continue.")
         return redirect("/login")
 
 
-
 def handleOrder(request):
-    
+
     return redirect("/order")
 
 
+@csrf_exempt
 def paymentSuccess(request):
-    if request.method=="POST":
+    if request.method == "POST":
 
-        user_id= request.user.id
-        orderedItm= request.POST.get('orderedItm')
-        orderID= request.POST.get('orderID')
+        user_id = request.user.id
+        orderedItm = request.POST.get('orderedItm')
+        orderID = request.POST.get('orderID')
 
         if orderedItm == "":
-            cartItems= Cart.objects.filter(user_id=user_id)
+            cartItems = Cart.objects.filter(user_id=user_id)
             for i in cartItems:
-                
+
                 if i.project.free:
                     price = 0
                 elif i.project.discounted_price:
@@ -344,13 +366,14 @@ def paymentSuccess(request):
                 else:
                     price = i.project.price
 
-                order= Order.objects.create(project=i.project, user_id=user_id, price=price,transaction_id=orderID)
+                order = Order.objects.create(
+                    project=i.project, user_id=user_id, price=price, transaction_id=orderID)
                 order.save()
                 cart = Cart.objects.get(cart_id=i.cart_id)
                 cart.delete()
-            
+
         else:
-            project= Project.objects.get(proj_id=orderedItm)
+            project = Project.objects.get(proj_id=orderedItm)
             if project.free:
                 price = 0
             elif project.discounted_price:
@@ -358,65 +381,79 @@ def paymentSuccess(request):
             else:
                 price = project.price
 
-            order = Order.objects.create(project=project, user_id=user_id, price=price,transaction_id=orderID)
+            order = Order.objects.create(
+                project=project, user_id=user_id, price=price, transaction_id=orderID)
             order.save()
 
-            inCart=False
-            inCart= Cart.objects.filter(project=project, user_id=user_id).exists()
+            inCart = False
+            inCart = Cart.objects.filter(
+                project=project, user_id=user_id).exists()
             if inCart:
                 cart = Cart.objects.get(project=project, user_id=user_id)
                 cart.delete()
-           
-        params={'success':True, "cartCount": cartCount(user_id)}
-        return render(request, 'user/orderStatus.html', params)
-            
-         
 
+        params = {'success': True, "cartCount": cartCount(user_id)}
+        return render(request, 'user/orderStatus.html', params)
+
+
+@csrf_exempt
 def paymentFailled(request):
 
-    params={'success':False, "cartCount": cartCount(request.user.id)}
+    params = {'success': False, "cartCount": cartCount(request.user.id)}
     return render(request, 'user/orderStatus.html', params)
-
-
-
 
 
 @csrf_exempt
 def handelPaymentRequest(request):
-   # paytm will send us post request here
 
-    # form = request.POST
-    # response_dict = {}
-    # for i in form.keys():
-    #     response_dict[i] = form[i]
-    #     if i == 'CHECKSUMHASH':
-    #         checksum = form[i]
-    #         print(checksum)
-    # print(form)
-    # paytmParams = dict()
-    # paytmParams = form.to_dict()
-    # paytmParams = request.POST
-    # # paytmChecksum = paytmChecksum
-    # paytmChecksum = paytmParams['CHECKSUMHASH']
-    # paytmParams.pop('CHECKSUMHASH', None)
-
-    # # Verify checksum
-    # # Find your Merchant Key in your Paytm Dashboard at https://dashboard.paytm.com/next/apikeys 
-    # isVerifySignature = PaytmChecksum.verifySignature(paytmParams, MERCHANT_Key,paytmChecksum)
-    # if isVerifySignature:
-    #     print("Checksum Matched")
-    # else:
-    #     print("Checksum Mismatched")
-
-
-
-
-    #
-    # verify = PaytmChecksum.verifySignature(response_dict, MERCHANT_Key, checksum)
-    # if verify:
-    #     if response_dict['RESPCODE'] == '01':
-    #         print('order successful')
-    #     else:
-    #         print('order was not successful because' + response_dict['RESPMSG'])
-    # return render(request, 'shop/paymentstatus.html', {'response': response_dict})
     return HttpResponse("hadfjhgdfdfudfuuyfhuifuisduifh")
+
+
+def generate_hash(params):
+    """Function to generate PayU hash"""
+
+    hash_string = ''
+    for key in params.keys():
+        hash_string += '{}|'.format(params[key])
+    hash_string += "||||||||||"+SALT
+
+    print(hash_string)
+
+    return hashlib.sha512(hash_string.encode('utf-8')).hexdigest()
+
+
+def buyNow(request):
+    """View function to process payment"""
+
+    # Get the payment amount from the request
+    amount = 1
+
+    # Generate the PayU hash
+    hash_params = {
+        'key': MERCHANT_KEY,
+        'txnid': 'TXN{}'.format(time.time()),
+        'amount': amount,
+        'productinfo': 'Test Product',
+        'firstname': 'Test',
+        'email': 'test@example.com',
+    }
+    hash_params['hash'] = generate_hash(hash_params)
+
+    # Build the PayU payment form
+    form_data = {
+        'key': MERCHANT_KEY,
+        'txnid': hash_params['txnid'],
+        'amount': hash_params['amount'],
+        'productinfo': hash_params['productinfo'],
+        'firstname': hash_params['firstname'],
+        'email': hash_params['email'],
+        'phone': '34294324',
+        'surl': 'http://127.0.0.1:8000/paymentSuccess/',
+        'furl': 'http://127.0.0.1:8000/paymentFailed/',
+        'hash': hash_params['hash'],
+    }
+
+    # payu_url = PAYU_PRODUCTION_URL
+    payu_url = PAYU_TEST_URL
+
+    return render(request, 'user/payment.html', {'form_data': form_data, 'payu_url': payu_url})
