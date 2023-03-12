@@ -18,7 +18,7 @@
                 <span class="visually-hidden">Loading...</span>
               </div>
             <h4>REDIRECTING...</h4>
-            <h5>Please wait! Redirecting you to payment page.</h5>
+            <h5 class="text-center">Please wait! Redirecting you to payment page.</h5>
         </div>
     </div>
     <form id="payth" action="{{ payu_url }}" method="post">
@@ -30,7 +30,7 @@
 
 <script>
     window.addEventListener("load", (event) => {
-        {% comment %} document.getElementById("payth").submit(); {% endcomment %}
+        document.getElementById("payth").submit();
       });
 </script>
 
