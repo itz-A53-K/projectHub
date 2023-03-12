@@ -298,16 +298,20 @@ def checkout(request):
 
                 return redirect("/")
             else:
-                params = {"totalprice": totalprice,
-                          "cartCount": cartCount(user_id)}
-                return render(request, "user/paymentPage.html", params)
+                f_name= request.user.first_name
+                email= request.user.email
+                phone= User_detail.objects.get(user_id=user_id).phone
+                odrItmID=""
+                
+                context= createPayment(totalprice,f_name,email,phone,odrItmID,user_id)
+                return render(request, 'user/payment.html', context)
     else:
         messages.error(
             request, "You are not logged in ! Please login first to continue.")
         return redirect("/login")
 
 
-# def buyNow(request):
+def buyNow(request):
     if request.user.is_authenticated:
         if request.method == "POST":
             user_id = request.user.id
@@ -322,19 +326,24 @@ def checkout(request):
             else:
 
                 if orderedItm.free:
-                    price = 0
-                    params = {"totalprice": price, "orderedItm": proj_id}
-                    # return redirect('/handleOrder', params )
-                    return HttpResponse(price)
+                    messages.info(
+                        request, 'This item is free🎉🥳 for now. You can download it directly.')
+                    return redirect('/projects/'+proj_id)
 
                 elif orderedItm.discounted_price is None:
                     price = orderedItm.price
 
                 else:
                     price = orderedItm.discounted_price
-                params = {"totalprice": price, "orderedItm": proj_id,
-                          "cartCount": cartCount(user_id)}
-                return render(request, "user/paymentPage.html", params)
+
+                #user detail
+                f_name= request.user.first_name
+                email= request.user.email
+                phone= User_detail.objects.get(user_id=user_id).phone
+                odrItmID=orderedItm.proj_id
+
+                context= createPayment(price,f_name,email,phone,odrItmID,user_id)
+                return render(request, 'user/payment.html', context)
 
     else:
         messages.error(
@@ -342,20 +351,16 @@ def checkout(request):
         return redirect("/login")
 
 
-def handleOrder(request):
-
-    return redirect("/order")
-
-
 @csrf_exempt
 def paymentSuccess(request):
     if request.method == "POST":
 
-        user_id = request.user.id
-        orderedItm = request.POST.get('orderedItm')
-        orderID = request.POST.get('orderID')
+        # user_id = request.user.id
+        user_id = request.POST.get('udf2')
+        odrItmID = request.POST.get('udf1')
+        txnID = request.POST.get('txnid')
 
-        if orderedItm == "":
+        if odrItmID == "":
             cartItems = Cart.objects.filter(user_id=user_id)
             for i in cartItems:
 
@@ -367,13 +372,13 @@ def paymentSuccess(request):
                     price = i.project.price
 
                 order = Order.objects.create(
-                    project=i.project, user_id=user_id, price=price, transaction_id=orderID)
+                    project=i.project, user_id=user_id, price=price, transaction_id=txnID)
                 order.save()
                 cart = Cart.objects.get(cart_id=i.cart_id)
                 cart.delete()
 
         else:
-            project = Project.objects.get(proj_id=orderedItm)
+            project = Project.objects.get(proj_id=odrItmID)
             if project.free:
                 price = 0
             elif project.discounted_price:
@@ -381,8 +386,9 @@ def paymentSuccess(request):
             else:
                 price = project.price
 
+            price=  request.POST.get('amount')
             order = Order.objects.create(
-                project=project, user_id=user_id, price=price, transaction_id=orderID)
+                project=project, user_id=user_id, price=price, transaction_id=txnID)
             order.save()
 
             inCart = False
@@ -397,16 +403,10 @@ def paymentSuccess(request):
 
 
 @csrf_exempt
-def paymentFailled(request):
-
-    params = {'success': False, "cartCount": cartCount(request.user.id)}
-    return render(request, 'user/orderStatus.html', params)
-
-
-@csrf_exempt
-def handelPaymentRequest(request):
-
-    return HttpResponse("hadfjhgdfdfudfuuyfhuifuisduifh")
+def paymentFailed(request):
+    if request.method=="POST":
+        params = {'success': False, "cartCount": cartCount(request.POST.get('udf2'))}
+        return render(request, 'user/orderStatus.html', params)
 
 
 def generate_hash(params):
@@ -415,27 +415,24 @@ def generate_hash(params):
     hash_string = ''
     for key in params.keys():
         hash_string += '{}|'.format(params[key])
-    hash_string += "||||||||||"+SALT
+    hash_string += "||||||||"+SALT
 
-    print(hash_string)
+    # print(hash_string)
 
     return hashlib.sha512(hash_string.encode('utf-8')).hexdigest()
 
-
-def buyNow(request):
-    """View function to process payment"""
-
-    # Get the payment amount from the request
-    amount = 1
-
+#creating payment for payU
+def createPayment(amount,f_name,email,phone,odrItmID,user_id):
     # Generate the PayU hash
     hash_params = {
         'key': MERCHANT_KEY,
         'txnid': 'TXN{}'.format(time.time()),
         'amount': amount,
         'productinfo': 'Test Product',
-        'firstname': 'Test',
-        'email': 'test@example.com',
+        'firstname': f_name,
+        'email': email,
+        'udf1':odrItmID,
+        'udf2':user_id
     }
     hash_params['hash'] = generate_hash(hash_params)
 
@@ -447,13 +444,18 @@ def buyNow(request):
         'productinfo': hash_params['productinfo'],
         'firstname': hash_params['firstname'],
         'email': hash_params['email'],
-        'phone': '34294324',
+        'phone': phone,
         'surl': 'http://127.0.0.1:8000/paymentSuccess/',
         'furl': 'http://127.0.0.1:8000/paymentFailed/',
         'hash': hash_params['hash'],
+        'udf1': hash_params['udf1'],
+        'udf2': hash_params['udf2'],
     }
 
     # payu_url = PAYU_PRODUCTION_URL
     payu_url = PAYU_TEST_URL
 
-    return render(request, 'user/payment.html', {'form_data': form_data, 'payu_url': payu_url})
+    context={'form_data': form_data, 'payu_url': payu_url}
+    return context
+
+   

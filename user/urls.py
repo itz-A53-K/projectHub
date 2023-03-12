@@ -15,22 +15,19 @@ urlpatterns = [
     path('profile/', views.profile, name="profile"),
 
     path('cart/', views.cart, name="cart"),
-    path('handleAddToCart/<proj_id>',
-         views.handleAddToCart, name="handleAddToCart"),
+    path('handleAddToCart/<proj_id>',views.handleAddToCart, name="handleAddToCart"),
     path('remove/<cart_id>', views.removeFromCart, name="removeFromCart"),
 
     path('search/', views.search, name="search"),
 
     path('checkout/', views.checkout, name="checkout"),
     path('buy/', views.buyNow, name="buyNow"),
-    path('handelPaymentRequest/', views.handelPaymentRequest,
-         name="handelPaymentRequest"),
+#     path('handelPaymentRequest/', views.handelPaymentRequest,name="handelPaymentRequest"),
 
     path('paymentSuccess/', views.paymentSuccess, name="paymentSuccess"),
-    path('paymentFailled/', views.paymentFailled, name="paymentFailled"),
+    path('paymentFailed/', views.paymentFailed, name="paymentFailed"),
 
     path('order/', views.my_order, name="order"),
-    path('handleOrder/', views.handleOrder, name="handleOrder"),
 
     path('download/', views.download, name="download"),
     # path('create-paypal-order/', views.createPaypalOrder, name="createPaypalOrder"),

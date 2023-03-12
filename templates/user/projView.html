@@ -208,16 +208,16 @@ a{
                     </div>
 
                     <div class="d-grid gap-2 mx-auto ">
-                        {% if itemInCart %}
-                            <a href="/cart/" class="btn btn-warning py-2 mx-3 my-1">Go to cart</a>
-                        {% else %}
-                            <button class="btn btnDesign2 mx-3 my-1 addToCart">Add to cart</button>
-                            <input type="hidden" id="projectId" name="projectId" value="{{project.proj_id}}">
-                        {% endif %}
-
                         {% if project.free or bought%}
                             <a href="#downloadBox" class="btn btnDesign3 mx-3 my-1">Download</a>
                         {%else%}
+                            {% if itemInCart %}
+                                <a href="/cart/" class="btn btn-warning py-2 mx-3 my-1">Go to cart</a>
+                            {% else %}
+                                <button class="btn btnDesign2 mx-3 my-1 addToCart">Add to cart</button>
+                                <input type="hidden" id="projectId" name="projectId" value="{{project.proj_id}}">
+                            {% endif %}
+
                             <button class="btn btnDesign3 mx-3 my-1 buyNow" id="{{project.proj_id}}">Buy now</button>
                         {%endif%}
 
@@ -361,16 +361,16 @@ a{
                     </div>
 
                     <div class="d-grid gap-2 mx-auto ">
-                        {% if itemInCart %}
-                            <a href="/cart/" class="btn btn-warning py-2 mx-3 my-1">Go to cart</a>
-                        {% else %}
-                            <button class="btn btnDesign2 mx-3 my-1 addToCart">Add to cart</button>
-                            <input type="hidden" id="projectId" name="projectId" value="{{template.proj_id}}">
-                        {% endif %}
-
                         {% if template.free or bought%}
                             <a href="#downloadBox" class="btn btnDesign3 mx-3 my-1">Download</a>
                         {%else%}
+                            {% if itemInCart %}
+                                <a href="/cart/" class="btn btn-warning py-2 mx-3 my-1">Go to cart</a>
+                            {% else %}
+                                <button class="btn btnDesign2 mx-3 my-1 addToCart">Add to cart</button>
+                                <input type="hidden" id="projectId" name="projectId" value="{{template.proj_id}}">
+                            {% endif %}
+
                             <button class="btn btnDesign3 mx-3 my-1 buyNow" id="{{template.proj_id}}">Buy now</button>
                         {%endif%}
 
