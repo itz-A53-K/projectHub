@@ -306,10 +306,12 @@ def checkout(request):
                 phone = User_detail.objects.get(user_id=user_id).phone
                 odrItmID = ""
 
-                context = createPayment(totalprice, f_name, email, phone, odrItmID, user_id)
+                context = createPayment(
+                    totalprice, f_name, email, phone, odrItmID, user_id)
                 return render(request, 'user/payment.html', context)
     else:
-        messages.error(request, "You are not logged in ! Please login first to continue.")
+        messages.error(
+            request, "You are not logged in ! Please login first to continue.")
         return redirect("/login")
 
 
@@ -344,7 +346,8 @@ def buyNow(request):
                 phone = User_detail.objects.get(user_id=user_id).phone
                 odrItmID = orderedItm.proj_id
 
-                context = createPayment(price, f_name, email, phone, odrItmID, user_id)
+                context = createPayment(
+                    price, f_name, email, phone, odrItmID, user_id)
                 return render(request, 'user/payment.html', context)
 
     else:
@@ -427,13 +430,14 @@ def paymentResponseHandler(request):
         print(dict['response']['status'])
 
         if status != dict['response']['status']:
-            params = {'success': False, "cartCount": cartCount(request.POST.get('udf2'))}
+            params = {'success': False, "cartCount": cartCount(
+                request.POST.get('udf2'))}
             return render(request, 'user/orderStatus.html', params)
-        
+
         else:
-            if not status == 'failure':
+            if dict['response']['status'] == status:
                 if odrItmID == "":
-                    #if order request is sent from cart (checkout button)
+                    # if order request is sent from cart (checkout button)
                     cartItems = Cart.objects.filter(user_id=user_id)
                     for i in cartItems:
 
@@ -444,12 +448,13 @@ def paymentResponseHandler(request):
                         else:
                             price = i.project.price
 
-                        order = Order.objects.create(project=i.project, user_id=user_id, price=price, transaction_id=txnID)
+                        order = Order.objects.create(
+                            project=i.project, user_id=user_id, price=price, transaction_id=txnID)
                         order.save()
                         cart = Cart.objects.get(cart_id=i.cart_id)
                         cart.delete()
                 else:
-                    #if order request is sent through buyNow button)
+                    # if order request is sent through buyNow button)
                     project = Project.objects.get(proj_id=odrItmID)
                     if project.free:
                         price = 0
@@ -465,14 +470,16 @@ def paymentResponseHandler(request):
                     #         request.POST.get('udf2'))}
                     #     return render(request, 'user/orderStatus.html', params)
                     # else:
-                    order = Order.objects.create(project=project, user_id=user_id, price=price, transaction_id=txnID)
+                    order = Order.objects.create(
+                        project=project, user_id=user_id, price=price, transaction_id=txnID)
                     order.save()
 
                     inCart = False
                     inCart = Cart.objects.filter(
                         project=project, user_id=user_id).exists()
                     if inCart:
-                        cart = Cart.objects.get(project=project, user_id=user_id)
+                        cart = Cart.objects.get(
+                            project=project, user_id=user_id)
                         cart.delete()
                 # params = {'success': True, "cartCount": cartCount(user_id),}
                 # return render(request, 'user/orderStatus.html', params)
@@ -487,7 +494,6 @@ def paymentResponseHandler(request):
         params = {'success': False, "cartCount": cartCount(
             request.POST.get('udf2'))}
         return render(request, 'user/orderStatus.html', params)
-
 
 
 def verify_transaction(params):
@@ -512,13 +518,12 @@ def verify_transaction(params):
     return (response.text)
 
 
-
 def paymentSuccess(request):
     params = {'success': True, "cartCount": cartCount(request.user.id)}
     return render(request, 'user/orderStatus.html', params)
 
 
 def paymentFailed(request):
-    params = {'success': False, "cartCount": cartCount(request.POST.get('udf2'))}
+    params = {'success': False, "cartCount": cartCount(
+        request.POST.get('udf2'))}
     return render(request, 'user/orderStatus.html', params)
-
