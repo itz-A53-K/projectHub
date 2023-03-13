@@ -497,8 +497,8 @@ def paymentHandler(request):
         odrItmID = request.POST.get('udf1')
         txnID = request.POST.get('txnid')
         status = request.POST.get('status')
-        post_price = request.POST.get('amount')
-        net_amount_debit = request.POST.get('net_amount_debit')
+        # post_price = request.POST.get('amount')
+        # net_amount_debit = request.POST.get('net_amount_debit')
 
         track_params = {
             'key': MERCHANT_KEY,
@@ -507,17 +507,12 @@ def paymentHandler(request):
             'var1': txnID,
         }
 
-        # JSON string
         response = verify_transaction(track_params)
-        # deserializes into dict and returns dict.
+
         dict = json.loads(response)
-        # print(dict[response][status])
+        print(dict['response']['status'])
 
-        # print("JSON string = ", dict)
-        # print()
-        # print("Status External : "+dict[response][status])
-
-        if status != "success":
+        if status != dict['response']['status']:
             params = {'success': False, "cartCount": cartCount(
                 request.POST.get('udf2'))}
             return render(request, 'user/orderStatus.html', params)
@@ -551,7 +546,7 @@ def paymentHandler(request):
 
             print(price)
             #  or price != post_price or net_amount_debit != price
-            if status != "success":
+            if status != dict['response']['status']:
                 params = {'success': False, "cartCount": cartCount(
                     request.POST.get('udf2'))}
                 return render(request, 'user/orderStatus.html', params)
