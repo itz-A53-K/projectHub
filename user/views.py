@@ -306,12 +306,10 @@ def checkout(request):
                 phone = User_detail.objects.get(user_id=user_id).phone
                 odrItmID = ""
 
-                context = createPayment(
-                    totalprice, f_name, email, phone, odrItmID, user_id)
+                context = createPayment(totalprice, f_name, email, phone, odrItmID, user_id)
                 return render(request, 'user/payment.html', context)
     else:
-        messages.error(
-            request, "You are not logged in ! Please login first to continue.")
+        messages.error(request, "You are not logged in ! Please login first to continue.")
         return redirect("/login")
 
 
@@ -346,72 +344,13 @@ def buyNow(request):
                 phone = User_detail.objects.get(user_id=user_id).phone
                 odrItmID = orderedItm.proj_id
 
-                context = createPayment(
-                    price, f_name, email, phone, odrItmID, user_id)
+                context = createPayment(price, f_name, email, phone, odrItmID, user_id)
                 return render(request, 'user/payment.html', context)
 
     else:
         messages.error(
             request, "You are not logged in ! Please login first to continue.")
         return redirect("/login")
-
-
-# @csrf_exempt
-# def paymentSuccess(request):
-#     if request.method == "POST":
-#         user_id = request.user.id
-#         # user_id = request.POST.get('udf2')
-#         odrItmID = request.POST.get('udf1')
-#         txnID = request.POST.get('txnid')
-
-#         if odrItmID == "":
-#             cartItems = Cart.objects.filter(user_id=user_id)
-#             for i in cartItems:
-
-#                 if i.project.free:
-#                     price = 0
-#                 elif i.project.discounted_price:
-#                     price = i.project.discounted_price
-#                 else:
-#                     price = i.project.price
-
-#                 order = Order.objects.create(
-#                     project=i.project, user_id=user_id, price=price, transaction_id=txnID)
-#                 order.save()
-#                 cart = Cart.objects.get(cart_id=i.cart_id)
-#                 cart.delete()
-
-#         else:
-#             project = Project.objects.get(proj_id=odrItmID)
-#             if project.free:
-#                 price = 0
-#             elif project.discounted_price:
-#                 price = project.discounted_price
-#             else:
-#                 price = project.price
-
-#             price = request.POST.get('amount')
-#             order = Order.objects.create(
-#                 project=project, user_id=user_id, price=price, transaction_id=txnID)
-#             order.save()
-
-#             inCart = False
-#             inCart = Cart.objects.filter(
-#                 project=project, user_id=user_id).exists()
-#             if inCart:
-#                 cart = Cart.objects.get(project=project, user_id=user_id)
-#                 cart.delete()
-
-#         params = {'success': True, "cartCount": cartCount(user_id)}
-#         return render(request, 'user/orderStatus.html', params)
-
-
-# @csrf_exempt
-# def paymentFailed(request):
-#     if request.method == "POST":
-#         params = {'success': False, "cartCount": cartCount(
-#             request.POST.get('udf2'))}
-#         return render(request, 'user/orderStatus.html', params)
 
 
 def generate_hash(params):
@@ -421,32 +360,9 @@ def generate_hash(params):
     for key in params.keys():
         hash_string += '{}|'.format(params[key])
     hash_string += "||||||||"+SALT
-
     # print(hash_string)
 
     return hashlib.sha512(hash_string.encode('utf-8')).hexdigest()
-
-
-def verify_transaction(params):
-    """Function to track PayU cash"""
-
-    hash_string = ''
-    for key in params.keys():
-        hash_string += '{}|'.format(params[key])
-    hash_string += SALT
-    hash_value = hashlib.sha512(hash_string.encode('utf-8')).hexdigest()
-    print(hash_string)
-    print(hash_value)
-
-    url = "https://test.payu.in/merchant/postservice?form=2"
-    payload = "key="+MERCHANT_KEY+"&command="+params['command']+"&var1=" + \
-        params['var1']+"&hash="+hash_value
-
-    headers = {"Accept": "application/json",
-               "Content-Type": "application/x-www-form-urlencoded"}
-    response = requests.request(
-        "POST", url, data=payload, headers=headers, params=params)
-    return (response.text)
 
 
 def createPayment(amount, f_name, email, phone, odrItmID, user_id):  # creating payment for payU
@@ -473,10 +389,8 @@ def createPayment(amount, f_name, email, phone, odrItmID, user_id):  # creating 
         'firstname': hash_params['firstname'],
         'email': hash_params['email'],
         'phone': phone,
-        # 'surl': 'http://127.0.0.1:8000/paymentSuccess/',
-        # 'furl': 'http://127.0.0.1:8000/paymentFailed/',
-        'surl': 'http://127.0.0.1:8000/paymentHandler/',
-        'furl': 'http://127.0.0.1:8000/paymentHandler/',
+        'surl': 'http://127.0.0.1:8000/paymentResponseHandler/',
+        'furl': 'http://127.0.0.1:8000/paymentResponseHandler/',
         'hash': hash_params['hash'],
         'udf1': hash_params['udf1'],
         'udf2': hash_params['udf2'],
@@ -490,7 +404,7 @@ def createPayment(amount, f_name, email, phone, odrItmID, user_id):  # creating 
 
 
 @csrf_exempt
-def paymentHandler(request):
+def paymentResponseHandler(request):
     if request.method == "POST":
         # user_id = request.user.id
         user_id = request.POST.get('udf2')
@@ -513,59 +427,98 @@ def paymentHandler(request):
         print(dict['response']['status'])
 
         if status != dict['response']['status']:
-            params = {'success': False, "cartCount": cartCount(
-                request.POST.get('udf2'))}
+            params = {'success': False, "cartCount": cartCount(request.POST.get('udf2'))}
             return render(request, 'user/orderStatus.html', params)
-
-        if odrItmID == "":
-            cartItems = Cart.objects.filter(user_id=user_id)
-            for i in cartItems:
-
-                if i.project.free:
-                    price = 0
-                elif i.project.discounted_price:
-                    price = i.project.discounted_price
-                else:
-                    price = i.project.price
-
-                print(price)
-                order = Order.objects.create(
-                    project=i.project, user_id=user_id, price=price, transaction_id=txnID)
-                order.save()
-                cart = Cart.objects.get(cart_id=i.cart_id)
-                cart.delete()
+        
         else:
+            if not status == 'failure':
+                if odrItmID == "":
+                    #if order request is sent from cart (checkout button)
+                    cartItems = Cart.objects.filter(user_id=user_id)
+                    for i in cartItems:
 
-            project = Project.objects.get(proj_id=odrItmID)
-            if project.free:
-                price = 0
-            elif project.discounted_price:
-                price = project.discounted_price
+                        if i.project.free:
+                            price = 0
+                        elif i.project.discounted_price:
+                            price = i.project.discounted_price
+                        else:
+                            price = i.project.price
+
+                        order = Order.objects.create(project=i.project, user_id=user_id, price=price, transaction_id=txnID)
+                        order.save()
+                        cart = Cart.objects.get(cart_id=i.cart_id)
+                        cart.delete()
+                else:
+                    #if order request is sent through buyNow button)
+                    project = Project.objects.get(proj_id=odrItmID)
+                    if project.free:
+                        price = 0
+                    elif project.discounted_price:
+                        price = project.discounted_price
+                    else:
+                        price = project.price
+
+                    # print(price)
+                    #  or price != post_price or net_amount_debit != price
+                    # if status != dict['response']['status']:
+                    #     params = {'success': False, "cartCount": cartCount(
+                    #         request.POST.get('udf2'))}
+                    #     return render(request, 'user/orderStatus.html', params)
+                    # else:
+                    order = Order.objects.create(project=project, user_id=user_id, price=price, transaction_id=txnID)
+                    order.save()
+
+                    inCart = False
+                    inCart = Cart.objects.filter(
+                        project=project, user_id=user_id).exists()
+                    if inCart:
+                        cart = Cart.objects.get(project=project, user_id=user_id)
+                        cart.delete()
+                # params = {'success': True, "cartCount": cartCount(user_id),}
+                # return render(request, 'user/orderStatus.html', params)
+                return redirect('/paymentSuccess')
             else:
-                price = project.price
+                # params = {'success': False, "cartCount": cartCount(request.POST.get('udf2'))}
+                # return render(request, 'user/orderStatus.html', params)
+                return redirect('/paymentFailed')
 
-            print(price)
-            #  or price != post_price or net_amount_debit != price
-            if status != dict['response']['status']:
-                params = {'success': False, "cartCount": cartCount(
-                    request.POST.get('udf2'))}
-                return render(request, 'user/orderStatus.html', params)
-            else:
-                order = Order.objects.create(
-                    project=project, user_id=user_id, price=price, transaction_id=txnID)
-                order.save()
-
-                inCart = False
-                inCart = Cart.objects.filter(
-                    project=project, user_id=user_id).exists()
-                if inCart:
-                    cart = Cart.objects.get(project=project, user_id=user_id)
-                    cart.delete()
-
-        params = {'success': True, "cartCount": cartCount(user_id)}
-        return render(request, 'user/orderStatus.html', params)
         # return HttpResponse("gada")
     else:
         params = {'success': False, "cartCount": cartCount(
             request.POST.get('udf2'))}
         return render(request, 'user/orderStatus.html', params)
+
+
+
+def verify_transaction(params):
+    """Function to track PayU cash"""
+
+    hash_string = ''
+    for key in params.keys():
+        hash_string += '{}|'.format(params[key])
+    hash_string += SALT
+    hash_value = hashlib.sha512(hash_string.encode('utf-8')).hexdigest()
+    print(hash_string)
+    print(hash_value)
+
+    url = "https://test.payu.in/merchant/postservice?form=2"
+    payload = "key="+MERCHANT_KEY+"&command="+params['command']+"&var1=" + \
+        params['var1']+"&hash="+hash_value
+
+    headers = {"Accept": "application/json",
+               "Content-Type": "application/x-www-form-urlencoded"}
+    response = requests.request(
+        "POST", url, data=payload, headers=headers, params=params)
+    return (response.text)
+
+
+
+def paymentSuccess(request):
+    params = {'success': True, "cartCount": cartCount(request.user.id)}
+    return render(request, 'user/orderStatus.html', params)
+
+
+def paymentFailed(request):
+    params = {'success': False, "cartCount": cartCount(request.POST.get('udf2'))}
+    return render(request, 'user/orderStatus.html', params)
+

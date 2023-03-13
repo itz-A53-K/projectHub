@@ -25,9 +25,9 @@ urlpatterns = [
     path('buy/', views.buyNow, name="buyNow"),
     #     path('handelPaymentRequest/', views.handelPaymentRequest,name="handelPaymentRequest"),
 
-    # path('paymentSuccess/', views.paymentSuccess, name="paymentSuccess"),
-    # path('paymentFailed/', views.paymentFailed, name="paymentFailed"),
-    path('paymentHandler/', views.paymentHandler, name="paymentHandler"),
+    path('paymentSuccess/', views.paymentSuccess, name="paymentSuccess"),
+    path('paymentFailed/', views.paymentFailed, name="paymentFailed"),
+    path('paymentResponseHandler/', views.paymentResponseHandler, name="paymentResponseHandler"),
 
     path('order/', views.my_order, name="order"),
 
