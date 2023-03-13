@@ -421,9 +421,9 @@ def paymentResponseHandler(request):
             'var1': txnID,
         }
 
-        response = verify_transaction(track_params)
+        pauyResponse = verify_transaction(track_params)
 
-        dict = json.loads(response)
+        dict = json.loads(pauyResponse)
         print(dict['response']['status'])
 
         if status != dict['response']['status']:
