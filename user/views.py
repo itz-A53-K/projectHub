@@ -17,12 +17,12 @@ PAYU_TEST_URL = 'https://test.payu.in/_payment'
 PAYU_PRODUCTION_URL = 'https://secure.payu.in/_payment'
 
 # Define the PayU merchant key and salt
-#production PayU merchant key and salt (nischal)
-MERCHANT_KEY = 'CY4YAH'
-SALT = '72toOcfuXCBizlYLEGqvVYeIUnXLOGsY'
-#test PayU merchant key and salt
-# MERCHANT_KEY = 'gtKFFx'
-# SALT = '4R38IvwiV57FwVpsgOvTXBdLE4tHUXFW'
+# MERCHANT_KEY = 'CY4YAH'
+# SALT = '72toOcfuXCBizlYLEGqvVYeIUnXLOGsY'
+
+# Test merchant keys
+MERCHANT_KEY = 'gtKFFx'
+SALT = '4R38IvwiV57FwVpsgOvTXBdLE4tHUXFW'
 
 
 def cartCount(user_id):
@@ -300,12 +300,13 @@ def checkout(request):
 
                 return redirect("/")
             else:
-                f_name= request.user.first_name
-                email= request.user.email
-                phone= User_detail.objects.get(user_id=user_id).phone
-                odrItmID=""
-                
-                context= createPayment(totalprice,f_name,email,phone,odrItmID,user_id)
+                f_name = request.user.first_name
+                email = request.user.email
+                phone = User_detail.objects.get(user_id=user_id).phone
+                odrItmID = ""
+
+                context = createPayment(
+                    totalprice, f_name, email, phone, odrItmID, user_id)
                 return render(request, 'user/payment.html', context)
     else:
         messages.error(
@@ -338,13 +339,14 @@ def buyNow(request):
                 else:
                     price = orderedItm.discounted_price
 
-                #user detail
-                f_name= request.user.first_name
-                email= request.user.email
-                phone= User_detail.objects.get(user_id=user_id).phone
-                odrItmID=orderedItm.proj_id
+                # user detail
+                f_name = request.user.first_name
+                email = request.user.email
+                phone = User_detail.objects.get(user_id=user_id).phone
+                odrItmID = orderedItm.proj_id
 
-                context= createPayment(price,f_name,email,phone,odrItmID,user_id)
+                context = createPayment(
+                    price, f_name, email, phone, odrItmID, user_id)
                 return render(request, 'user/payment.html', context)
 
     else:
@@ -353,14 +355,136 @@ def buyNow(request):
         return redirect("/login")
 
 
-@csrf_exempt
-def paymentSuccess(request):
-    if request.method == "POST":
+# @csrf_exempt
+# def paymentSuccess(request):
+#     if request.method == "POST":
+#         user_id = request.user.id
+#         # user_id = request.POST.get('udf2')
+#         odrItmID = request.POST.get('udf1')
+#         txnID = request.POST.get('txnid')
 
+#         if odrItmID == "":
+#             cartItems = Cart.objects.filter(user_id=user_id)
+#             for i in cartItems:
+
+#                 if i.project.free:
+#                     price = 0
+#                 elif i.project.discounted_price:
+#                     price = i.project.discounted_price
+#                 else:
+#                     price = i.project.price
+
+#                 order = Order.objects.create(
+#                     project=i.project, user_id=user_id, price=price, transaction_id=txnID)
+#                 order.save()
+#                 cart = Cart.objects.get(cart_id=i.cart_id)
+#                 cart.delete()
+
+#         else:
+#             project = Project.objects.get(proj_id=odrItmID)
+#             if project.free:
+#                 price = 0
+#             elif project.discounted_price:
+#                 price = project.discounted_price
+#             else:
+#                 price = project.price
+
+#             price = request.POST.get('amount')
+#             order = Order.objects.create(
+#                 project=project, user_id=user_id, price=price, transaction_id=txnID)
+#             order.save()
+
+#             inCart = False
+#             inCart = Cart.objects.filter(
+#                 project=project, user_id=user_id).exists()
+#             if inCart:
+#                 cart = Cart.objects.get(project=project, user_id=user_id)
+#                 cart.delete()
+
+#         params = {'success': True, "cartCount": cartCount(user_id)}
+#         return render(request, 'user/orderStatus.html', params)
+
+
+# @csrf_exempt
+# def paymentFailed(request):
+#     if request.method == "POST":
+#         params = {'success': False, "cartCount": cartCount(
+#             request.POST.get('udf2'))}
+#         return render(request, 'user/orderStatus.html', params)
+
+
+def generate_hash(params):
+    """Function to generate PayU hash"""
+
+    hash_string = ''
+    for key in params.keys():
+        hash_string += '{}|'.format(params[key])
+    hash_string += "||||||||"+SALT
+
+    # print(hash_string)
+
+    return hashlib.sha512(hash_string.encode('utf-8')).hexdigest()
+
+
+def createPayment(amount, f_name, email, phone, odrItmID, user_id):  # creating payment for payU
+    # Generate the PayU hash
+    hash_params = {
+        'key': MERCHANT_KEY,
+        'txnid': 'TXN{}'.format(time.time()),
+        'amount': amount,
+        'productinfo': 'Test Product',
+        'firstname': f_name,
+        'email': email,
+        'udf1': odrItmID,
+        'udf2': user_id
+    }
+    # hash value of the above json contents
+    hash_params['hash'] = generate_hash(hash_params)
+
+    # Build the PayU payment form fields
+    form_data = {
+        'key': MERCHANT_KEY,
+        'txnid': hash_params['txnid'],
+        'amount': hash_params['amount'],
+        'productinfo': hash_params['productinfo'],
+        'firstname': hash_params['firstname'],
+        'email': hash_params['email'],
+        'phone': phone,
+        # 'surl': 'http://127.0.0.1:8000/paymentSuccess/',
+        # 'furl': 'http://127.0.0.1:8000/paymentFailed/',
+        'surl': 'http://127.0.0.1:8000/paymentHandler/',
+        'furl': 'http://127.0.0.1:8000/paymentHandler/',
+        'hash': hash_params['hash'],
+        'udf1': hash_params['udf1'],
+        'udf2': hash_params['udf2'],
+    }
+
+    # payu_url = PAYU_PRODUCTION_URL
+    payu_url = PAYU_TEST_URL
+
+    context = {'form_data': form_data, 'payu_url': payu_url}
+    return context
+
+
+@csrf_exempt
+def paymentHandler(request):
+    if request.method == "POST":
         # user_id = request.user.id
         user_id = request.POST.get('udf2')
         odrItmID = request.POST.get('udf1')
         txnID = request.POST.get('txnid')
+        status = request.POST.get('status')
+        post_price = request.POST.get('amount')
+        net_amount_debit = request.POST.get('net_amount_debit')
+
+        print(status)
+        print(post_price)
+        print(net_amount_debit)
+
+        if status != "success":
+            params = {'success': False, "cartCount": cartCount(
+                request.POST.get('udf2'))}
+            return render(request, 'user/orderStatus.html', params)
 
         if odrItmID == "":
             cartItems = Cart.objects.filter(user_id=user_id)
@@ -373,13 +497,14 @@ def paymentSuccess(request):
                 else:
                     price = i.project.price
 
+                print(price)
                 order = Order.objects.create(
                     project=i.project, user_id=user_id, price=price, transaction_id=txnID)
                 order.save()
                 cart = Cart.objects.get(cart_id=i.cart_id)
                 cart.delete()
-
         else:
+
             project = Project.objects.get(proj_id=odrItmID)
             if project.free:
                 price = 0
@@ -388,26 +513,30 @@ def paymentSuccess(request):
             else:
                 price = project.price
 
-            price=  request.POST.get('amount')
-            order = Order.objects.create(
-                project=project, user_id=user_id, price=price, transaction_id=txnID)
-            order.save()
+            print(price)
+            #  or price != post_price or net_amount_debit != price
+            if status != "success":
+                params = {'success': False, "cartCount": cartCount(
+                    request.POST.get('udf2'))}
+                return render(request, 'user/orderStatus.html', params)
+            else:
+                order = Order.objects.create(
+                    project=project, user_id=user_id, price=price, transaction_id=txnID)
+                order.save()
 
-            inCart = False
-            inCart = Cart.objects.filter(
-                project=project, user_id=user_id).exists()
-            if inCart:
-                cart = Cart.objects.get(project=project, user_id=user_id)
-                cart.delete()
+                inCart = False
+                inCart = Cart.objects.filter(
+                    project=project, user_id=user_id).exists()
+                if inCart:
+                    cart = Cart.objects.get(project=project, user_id=user_id)
+                    cart.delete()
 
         params = {'success': True, "cartCount": cartCount(user_id)}
         return render(request, 'user/orderStatus.html', params)
-
-
-@csrf_exempt
-def paymentFailed(request):
-    if request.method=="POST":
-        params = {'success': False, "cartCount": cartCount(request.POST.get('udf2'))}
+        # return HttpResponse("gada")
+    else:
+        params = {'success': False, "cartCount": cartCount(
+            request.POST.get('udf2'))}
         return render(request, 'user/orderStatus.html', params)
 
 
@@ -423,8 +552,10 @@ def generate_hash(params):
 
     return hashlib.sha512(hash_string.encode('utf-8')).hexdigest()
 
-#creating payment for payU
-def createPayment(amount,f_name,email,phone,odrItmID,user_id):
+# creating payment for payU
+
+
+def createPayment(amount, f_name, email, phone, odrItmID, user_id):
     # Generate the PayU hash
     hash_params = {
         'key': MERCHANT_KEY,
@@ -433,8 +564,8 @@ def createPayment(amount,f_name,email,phone,odrItmID,user_id):
         'productinfo': 'Test Product',
         'firstname': f_name,
         'email': email,
-        'udf1':odrItmID,
-        'udf2':user_id
+        'udf1': odrItmID,
+        'udf2': user_id
     }
     hash_params['hash'] = generate_hash(hash_params)
 
@@ -454,10 +585,8 @@ def createPayment(amount,f_name,email,phone,odrItmID,user_id):
         'udf2': hash_params['udf2'],
     }
 
-    # payu_url = PAYU_TEST_URL
-    payu_url = PAYU_PRODUCTION_URL
+    # payu_url = PAYU_PRODUCTION_URL
+    payu_url = PAYU_TEST_URL
 
-    context={'form_data': form_data, 'payu_url': payu_url}
+    context = {'form_data': form_data, 'payu_url': payu_url}
     return context
-
-   
