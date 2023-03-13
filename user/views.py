@@ -1,10 +1,10 @@
 from user.models import Project, Proj_image, Cart, Order, User_detail
+
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.http import JsonResponse, Http404
-from user.form import ImageForm
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 import hashlib
@@ -89,6 +89,38 @@ def tempView(request, temp_id):
     return render(request, 'user/projView.html', params)
 
 
+def profile(request):
+    if request.user.is_authenticated:
+        user_id = request.user.id
+        account = User_detail.objects.get(user_id=user_id)
+
+        if request.method == "POST":
+            f_name = request.POST.get('f_name')
+            l_name = request.POST.get('l_name')
+            gender = request.POST.get('gender')
+            phone = request.POST.get('phone')
+            address = request.POST.get('address')
+            profileImg = request.POST.get('profileImg')
+
+            user = User.objects.get(id=user_id)
+            user.first_name = f_name
+            user.last_name = l_name
+
+            account.gender = gender
+            account.phone = phone
+            account.address = address
+
+            account.save()
+            user.save()
+            messages.success(request, "Profile updated successfully.")
+            return redirect("/profile/")
+        params = {'User_detail': account, "activeProfile": "activeProfile",
+                  "cartCount": cartCount(request.user.id)}
+        return render(request, "user/profile.html", params)
+    else:
+        return redirect("/")
+
+
 def handleLogin(request):
     if request.method == "POST":
 
@@ -142,37 +174,6 @@ def handleLogout(request):
         return redirect('/')
     else:
         return redirect('/')
-
-
-def profile(request):
-    if request.user.is_authenticated:
-        user_id = request.user.id
-        account = User_detail.objects.get(user_id=user_id)
-
-        if request.method == "POST":
-            f_name = request.POST.get('f_name')
-            l_name = request.POST.get('l_name')
-            gender = request.POST.get('gender')
-            phone = request.POST.get('phone')
-            address = request.POST.get('address')
-            profileImg = request.POST.get('profileImg')
-
-            user = User.objects.get(id=user_id)
-            user.first_name = f_name
-            user.last_name = l_name
-
-            account.gender = gender
-            account.phone = phone
-            account.address = address
-
-            account.save()
-            user.save()
-            return redirect("/profile/")
-        params = {'User_detail': account, "activeProfile": "activeProfile",
-                  "cartCount": cartCount(request.user.id)}
-        return render(request, "user/profile.html", params)
-    else:
-        return redirect("/")
 
 
 def handleAddToCart(request, proj_id):
@@ -537,3 +538,55 @@ def paymentHandler(request):
         params = {'success': False, "cartCount": cartCount(
             request.POST.get('udf2'))}
         return render(request, 'user/orderStatus.html', params)
+
+
+def generate_hash(params):
+    """Function to generate PayU hash"""
+
+    hash_string = ''
+    for key in params.keys():
+        hash_string += '{}|'.format(params[key])
+    hash_string += "||||||||"+SALT
+
+    # print(hash_string)
+
+    return hashlib.sha512(hash_string.encode('utf-8')).hexdigest()
+
+# creating payment for payU
+
+
+def createPayment(amount, f_name, email, phone, odrItmID, user_id):
+    # Generate the PayU hash
+    hash_params = {
+        'key': MERCHANT_KEY,
+        'txnid': 'TXN{}'.format(time.time()),
+        'amount': amount,
+        'productinfo': 'Test Product',
+        'firstname': f_name,
+        'email': email,
+        'udf1': odrItmID,
+        'udf2': user_id
+    }
+    hash_params['hash'] = generate_hash(hash_params)
+
+    # Build the PayU payment form
+    form_data = {
+        'key': MERCHANT_KEY,
+        'txnid': hash_params['txnid'],
+        'amount': hash_params['amount'],
+        'productinfo': hash_params['productinfo'],
+        'firstname': hash_params['firstname'],
+        'email': hash_params['email'],
+        'phone': phone,
+        'surl': 'http://127.0.0.1:8000/paymentSuccess/',
+        'furl': 'http://127.0.0.1:8000/paymentFailed/',
+        'hash': hash_params['hash'],
+        'udf1': hash_params['udf1'],
+        'udf2': hash_params['udf2'],
+    }
+
+    # payu_url = PAYU_PRODUCTION_URL
+    payu_url = PAYU_TEST_URL
+
+    context = {'form_data': form_data, 'payu_url': payu_url}
+    return context
