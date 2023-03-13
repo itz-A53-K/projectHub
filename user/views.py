@@ -1,5 +1,5 @@
 from user.models import Project, Proj_image, Cart, Order, User_detail
-
+import requests
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -10,6 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 import hashlib
 from django.conf import settings
 import time
+import json
 
 # Define the payment gateway URLs
 # PAYU_BASE_URL = 'https://secure.payu.in/_payment'
@@ -426,6 +427,28 @@ def generate_hash(params):
     return hashlib.sha512(hash_string.encode('utf-8')).hexdigest()
 
 
+def verify_transaction(params):
+    """Function to track PayU cash"""
+
+    hash_string = ''
+    for key in params.keys():
+        hash_string += '{}|'.format(params[key])
+    hash_string += SALT
+    hash_value = hashlib.sha512(hash_string.encode('utf-8')).hexdigest()
+    print(hash_string)
+    print(hash_value)
+
+    url = "https://test.payu.in/merchant/postservice?form=2"
+    payload = "key="+MERCHANT_KEY+"&command="+params['command']+"&var1=" + \
+        params['var1']+"&hash="+hash_value
+
+    headers = {"Accept": "application/json",
+               "Content-Type": "application/x-www-form-urlencoded"}
+    response = requests.request(
+        "POST", url, data=payload, headers=headers, params=params)
+    return (response.text)
+
+
 def createPayment(amount, f_name, email, phone, odrItmID, user_id):  # creating payment for payU
     # Generate the PayU hash
     hash_params = {
@@ -477,9 +500,22 @@ def paymentHandler(request):
         post_price = request.POST.get('amount')
         net_amount_debit = request.POST.get('net_amount_debit')
 
-        print(status)
-        print(post_price)
-        print(net_amount_debit)
+        track_params = {
+            'key': MERCHANT_KEY,
+            # 'command': "verify_payment",
+            'command': "get_ws_response",
+            'var1': txnID,
+        }
+
+        # JSON string
+        response = verify_transaction(track_params)
+        # deserializes into dict and returns dict.
+        dict = json.loads(response)
+        # print(dict[response][status])
+
+        # print("JSON string = ", dict)
+        # print()
+        # print("Status External : "+dict[response][status])
 
         if status != "success":
             params = {'success': False, "cartCount": cartCount(
@@ -538,55 +574,3 @@ def paymentHandler(request):
         params = {'success': False, "cartCount": cartCount(
             request.POST.get('udf2'))}
         return render(request, 'user/orderStatus.html', params)
-
-
-def generate_hash(params):
-    """Function to generate PayU hash"""
-
-    hash_string = ''
-    for key in params.keys():
-        hash_string += '{}|'.format(params[key])
-    hash_string += "||||||||"+SALT
-
-    # print(hash_string)
-
-    return hashlib.sha512(hash_string.encode('utf-8')).hexdigest()
-
-# creating payment for payU
-
-
-def createPayment(amount, f_name, email, phone, odrItmID, user_id):
-    # Generate the PayU hash
-    hash_params = {
-        'key': MERCHANT_KEY,
-        'txnid': 'TXN{}'.format(time.time()),
-        'amount': amount,
-        'productinfo': 'Test Product',
-        'firstname': f_name,
-        'email': email,
-        'udf1': odrItmID,
-        'udf2': user_id
-    }
-    hash_params['hash'] = generate_hash(hash_params)
-
-    # Build the PayU payment form
-    form_data = {
-        'key': MERCHANT_KEY,
-        'txnid': hash_params['txnid'],
-        'amount': hash_params['amount'],
-        'productinfo': hash_params['productinfo'],
-        'firstname': hash_params['firstname'],
-        'email': hash_params['email'],
-        'phone': phone,
-        'surl': 'http://127.0.0.1:8000/paymentSuccess/',
-        'furl': 'http://127.0.0.1:8000/paymentFailed/',
-        'hash': hash_params['hash'],
-        'udf1': hash_params['udf1'],
-        'udf2': hash_params['udf2'],
-    }
-
-    # payu_url = PAYU_PRODUCTION_URL
-    payu_url = PAYU_TEST_URL
-
-    context = {'form_data': form_data, 'payu_url': payu_url}
-    return context
