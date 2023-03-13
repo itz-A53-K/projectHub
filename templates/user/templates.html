@@ -1,6 +1,6 @@
 {% extends 'user/basic.html' %}
 {%load static %}
-{%block title%}Project-Hub - Projects Available{%endblock%}
+{%block title%}Project-Hub - Templates{%endblock%}
 {%block csslink%}
 <link rel="stylesheet" href="{% static 'user/css/project-cards.css'%}" />
 {%endblock%}
@@ -8,6 +8,16 @@
 {%block css%}
     body{
         /* background:#d6d8db; */
+    }
+    .cardBody .title{
+        font-weight: 500;
+        color: #000000;
+    }
+    .cardBody .title:hover{
+        /* color: #ff4422; */
+        /* text-decoration: underline; */
+        color: #3cc02d;
+        cursor: pointer;
     }
     .filters{
         height:fit-content;
@@ -33,10 +43,38 @@
         font-weight:600;
         text-decoration: underline;
     }
+
+    .viewBtn {
+        outline: 0;
+        border: 0;
+        background: none;
+        border: 1px solid #d9d9d9;
+        padding: 8px 40px;
+        color: #515151;
+        text-transform: uppercase;
+        width: 125px;
+        font-family: inherit;
+        margin-right: 5px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+      }
+      .viewBtn:hover {
+        border: 1px solid #3cc02d;
+        color: #3cc02d;
+        cursor: pointer;
+      }
     
 {%endblock%}
 
 {%block body%}
+{% if messages %}
+  {% for message in messages %}
+    <div {%if message.tags%}class="alert m-auto fixed-bottom mb-1 border-{{ message.tags }} alert-dismissible fade show alert-{{ message.tags }} myAlert"{%endif%} role="alert" style="width:fit-content;bottom:10vh;">
+      <b>{{ message}}</b>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+{% endif %}
     <div class="container-fluid d-flex ">
 
         {% comment %} <div id="alert-section" class="fixed-bottom m-auto fw-semibold" style="bottom:10vh;width:fit-content;"></div> Alert Message Dialog {% endcomment %}
@@ -86,14 +124,14 @@
                         <div class="imgDiv ">
                             <a href="/templates/view/{{item.proj_id}}"><img src="/media/{{item.default_image}}" alt="{{item.title}}" srcset="" style="height:10rem; width:17rem;" title="{{item.title}} {% if item.short_Desc %} ( {{item.short_Desc}} ){% endif %}"></a>
                         </div>
-                        <div class="body m-3">
+                        <div class="cardBody my-2 mx-3">
                             <a href="/templates/view/{{item.proj_id}}" class="title fs-4 ">{{item.title}}</a>
                             <div class="desc">
                                 <p class="fs-6 m-0">{{item.full_Desc| truncatechars:130}}</p>
-                                <p class="fs-6">By : <span>oaohfasufuayfgufug</span> | {{item.publish_date| truncatechars:12}}</p>
+                                <p class="fs-6">By : <span>{{item.created_by}}</span> | {{item.publish_date| truncatechars:12}}</p>
                             </div>  
-                            <div class="">
-                                <h1 class="pt-0 fs-5">
+                            <div class=" align-items-center">
+                                <h1 class="m-0 fs-5">
                                     {% if  item.free %}
                                         <span class="fw-semibold ">Free</span>
                                         <span class="text-decoration-line-through "> {{item.price}}0</span>
@@ -104,6 +142,9 @@
                                         <span class="fw-semibold fs-5"> ₹ {{item.price}}0</span>
                                     {%endif%}
                                 </h1>
+                                <div class="my-3 mx-2">
+                                    <a href="/templates/view/{{item.proj_id}}" class="viewBtn">View</a>
+                                </div>
                             </div>  
                         </div>
                     </div>
