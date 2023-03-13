@@ -1,5 +1,5 @@
 from user.models import Project, Proj_image, Cart, Order, User_detail
-import requests
+# import requests
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
