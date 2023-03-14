@@ -435,7 +435,7 @@ def paymentResponseHandler(request):
             return render(request, 'user/orderStatus.html', params)
 
         else:
-            if dict['response']['status'] == status:
+            if dict['response']['status'] == "success" and status == "success":
                 if odrItmID == "":
                     # if order request is sent from cart (checkout button)
                     cartItems = Cart.objects.filter(user_id=user_id)
