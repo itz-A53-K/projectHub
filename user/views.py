@@ -407,7 +407,7 @@ def createPayment(amount, f_name, email, phone, odrItmID, user_id):  # creating 
 
 
 @csrf_exempt
-def paymentResponseHandler(request):
+def payment(request):
     if request.method == "POST":
         # user_id = request.user.id
         user_id = request.POST.get('udf2')
@@ -429,13 +429,13 @@ def paymentResponseHandler(request):
         dict = json.loads(pauyResponse)
         print(dict['response']['status'])
 
-        if status != dict['response']['status']:
+        if dict['response']['status'] != "success":
             params = {'success': False, "cartCount": cartCount(
                 request.POST.get('udf2'))}
             return render(request, 'user/orderStatus.html', params)
 
         else:
-            if dict['response']['status'] == status:
+            if dict['response']['status'] == "success" and status == "success":
                 if odrItmID == "":
                     # if order request is sent from cart (checkout button)
                     cartItems = Cart.objects.filter(user_id=user_id)
@@ -483,11 +483,11 @@ def paymentResponseHandler(request):
                         cart.delete()
                 # params = {'success': True, "cartCount": cartCount(user_id),}
                 # return render(request, 'user/orderStatus.html', params)
-                return redirect('/paymentSuccess')
+                return redirect('/ordersuccess')
             else:
                 # params = {'success': False, "cartCount": cartCount(request.POST.get('udf2'))}
                 # return render(request, 'user/orderStatus.html', params)
-                return redirect('/paymentFailed')
+                return redirect('/orderfailed')
 
         # return HttpResponse("gada")
     else:
@@ -518,12 +518,12 @@ def verify_transaction(params):
     return (response.text)
 
 
-def paymentSuccess(request):
+def ordersuccess(request):
     params = {'success': True, "cartCount": cartCount(request.user.id)}
     return render(request, 'user/orderStatus.html', params)
 
 
-def paymentFailed(request):
+def orderfailed(request):
     params = {'success': False, "cartCount": cartCount(
         request.POST.get('udf2'))}
     return render(request, 'user/orderStatus.html', params)
