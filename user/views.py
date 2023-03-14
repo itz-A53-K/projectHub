@@ -408,7 +408,7 @@ def createPayment(amount, f_name, email, phone, odrItmID, user_id):  # creating 
 
 
 @csrf_exempt
-def payment(request):
+def paymentResponseHandler(request):
     if request.method == "POST":
         # user_id = request.user.id
         user_id = request.POST.get('udf2')
@@ -465,8 +465,7 @@ def payment(request):
                         price = project.price
 
                     
-                    order = Order.objects.create(
-                        project=project, user_id=user_id, price=price, transaction_id=txnID)
+                    order = Order.objects.create(project=project, user_id=user_id, price=price, transaction_id=txnID)
                     order.save()
 
                     inCart = False
@@ -476,19 +475,14 @@ def payment(request):
                         cart = Cart.objects.get(
                             project=project, user_id=user_id)
                         cart.delete()
-                # params = {'success': True, "cartCount": cartCount(user_id),}
-                # return render(request, 'user/orderStatus.html', params)
                 return redirect('/orderSuccess')
             else:
-                # params = {'success': False, "cartCount": cartCount(request.POST.get('udf2'))}
-                # return render(request, 'user/orderStatus.html', params)
                 return redirect('/orderFailed')
 
         # return HttpResponse("gada")
     else:
-        params = {'success': False, "cartCount": cartCount(
-            request.POST.get('udf2'))}
-        return render(request, 'user/orderStatus.html', params)
+        return redirect('/orderFailed')
+       
 
 
 def verify_transaction(params):
