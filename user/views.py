@@ -39,8 +39,9 @@ def bought(project, user_id):
 
 
 def home(request):
-    topProjs = Project.objects.all()[:2]
-    params = {'topProjs': topProjs, "cartCount": cartCount(request.user.id)}
+    topProjs = Project.objects.filter(category='Project')[:1]
+    topTemps = Project.objects.filter(category='Template')[:1]
+    params = {'topProjs': topProjs,'topTemps': topTemps, "cartCount": cartCount(request.user.id)}
     return render(request, 'user/index.html', params)
 
 
@@ -458,13 +459,6 @@ def paymentResponseHandler(request):
                     else:
                         price = project.price
 
-                    # print(price)
-                    #  or price != post_price or net_amount_debit != price
-                    # if status != dict['response']['status']:
-                    #     params = {'success': False, "cartCount": cartCount(
-                    #         request.POST.get('udf2'))}
-                    #     return render(request, 'user/orderStatus.html', params)
-                    # else:
                     order = Order.objects.create(project=project, user_id=user_id, price=price, transaction_id=txnID)
                     order.save()
 
