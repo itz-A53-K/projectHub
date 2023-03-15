@@ -39,8 +39,9 @@ def bought(project, user_id):
 
 
 def home(request):
-    topProjs = Project.objects.all()[:2]
-    params = {'topProjs': topProjs, "cartCount": cartCount(request.user.id)}
+    topProjs = Project.objects.filter(category='Project')[:1]
+    topTemps = Project.objects.filter(category='Template')[:1]
+    params = {'topProjs': topProjs,'topTemps': topTemps, "cartCount": cartCount(request.user.id)}
     return render(request, 'user/index.html', params)
 
 
@@ -407,7 +408,7 @@ def createPayment(amount, f_name, email, phone, odrItmID, user_id):  # creating 
 
 
 @csrf_exempt
-def payment(request):
+def paymentResponseHandler(request):
     if request.method == "POST":
         # user_id = request.user.id
         user_id = request.POST.get('udf2')
@@ -463,15 +464,8 @@ def payment(request):
                     else:
                         price = project.price
 
-                    # print(price)
-                    #  or price != post_price or net_amount_debit != price
-                    # if status != dict['response']['status']:
-                    #     params = {'success': False, "cartCount": cartCount(
-                    #         request.POST.get('udf2'))}
-                    #     return render(request, 'user/orderStatus.html', params)
-                    # else:
-                    order = Order.objects.create(
-                        project=project, user_id=user_id, price=price, transaction_id=txnID)
+                    
+                    order = Order.objects.create(project=project, user_id=user_id, price=price, transaction_id=txnID)
                     order.save()
 
                     inCart = False
@@ -481,19 +475,14 @@ def payment(request):
                         cart = Cart.objects.get(
                             project=project, user_id=user_id)
                         cart.delete()
-                # params = {'success': True, "cartCount": cartCount(user_id),}
-                # return render(request, 'user/orderStatus.html', params)
-                return redirect('/ordersuccess')
+                return redirect('/orderSuccess')
             else:
-                # params = {'success': False, "cartCount": cartCount(request.POST.get('udf2'))}
-                # return render(request, 'user/orderStatus.html', params)
-                return redirect('/orderfailed')
+                return redirect('/orderFailed')
 
         # return HttpResponse("gada")
     else:
-        params = {'success': False, "cartCount": cartCount(
-            request.POST.get('udf2'))}
-        return render(request, 'user/orderStatus.html', params)
+        return redirect('/orderFailed')
+       
 
 
 def verify_transaction(params):
@@ -518,12 +507,12 @@ def verify_transaction(params):
     return (response.text)
 
 
-def ordersuccess(request):
+def orderSuccess(request):
     params = {'success': True, "cartCount": cartCount(request.user.id)}
     return render(request, 'user/orderStatus.html', params)
 
 
-def orderfailed(request):
+def orderFailed(request):
     params = {'success': False, "cartCount": cartCount(
         request.POST.get('udf2'))}
     return render(request, 'user/orderStatus.html', params)

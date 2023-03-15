@@ -88,7 +88,7 @@
 {% endif %}
 
 
-<div class="container d-flex p-4 profile" id="profile">
+<div class="container-fluid d-flex p-4 profile" id="profile">
     <div class="profile_links">
         <div class="card p-2  flex-row align-items-center">
             <img src="/media/{{User_detail.profileImg}}" alt="" srcset="">
@@ -122,7 +122,7 @@
             </div>
             <div>
 
-                <form id="editProfileForm" method="post" action="/profile/" method="post" name="" enctype="multipart/form-data">
+                <form id="editProfileForm" method="post" action="/profile/" name="" enctype="multipart/form-data" >
                     {% csrf_token %}
                     <div>
                         <h4 class="mt-4">Personal Information</h4>
@@ -161,9 +161,10 @@
                     <div>
                         <h4 class="mt-4">Phone Number</h4>
                         <div class="form-floating mb-3">
-                            <input type="number" class="form-control input disabled" name="phone" id="phone" placeholder="Your phone number" minlength="10" value="{{User_detail.phone}}"
+                            <input type="number" class="form-control input disabled" name="phone" id="phone" placeholder="Your phone number" value="{{User_detail.phone}}" 
                                 disabled required>
                             <label for="phone">Phone number</label>
+                            <p id="errPhMsg" class="text-danger ms-3 fw-600"></p>
                         </div>
                     </div>
                     <div>
@@ -221,7 +222,11 @@
                             <h6 class="price fs-5">₹ {{i.price}}0</h6>
                         </div>
                         <div class="btns mt-4">
-                            <a href="/projects/{{i.project.proj_id}}" class="btn btn-outline-dark mx-1 px-4">View</a>
+                            {% if i.project.category == 'Template' %}
+                                <a href="/templates/view/{{i.project.proj_id}}" class="btn btn-outline-dark mx-1 px-4">View</a>
+                            {% else %}
+                                <a href="/projects/{{i.project.proj_id}}" class="btn btn-outline-dark mx-1 px-4">View</a>
+                            {% endif %}
                             {% comment %} <a href="{{i.project.sourcecode_link}}" class="btn btn-warning mx-1 px-4" Download>Download</a> {% endcomment %}
                             <a class="btn btn-warning mx-1 px-4 downloadBtn" id="{{i.order_id}}" >Download</a>
                         </div>
@@ -245,10 +250,6 @@
 {%block JS%}
 <script>
 
-    
-    genderValue=document.getElementById('genderValue').value
-    document.getElementById(genderValue).checked=true
-
     function editProfile() {
         disabledInput= document.querySelectorAll(".disabled")
         
@@ -257,14 +258,55 @@
         })
         
         {% comment %} const profileImgHead = document.getElementById("profileImgHead").classList.remove('visually-hidden')
-        const profileImg = document.getElementById("profileImg").classList.remove('visually-hidden') {% endcomment %}
+        const profileImg = document.getElementById("profileImg").classList.remove('visually-hidden') 
+        {% endcomment %}
 
         const profileSaveBtn = document.getElementById("profileSaveBtn").classList.remove('visually-hidden')
         const editProfileBtn = document.getElementById("editProfileBtn").classList.add('visually-hidden')
 
     }
 
-    function mediaQuery(x) {
+
+    // prevent input >10 digit and first character is 0
+    var savBtn=document.getElementById('profileSaveBtn');
+
+    $('#phone').keypress(function (e){
+        var phoneValue = $(this).val();
+        if(phoneValue[0]==0){
+            phoneValue = phoneValue.substring(1);
+        }
+        $(this).val(phoneValue); 
+        
+        if (phoneValue.length >9){
+            e.preventDefault();
+        }
+    })
+    $("#phone").keyup(function (e) {
+        var phoneValue = $(this).val();
+        if(phoneValue.length<10){
+            document.getElementById('errPhMsg').innerText="Invalid phone number length!"
+            savBtn.disabled=true;
+        }
+        else {
+            document.getElementById('errPhMsg').innerText=""
+            savBtn.disabled=false;
+        }        
+    });
+
+       
+    genderValue=document.getElementById('genderValue').value
+    if( genderValue != 'None'){
+        document.getElementById(genderValue).checked=true
+    }
+    
+
+    
+    $('.downloadBtn').click(function(){
+
+    })
+
+
+    {% comment %} function mediaQuery(x) {
         if (x.matches) { // If media query matches
             console.log(document.getElementById("profile"))
           document.getElementById("profile").classList.remove("container");
@@ -274,11 +316,7 @@
       
     var x = window.matchMedia("(max-width: 800px)")
     mediaQuery(x) // Call listener function at run time
-    x.addListener(mediaQuery) 
-
-
-    $('.downloadBtn').click(function(){
-
-    })
+    x.addListener(mediaQuery)  {% endcomment %}
+  
 </script>
 {%endblock JS%}

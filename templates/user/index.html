@@ -65,12 +65,14 @@
   <div class="container-fluid my-5 " style="background: #f0f6eb; border-radius: 15px;">
     <div class="container-lg my-5 d-flex align-items-center justify-content-between p-2 projectContainer" style="">
       <div style="" class="left">
-        <h2 class="afterLine my-4">A broad selection of projects</h2>
+        <h2 class="afterLine my-4">A broad selection of projects and templates </h2>
         <p class="mx-2" style="font-size: 1.2rem" >
-          Choose from a lot of pre prepared projects with new additions published
-          continuously.
+          Choose from a lot of pre prepared projects and wonderfully designed templates with new additions published continuously.
         </p>
-        <center><a href="/projects/" class="btn btnDesign1 my-2">Explore all >></a></center>
+        <div class="btndiv ps-4">
+          <a href="/projects/" class="btn btnDesign1 my-2">Explore projects >></a>
+          <a href="/templates/" class="btn btnDesign1 my-2">Explore templates >></a>
+        </div>
       </div>
 
       <div class="my-4 px-4 py-3 d-flex flex-column align-items-center justify-content-center projectDiv"
@@ -83,6 +85,30 @@
           style="">
           <a
             href="/projects/{{i.proj_id}}"
+            style="text-decoration: none; color: black">
+            <img
+              src="/media/{{i.default_image}}"
+              class="card-img-top"
+              alt="..."
+              style="height: 22vh" />
+            <div class="card-body">
+              <h5 class="card-title">
+                {{i.title}} {% if i.short_Desc %}<span> ( {{i.short_Desc}} )</span
+                >{% endif %}
+              </h5>
+              <p class="card-text" style="height: 7vh">
+                {{i.full_Desc| truncatechars:130}}
+              </p>
+            </div>
+          </a>
+        </div>
+        {% endfor %}
+
+        {% for i in topTemps %}
+        <div class="card my-3"
+          style="">
+          <a
+            href="/templates/view/{{i.proj_id}}"
             style="text-decoration: none; color: black">
             <img
               src="/media/{{i.default_image}}"
