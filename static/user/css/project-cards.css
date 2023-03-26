@@ -1,0 +1,121 @@
+@import url(https://fonts.googleapis.com/css?family=Raleway:400,300,500,700);
+
+.project-card-placeholder {
+  font-family: "Raleway";
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+  gap: 10px;
+  border-radius: 10px;
+}
+
+.bottom-paste {
+  position: absolute;
+  display: flex;
+  bottom: 0;
+}
+
+.full-description {
+  position: relative;
+  height: auto;
+  overflow: hidden;
+}
+
+.card-pro {
+  position: relative;
+  background: white;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+  transition: all 0.3s;
+  margin: 15px 5px;
+  margin-top: 0;
+  min-height: 28rem;
+  /* height: fit-content; */
+}
+.card-pro:hover {
+  box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.card-pro .photo {
+  padding: 20px;
+  /* width: 45%; */
+  text-align: center;
+  /* float: left; */
+  height: 18rem;
+}
+.card-pro .photo img {
+  max-height: 240px;
+}
+.card-pro .description {
+  padding: 20px;
+  float: left;
+  /* width: 55%; */
+  border-left: 2px solid #efefef;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-pro .description h1 {
+  color: #1c1c1c;
+  font-weight: 300;
+  padding-top: 15px;
+  margin: 0;
+  font-size: 25px;
+  font-weight: 300;
+}
+.card-pro .description h2 {
+  color: #2f2e2e;
+  margin: 0;
+  text-transform: uppercase;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+.card-pro .description h2 span{
+  color: #745291;
+}
+.card-pro .description h4 {
+  margin: 0;
+  color: #727272;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 12px;
+}
+.card-pro .description p {
+  font-size: 16px;
+  line-height: 20px;
+  color: #727272;
+  padding: 10px 0;
+  margin: 0;
+  font-family: 'Times New Roman', Times, serif;
+}
+.card-pro .description .card-footer{
+justify-self: flex-end;
+
+}
+.card-pro .description .card-footer button {
+  outline: 0;
+  border: 0;
+  background: none;
+  border: 1px solid #d9d9d9;
+  padding: 8px 0px;
+  color: #515151;
+  text-transform: uppercase;
+  width: 125px;
+  font-family: inherit;
+  margin-right: 5px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+.card-pro .description button:hover {
+  border: 1px solid #3cc02d;
+  color: #3cc02d;
+  cursor: pointer;
+}
+
+.card-pro .description button a {
+    text-decoration: none;
+    color: black;
+}
+
+.card-pro .description button:hover a {
+    color: #aedaa6;
+}

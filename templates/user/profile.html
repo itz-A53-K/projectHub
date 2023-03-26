@@ -1,0 +1,271 @@
+{% extends 'user/basic.html' %}
+{%load static %}
+{% comment %} {%block title%}Project-Hub : profile{%endblock%} {% endcomment %}
+{%block csslink%}
+<link rel="stylesheet" href="{% static 'user/css/profile.css'%}">
+{%endblock csslink%}
+
+{%block title%}
+    {% if activeProfile %}
+        Project-Hub.in : Profile
+    {% elif activeOrder%}
+        Project-Hub.in : Orders
+    {% endif %}
+{%endblock title%}
+    
+
+{%block body%}
+{% if messages %}
+  {% for message in messages %}
+    <div {%if message.tags%}class="alert m-auto fixed-bottom mb-1 border-{{ message.tags }} alert-dismissible fade show alert-{{ message.tags }} myAlert"{%endif%} role="alert" style="width:fit-content;bottom:10vh;">
+      <b>{{ message}}</b>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+{% endif %}
+
+
+<div class="d-flex p-4 profile" id="profile">
+    <div class="profile_links">
+        <div class="card p-2  flex-row align-items-center helloUser">
+            <img src="/media/{{User_detail.profileImg}}" alt="" srcset="">
+            <div class=" m-2">
+                <div>Hello,</div>
+                <h5>{{request.user.first_name}} {{request.user.last_name}}</h5>
+            </div>
+        </div>
+        <div class="card p-2 mt-3 align-items-center linkDiv">
+            <a href="/profile/" class="itemLink my-2">
+                <h5>Profile</h5>
+            </a>
+            <a href="/order/" class=" itemLink my-2">
+                <h5>My Orders</h5>
+            </a>
+
+            <div class="card-footer d-flex justify-content-center w-100 mt-4">
+                <a class="btn btn-outline-info w-50 logout">Logout</a>
+            </div>
+        </div>
+    </div>
+    <div class=" card profile-body">
+        
+        <div class=" d-flex flex-column align-items-center profile_info {% if not activeProfile %} d-none{% endif %}" id="profile_info">
+            <nav aria-label="breadcrumb" class="align-self-start p-1 my-0" style="min-height:fit-content !important;">
+                <ol class="breadcrumb m-0 ">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Profile</li>
+                </ol>
+            </nav>
+            <!-- <div>
+                    <h4>Persional Information</h4>
+                    <span>Edit</span>
+                </div> -->
+            <div class="imgDiv">
+                <img src="/media/{{User_detail.profileImg}}" alt="">
+            </div>
+            <div>
+
+                <form id="editProfileForm" method="post" action="/profile/" name="" enctype="multipart/form-data" >
+                    {% csrf_token %}
+                    <div>
+                        <h4 class="mt-4" id="infoHeading">Personal Information</h4>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control input disabled" name="f_name" id="f_name" placeholder="Your first name" value="{{request.user.first_name}}" disabled required>
+                            <label for="f_name">First name</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control input disabled" name="l_name" id="l_name" placeholder="Your last name" value="{{request.user.last_name}}" disabled required>
+                            <label for="l_name">Last name</label>
+                        </div>
+
+                        <div class="input-field">
+                            <h6 class="mt-4">Gender</h6>
+                            <input type="hidden" name="" id="genderValue" value={{User_detail.gender}}>
+                            <input class="form-check-input disabled " type="radio" name="gender" value="male" id="male" disabled>
+                            <label class="form-check-label me-2 fs-5" for="male">Male</label>
+
+                            <input class="form-check-input disabled" type="radio" name="gender" value="female" id="female" disabled>
+                            <label class="form-check-label me-2 fs-5" for="female">Female</label>
+
+                            <input class="form-check-input disabled" type="radio" name="gender" value="other" id="other" disabled>
+                            <label class="form-check-label me-2 fs-5" for="other">Other</label>
+
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="mt-4">Email Address</h4>
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control input" id="email" placeholder="Your email"
+                                value="{{request.user}}" disabled>
+                            <label for="email">Email</label>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="mt-4">Phone Number</h4>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control input disabled" name="phone" id="phone" placeholder="Your phone number" value="{{User_detail.phone}}" 
+                                disabled required>
+                            <label for="phone">Phone number</label>
+                            <p id="errPhMsg" class="text-danger ms-3 fw-600"></p>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="mt-4">Address</h4>
+                        <div class="form-floating mb-3">
+                            <textarea name="address" class="form-control textarea disabled" id="address" cols="30" rows="10" placeholder="Your Address" maxlength="200" disabled>{{User_detail.address}}</textarea>
+                            
+                            <label for="address">Your address</label>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="mt-4 visually-hidden" id="profileImgHead">Profile picture</h4>
+                        <div class=" mb-3">
+                            <input type="file" class="form-control input visually-hidden" name="profileImg" id="profileImg">
+                        </div>
+                    </div>
+
+                    <div class=" button-field">
+                        <button id="profileSaveBtn" class="btn btn-primary visually-hidden" type="submit">Save Changes</button>
+                    </div>
+                </form>
+
+                <div class="d-grid  col-6 mx-auto mt-4 ">
+                    <button class="btn btn-primary" id="editProfileBtn" onclick="editProfile()">Edit
+                        Profile</button>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="d-flex flex-column align-items-center order {% if not activeOrder %} d-none{% endif %}" id="order">
+        {% comment %} <h2 class="align-self-start">My Orders</h2> {% endcomment %}
+
+        <nav aria-label="breadcrumb" class="align-self-start p-1 my-0" style="min-height:fit-content !important;">
+            <ol class="breadcrumb m-0 ">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">My Orders</li>
+            </ol>
+        </nav>
+        {% if orders%}
+            {% for i in orders %}
+                {% comment %} orderpage code  {% endcomment %}
+                <div class=" orderCard flex-row">
+                    <div class="orderImg">
+                        <img src="/media/{{i.project.default_image}}" alt="" srcset="" style="width:100%; height:100%;">
+                    </div>
+                    <div class="orderDetails">
+                        <div>
+                            <h5>{{i.project.title}}
+                                {% if i.project.short_Desc %}
+                                    <span> (
+                                        {{i.project.short_Desc}} )
+                                    </span>
+                                {% endif %}
+                            </h5>
+                        </div>
+                        <div>
+                            <p class=" mt-3 mb-0" id="buyDate">Purchased on <span>{{i.order_time}}</span></p>
+                            <p class="mb-0" style="font-size:.75rem;">Order id : <em>OD{{i.order_id}}</em></p>
+                            <p class="mb-2" style="font-size:.75rem;">Transaction id : <em>{{i.transaction_id}}</em></p>
+                            <h6 class="price fs-5">₹ {{i.price}}0</h6>
+                        </div>
+                        <div class="btns mt-4">
+                            {% if i.project.category == 'Template' %}
+                                <a href="/templates/view/{{i.project.proj_id}}" class="btn btn-outline-dark mx-1 px-4">View</a>
+                            {% else %}
+                                <a href="/projects/{{i.project.proj_id}}" class="btn btn-outline-dark mx-1 px-4">View</a>
+                            {% endif %}
+                            {% comment %} <a href="{{i.project.sourcecode_link}}" class="btn btn-warning m-1 px-4" Download>Download</a> {% endcomment %}
+                            <a class="btn btn-warning m-1 px-4 downloadBtn" href="/download/?id={{i.project.proj_id}}" id="{{i.order_id}}" >Download</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="d-flex flex-column justify-content-center align-items-center h-100 text-center">
+                <h5>Your order list is empty!☹</h5>
+                <p>Explore our wide collection of projects and find something you need😀</p>
+                <a href="/projects/" class="btn btn-outline-dark">Find projects</a>
+            </div>
+        {% endif %}
+        </div>
+    </div>
+
+</div>
+
+{%endblock body%}
+
+{%block JS%}
+<script>
+
+    function editProfile() {
+        disabledInput= document.querySelectorAll(".disabled")
+        
+        disabledInput.forEach( e =>{
+            e.disabled=false;
+        })
+        
+        {% comment %} const profileImgHead = document.getElementById("profileImgHead").classList.remove('visually-hidden')
+        const profileImg = document.getElementById("profileImg").classList.remove('visually-hidden') 
+        {% endcomment %}
+
+        const profileSaveBtn = document.getElementById("profileSaveBtn").classList.remove('visually-hidden')
+        const editProfileBtn = document.getElementById("editProfileBtn").classList.add('visually-hidden')
+
+    }
+
+
+    // prevent input >10 digit and first character is 0
+    var savBtn=document.getElementById('profileSaveBtn');
+
+    $('#phone').keypress(function (e){
+        var phoneValue = $(this).val();
+        if(phoneValue[0]==0){
+            phoneValue = phoneValue.substring(1);
+        }
+        $(this).val(phoneValue); 
+        
+        if (phoneValue.length >9){
+            e.preventDefault();
+        }
+    })
+    $("#phone").keyup(function (e) {
+        var phoneValue = $(this).val();
+        if(phoneValue.length<10){
+            document.getElementById('errPhMsg').innerText="Invalid phone number length!"
+            savBtn.disabled=true;
+        }
+        else {
+            document.getElementById('errPhMsg').innerText=""
+            savBtn.disabled=false;
+        }        
+    });
+
+       
+    genderValue=document.getElementById('genderValue').value
+    if( genderValue != 'None'){
+        document.getElementById(genderValue).checked=true
+    }
+    
+
+    
+    $('.downloadBtn').click(function(){
+
+    })
+
+
+    {% comment %} function mediaQuery(x) {
+        if (x.matches) { // If media query matches
+            console.log(document.getElementById("profile"))
+          document.getElementById("profile").classList.remove("container");
+          document.getElementById("profile").classList.add("container-fluid");
+        } 
+      }
+      
+    var x = window.matchMedia("(max-width: 800px)")
+    mediaQuery(x) // Call listener function at run time
+    x.addListener(mediaQuery)  {% endcomment %}
+  
+</script>
+{%endblock JS%}

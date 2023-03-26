@@ -1,0 +1,143 @@
+{%load static%}
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ProjectHub : Payment Status</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{% static 'user/css/commonStyle.css'%}" />
+    
+    <style>
+        .box{
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .box .orderStatusbox{
+            border: 1px solid blanchedalmond;
+            padding: 1rem;
+            border-radius: 10px;
+            width: 50rem;
+            background-color: ffffff;
+            display: flex;
+            flex-direction:column;
+            align-items: center;
+        }
+        .orderStatusbox .img{
+            width: 20rem;
+            height: 20rem;
+            
+        }
+        .orderStatusbox div{
+            margin:10px;
+            display: flex;
+            flex-direction:column;
+            align-items: center;
+                       
+        }
+        @media screen and (max-width: 550px) {
+            
+            .orderStatusbox .img{
+                height: 12rem;
+                width: 12rem;
+            }
+            .orderStatusbox div{
+                margin: 0;
+            }
+            .box{
+                height: auto;
+            }
+            .orderStatusbox {
+                height: 100vh;
+                justify-content:center;
+            }
+        }
+        @media screen and (max-width: 350px) {
+            
+            .orderStatusbox {
+                height : 100vh;
+                min-height: fit-content;
+            }
+            .orderStatusbox .img{
+                height: 10rem !important;
+                width: 10rem !important;
+            }
+        }
+        @media screen and (max-height: 490px){
+            .box{
+                height: auto;
+            }
+            .orderStatusbox {
+                height: fit-content;
+            }
+            .orderStatusbox .img{
+                height: 12rem;
+                width: 12rem;
+            }
+        }
+    </style>
+    
+</head>
+<body id="body">
+
+<div class="box">
+    {% if success %}
+    <div class="orderStatusBox">
+        <img src="{%static 'user/img/success.jpg'%}" alt="" srcset="" class="img mx-auto">
+        <div class="text-center">
+            <h3>Thank you for your order</h3>
+            <h5 class="text-success">Your order has been confirmed.</h5>
+            <p class="fs-5 ">Go to <b>'My Orders'</b> section or  click <a href="/order" class="text-primary">here</a> to download the source code</p>
+            <p> Redirecting you to home page in <span id="redirect" class="text-danger">10</span> seconds.</p>
+            <a href="/"><button class="btn btn-outline-dark">Go Home Now</button></a>
+        </div>
+        
+    </div>
+    {% else %}
+    <div class="orderStatusBox">
+        <img src="{%static 'user/img/failed.jpg'%}" alt="" srcset="" class="img mx-auto">
+        <div class="text-center">
+            <h3>We are sorry !☹</h3>
+            <h5 class="text-danger">Transaction for your order has been failed due to some error.</h5>
+            <p class="fs-5">Please try again !</p>
+            <p> Redirecting you to home page in <span id="redirect" class="text-danger">10</span> seconds.</p>
+            <a href="/"><button class="btn btn-outline-dark">Go Home Now</button></a>
+        </div>
+        
+    </div>
+    {% endif %}
+</div>
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous">
+</script>
+    
+<script>
+    window.onload = function () {
+        redirect = document.getElementById('redirect');
+
+        // timer for download link to be available
+        duration = 9;
+
+        var timer = duration, minutes, seconds;
+        var countdownInterval = setInterval(function () {
+            minutes = parseInt(timer / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+
+            time = (minutes * 60) + seconds
+            redirect.innerHTML = time ;
+
+            if (--timer < 0) {
+                clearInterval(countdownInterval);
+                window.location.href="/"
+            }
+        }, 1000);
+    }
+</script>
+
+</body>
+</html>

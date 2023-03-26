@@ -1,0 +1,82 @@
+
+{% extends 'user/basic.html' %}
+{%load static %}
+{%block title%}Paypal payment page{%endblock%}
+{%block csslink%}
+{% comment %} <link rel="stylesheet" href="{% static 'user/css/project-cards-cart.css'%}" />
+<link rel="stylesheet" href="{% static 'user/css/cart.css'%}" /> {% endcomment %}
+{%endblock%}
+{%block body%}
+        
+    <div class="container h-50 d-flex align-items-center">
+        <div class="bg-light rounded p-4 m-auto w-25">
+            {% comment %} <h2>Payment Option</h2> {% endcomment %}
+            <h4>Pay securly with paypal</h4>
+            <h5>Amount : {{totalprice}}0</h5>
+            <div id="paypal-button-container"> </div>
+        </div>
+    </div>
+
+    {% comment %} payment success Form {% endcomment %}
+    <form action="/paymentSuccess/" method="post" id="paySuccess">
+        {% csrf_token %}
+        <input type="hidden" name="orderedItm" value="{{orderedItm}}">
+        <input type="hidden" name="orderID" id="orderID">
+    </form>
+        <!-- Replace "client-id=test" with your PayPal Client ID -->
+        <script src="https://www.paypal.com/sdk/js?client-id=AVTKp6h0bWjiKHbrUnLxZ6SqwR6sAAIu1LUemjYyX_fmjLePBAL4jLzjXsYObpxeqAvDQouwrZY9UFCZ&currency=USD"></script>
+
+        <script>
+            const paypalButtonsComponent = paypal.Buttons({
+               
+                style: {
+                    color: "gold",
+                    shape: "rect",
+                    height: 40
+                },
+               
+                createOrder: (data, actions) => {
+                    
+                    const createOrderPayload = {
+                        purchase_units: [
+                            {
+                                amount: {
+                                    value: "{{totalprice}}"
+                                }
+                            }
+                        ]
+                    };
+
+                    return actions.order.create(createOrderPayload);
+                },
+
+                onApprove: (data, actions) => {
+                    const captureOrderHandler = (details) => {
+                        const payerName = details.payer.name.given_name;
+                        console.log(`Transaction completed by ${payerName}!`);
+                        {% comment %} window.location.href="/paymentSuccess/{{orderedItm}}" {% endcomment %}
+                        document.getElementById('orderID').value=data.orderID;
+                        document.getElementById('paySuccess').submit()
+
+                        
+                    };
+
+                    return actions.order.capture().then(captureOrderHandler);
+                },
+
+                // handle unrecoverable errors
+                onError: (err) => {
+                    {% comment %} console.error(
+                        `An error prevented the buyer from checking out with PayPal: ${err}`
+                    ); {% endcomment %}
+                    window.location.href="/paymentFailled/"
+                }
+                });
+
+                paypalButtonsComponent
+                    .render("#paypal-button-container")
+                    .catch((err) => {
+                        console.error(`PayPal Buttons failed to render: ${err}`);
+                });
+        </script>
+{%endblock%}

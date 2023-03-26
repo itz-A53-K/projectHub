@@ -1,0 +1,102 @@
+@import url(https://fonts.googleapis.com/css?family=Raleway:400,300,500,700);
+
+.project-card-placeholder {
+  font-family: "Raleway";
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+  gap: 10px;
+  border-radius: 10px;
+}
+
+.bottom-paste {
+  position: absolute;
+  display: flex;
+  bottom: 0;
+}
+
+.full-description {
+  position: relative;
+  height: auto;
+  overflow: hidden;
+}
+
+.cartItems{
+  background-color: #fffcfc;
+}
+.card-pro {
+  /* width: 650px; */
+  position: relative;
+  display: flex;
+  margin: 5px 0;
+  padding: 5px 0;
+  height: auto;
+  border-bottom: 1px solid rgba(137, 135, 135, 0.683);
+}
+
+
+.card-pro .photo {
+  padding: 1rem;
+  width: 35%;
+  height: 13rem;
+  text-align: center;
+  float: left;
+}
+.card-pro .photo img {
+  max-height: 240px;
+}
+.card-pro .description {
+  padding: 1rem;
+  float: left;
+  width: 65%;
+  border-left: 2px solid #efefef;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-pro .description h1 {
+  color: #1c1c1c;
+  font-weight: 300;
+  padding-top: 15px;
+  margin: 0;
+  font-size: 25px;
+  font-weight: 300;
+}
+.card-pro .description h2 {
+  color: #2f2e2e;
+  margin: 0;
+  text-transform: uppercase;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+.card-pro .description h2 span{
+  color: #745291;
+}
+.card-pro .description h4 {
+  margin: 0;
+  color: #727272;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 12px;
+}
+.card-pro .description p {
+  font-size: 16px;
+  line-height: 20px;
+  color: #727272;
+  padding: 10px 0;
+  margin: 0;
+  font-family: 'Times New Roman', Times, serif;
+}
+.card-pro .description .card-footer{
+justify-self: flex-end;
+
+}
+
+.card-pro .description button a {
+    text-decoration: none;
+    color: black;
+}
+
+.card-pro .description button:hover a {
+    color: #aedaa6;
+}

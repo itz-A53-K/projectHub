@@ -1,0 +1,657 @@
+{% extends 'user/basic.html' %} 
+{%block title%} Project-Hub {%endblock%} 
+
+
+{%block css%}
+
+  .btnDesign2 {
+    background-color: #a11b1bd6;
+    border: 2px solid #a11b1bd6;
+    color: aliceblue;
+    transition: 0s;
+  }
+
+  .projMainDiv {
+    width: 85vw;
+    margin: 0 auto;
+  }
+
+  .projMainDiv .projBody {
+    width: 75%;
+    margin: 0.25rem;
+  }
+
+  .projMainDiv .projBody .btnDiv {
+    grid-auto-flow: column;
+    gap: 0.5rem;
+    margin:
+      1rem 0;
+    width: 50%;
+    display: grid;
+  }
+
+  .similarProj {
+    width: 85vw;
+    margin: 0 auto;
+  }
+
+  .imagesDiv {
+    border: 1px solid rgb(183, 181, 181);
+    padding: 5px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin: 0.25rem;
+  }
+
+  .mainImgDiv {
+    margin: 0 10px;
+    height: 55vh;
+    width: 88%;
+  }
+
+  .mainImgDiv img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+  }
+
+  .allImg {
+    display: grid;
+    flex-direction: column;
+    height:
+      50vh;
+    width: 12%;
+    overflow-y: scroll;
+    margin: 1rem;
+    justify-items: center;
+  }
+
+  .allImg img {
+    cursor: pointer;
+    height: 7vh;
+    width: 70%;
+    margin: 7px;
+    object-fit:
+      fill;
+    border: 2px solid rgba(200, 197, 197, 0.483);
+  }
+
+  .bord2px {
+    border: 2px solid rgb(24, 87, 215) !important;
+  }
+
+  .card-price {
+    width: 25%;
+    padding: 0.5rem 0;
+    margin: 1rem;
+  }
+
+  .card-price .card-priceDiv {
+    padding: 5px;
+    border: 1px solid rgb(116, 114, 114);
+    position: sticky;
+    top: 10vh;
+  }
+
+  .card-price .card-priceDiv .btnsDiv {
+    display: grid;
+    gap: 0.5rem;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  a {
+    color: rgba(var(--bs-link-color-rgb), var(--bs-link-opacity, 1));
+    text-decoration: underline;
+  }
+
+  #downloadBox {
+    background-color: rgb(245, 135,
+        80);
+    width: 60%;
+    margin: 10px auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+  #downloadBox span {
+    margin: 15px;
+    text-align: center;
+  }
+
+  #downloadBox a {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 15px 0;
+    color:green;
+  }
+
+  #downloadBox a:hover {
+    color: rgb(27, 24, 24);
+    text-decoration: none;
+  }
+
+  @media screen and (max-width: 1100px) {
+    .projMainDiv {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .projMainDiv .projBody {
+      width: 100%;
+    }
+
+    .projMainDiv .projBody .btnDiv {
+      background: var(--dk-gray-100);
+      position: sticky;
+      bottom: 0vh;
+      padding: 1rem;
+      width: 100%;
+      border-top: 1px solid rgb(116,114, 114);
+    }
+
+    .card-price {
+      display: none;
+    }
+
+    .imagesDiv {
+      flex-direction: column-reverse;
+      margin: 0;
+    }
+
+    .imagesDiv .allImg {
+      grid-auto-flow: column;
+      height: fit-content;
+      width: 95%;
+      overflow-x: scroll;
+      overflow-y: auto;
+    }
+
+    .imagesDiv .allImg img {
+      width: 14vw;
+      height: 8vh;
+    }
+
+    .imagesDiv .mainImgdiv {
+      margin: 0;
+      width: 100%;
+      height: 46.5vh;
+    }
+  }
+
+  @media screen and (max-width: 850px) {
+    .projMainDiv {
+      width: 100vw;
+    }
+
+    .projMainDiv .projBody {
+      margin: 0;
+    }
+
+    .similarProj {
+      width: 100vw;
+    }
+
+    #go-top {
+      bottom: 4.5rem;
+    }
+  }
+
+  @media screen and (max-width: 750px) {
+    .imagesDiv .allImg img {
+      width: 16vw;
+      height: 6vh;
+    }
+  }
+  @media screen and (max-width: 430px) {
+    .imagesDiv .mainImgdiv {
+      height: 39vh;
+    }
+
+    .imagesDiv .allImg img {
+      margin: 5px;
+    }
+
+    .projMainDiv .projBody .btnDiv {
+      padding: 1rem 0;
+    }
+
+    .projMainDiv .projBody .btnDiv a {
+      padding: 5px !important;
+      margin: 0.25 0.15rem !important;
+    }
+
+    .projMainDiv .projBody .btnDiv button {
+      padding: 5px !important;
+      margin: 0.25 0.15rem !important;
+    }
+
+    #downloadBox {
+      width: 95%;
+    }
+
+    #downloadBox span {
+      margin:
+        15px 0;
+    }
+  }
+
+{%endblock css%}
+
+
+{% block body %} 
+  {% for message in messages %}
+    <div
+      {%if  message.tags%} class="alert m-auto fixed-bottom mb-1 border-{{ message.tags }} alert-dismissible fade show alert-{{ message.tags }} myAlert"  {%endif%}
+      role="alert" style="width: fit-content; bottom: 10vh"><b> {{ message }} </b><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %} 
+
+  {% if project %}
+
+    <div class="py-2 d-flex projMainDiv" style="background: var(--dk-gray-100)">
+      <div class="projBody">
+        <div class="imagesDiv">
+          <div class="allImg">
+            <img
+              class="projImg"
+              src="/media/{{project.default_image}}"
+              alt=""
+              srcset=""
+            />
+            {% for img in images %}
+
+            <img class="projImg" src="/media/{{img.image_url}}" alt="" srcset="" />
+            {% endfor %}
+          </div>
+          <div class="mainImgDiv">
+            <img
+              id="mainImg"
+              src="/media/{{project.default_image}}"
+              alt=""
+              srcset=""
+            />
+          </div>
+        </div>
+        <div class="descBody m-3">
+          <section aria-label="breadcrumb" style="font-size: 15px">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/">Home</a></li>
+              <li class="breadcrumb-item"><a href="/projects/">Projects</a></li>
+              <li class="breadcrumb-item active" aria-current="page">
+                {{project.title| truncatewords:20}}
+              </li>
+            </ol>
+          </section>
+          <div class="title">
+            <h5>
+              {{ project.title }} {% if project.short_Desc %}<span>({{ project.short_Desc }})</span> {% endif %}
+            </h5>
+          </div>
+          <p class="m-0 text-secondary" style="font-family: 'Poppins'">
+            By
+            <span class="fs-6 text-danger-emphasis">{{ project.created_by }} </span>&diams; {{ project.publish_date|date:"F d, Y" }}
+          </p>
+          <div class="my-3">
+            <h4>
+              {% if project.free %}
+
+                <span class="fw-semibold fs-5">Free</span>
+                <span class="text-decoration-line-through">{{ project.price }}0</span>
+                <input type="hidden" id="price" value="0" />
+              {% elif project.discounted_price %}
+
+                <span class="fw-semibold fs-5">₹ {{ project.discounted_price }}0</span> <span class="text-decoration-line-through">{{ project.price }}0</span >
+                <input type="hidden" id="price" value="{{project.discounted_price}}"/>
+              {%else%}
+
+                <span class="fw-semibold fs-5">₹ {{ project.price }}0</span>
+                <input type="hidden" id="price" value="{{project.price}}" /> 
+              {%endif%}
+            </h4>
+          </div>
+          <div>
+            <h5 class="my-3">
+              Category: <em class="fs-6"> {{ project.sub_category }} </em>
+            </h5>
+          </div>
+          <div>
+            <h5 class="my-3">
+              Languages Used: <em class="fs-6"> {{ project.used_language }} </em>
+            </h5>
+          </div>
+          {% comment %}
+
+          <div>
+            <p class="my-3">
+              Last modified at:
+              <em class="fs-6">
+                { { project.last_modified_date|date: "F d, Y" } }
+              </em>
+            </p>
+          </div>
+          {% endcomment %}
+
+          <div class="descDiv my-2" id="descDiv">
+            <h4>About this project</h4>
+            <p class="d-none mx-1" id="more">{{ project.full_Desc|linebreaksbr }}
+              <span class="btn btn-outline-dark" id="hidebtn">Show less</span>
+            </p>
+            <p class="mx-1" id="less">{{ project.full_Desc|linebreaksbr | truncatewords:40 }}
+              <span class="btn btn-outline-dark" id="showbtn"{% if project.full_Desc|length < 550 %}hidden    {% endif %}>Show more</span>
+            </p>
+          </div>
+          <div class="btnDiv">
+            {% if not project.free %} 
+              {% if not bought %}
+                {% if itemInCart %}
+                  <a href="/cart/" class="btn btn-warning py-2 mx-2 my-1 px-5">Go to cart</a>
+                {% else %}
+                  <button class="btn btnDesign2 mx-3 my-1 addToCart">Add to cart</button>
+                {% endif %}
+
+                <button class="btn btnDesign3 mx-2 my-1 buyNow" id="{{project.proj_id}}">Buy now</button>
+              {%endif%}
+            {% endif %}
+          </div>
+          {% if project.free or bought%}
+            <div id="downloadBox"></div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="card-price" style="background: var(--dk-gray-100)">
+        <div class="card-priceDiv">
+          <div class="price m-3">
+            <h4>
+              {% if project.free %}
+                <span class="fw-semibold fs-5">Free</span> <span class="text-decoration-line-through"> 
+                  {{ project.price }}0</span>
+                <input type="hidden" id="price" value="0" /> 
+              {% elif project.discounted_price %}
+                <span class="fw-semibold fs-5">₹ {{ project.discounted_price }}0</span>
+                <span class="text-decoration-line-through"> {{ project.price }}0</span>
+                <input type="hidden" id="price" value="{{project.discounted_price}}"/>
+              {% else %}
+                <span class="fw-semibold fs-5">₹ {{ project.price }}0</span>
+                <input type="hidden" id="price" value="{{project.price}}" /> 
+              {% endif %}
+            </h4>
+          </div>
+          <div class="btnsDiv">
+            {% if project.free or bought%}
+              <a href="#downloadBox" class="btn btnDesign3 mx-3 my-1">Download</a> 
+            {%else%} 
+              {% if itemInCart %}
+                <a href="/cart/" class="btn btn-warning py-2 mx-3 my-1 px-5">Go to cart</a>
+              {% else %}
+                <button class="btn btnDesign2 mx-3 my-1 addToCart">Add to cart</button>
+                <input type="hidden" id="projectId" name="projectId" value="{{project.proj_id}}"/>
+              {% endif %}
+
+              <button class="btn btnDesign3 mx-3 my-1 buyNow" id="{{project.proj_id}}">Buy now</button>
+            {% endif %}
+          </div>
+          <div><p class="text-center mb-0">Full Lifetime Access</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="similarProj p-2 my-3" style="background: var(--dk-gray-100)">
+      <h4 class="my-2">Similar Projects</h4>
+      <div class="container"></div>
+    </div>
+  {% elif template %}
+
+    <div class="py-2 d-flex projMainDiv" style="background: var(--dk-gray-100)">
+      <div class="projBody">
+        <div class="imagesDiv">
+          <div class="allImg">
+            <img class="projImg" src="/media/{{template.default_image}}" alt="" srcset=""/>
+            
+            {% for img in images %}
+              <img class="projImg" src="/media/{{img.image_url}}" alt="" srcset="" />
+            {% endfor %}
+          </div>
+          <div class="mainImgDiv">
+            <img id="mainImg" src="/media/{{template.default_image}}" alt="" srcset="" />
+          </div>
+        </div>
+        <div class="descBody m-3">
+          <section aria-label="breadcrumb" style="font-size: 15px">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/">Home</a></li>
+              <li class="breadcrumb-item"><a href="/templates/">templates</a></li>
+              <li class="breadcrumb-item active" aria-current="page"> {{ template.title| truncatewords:20 }} </li>
+            </ol>
+          </section>
+          <div class="title">
+            <h5> {{ template.title }} {% if template.short_Desc %} <span>({{ template.short_Desc }})</span> {% endif %}</h5>
+          </div>
+          <p class="m-0 text-secondary" style="font-family: 'Poppins'">By <span class="fs-6 text-danger-emphasis">{{ template.created_by }}</span>&diams; {{ template.publish_date|date:"F d, Y" }}</p>
+          <div class="my-3">
+            <h4>
+              {% if template.free %}
+
+                <span class="fw-semibold fs-5">Free</span>
+                <span class="text-decoration-line-through"> {{ template.price }}0</span>
+                <input type="hidden" id="price" value="0" /> 
+              {% elif template.discounted_price %}
+
+                <span class="fw-semibold fs-5">₹ {{ template.discounted_price }}0</span >
+                <span class="text-decoration-line-through"> {{ template.price }}0</span>
+                <input type="hidden" id="price" value="{{template.discounted_price}}"/>
+              {%else%}
+
+                <span class="fw-semibold fs-5">₹ {{ template.price }}0</span>
+                <input type="hidden" id="price" value="{{template.price}}" /> 
+              {%endif%}
+            </h4>
+          </div>
+          <div>
+            <h5 class="my-3">
+              Category: <em class="fs-6"> {{ template.sub_category }} </em>
+            </h5>
+          </div>
+          <div>
+            <h5 class="my-3">
+              Languages Used: <em class="fs-6"> {{ template.used_language }} </em>
+            </h5>
+          </div>
+          <div class="descDiv my-2" id="descDiv">
+            <h4>About</h4>
+            <p class="d-none mx-1" id="more">{{ template.full_Desc|linebreaksbr }}
+              <span class="btn btn-outline-dark" id="hidebtn">Show less</span>
+            </p>
+            <p class="mx-1" id="less"> {{ template.full_Desc|linebreaksbr |truncatewords:40 }}
+              <span class="btn btn-outline-dark" id="showbtn"{% if template.full_Desc|length < 550%} hidden {% endif %}>Show more </span>
+            </p>
+          </div>
+          <div class="btnDiv">
+            {% if not template.free %}
+              {% if not bought %} 
+                {% if itemInCart %}
+                  <a href="/cart/" class="btn btn-warning py-2 mx-3 my-1 px-5">Go to cart</a>
+                {% else %}
+                  <button class="btn btnDesign2 mx-3 my-1 addToCart">Add to cart</button>
+                {% endif %}
+
+                <button class="btn btnDesign3 mx-3 my-1 buyNow" id="{{template.proj_id}}"> Buy now </button>
+              {% endif %} 
+            {% endif %}
+          </div>
+
+          {% if template.free or bought%}
+            <div id="downloadBox"></div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="card-price" style="background: var(--dk-gray-100)">
+        <div class="card-priceDiv">
+          <div class="price m-3">
+            <h4>
+              {% if template.free %}
+
+                <span class="fw-semibold fs-5">Free</span>
+                <span class="text-decoration-line-through">{{ template.price }}0</span>
+              {% elif template.discounted_price %}
+
+                <span class="fw-semibold fs-5">₹ {{ template.discounted_price }}0</span>
+                <span class="text-decoration-line-through">{{ template.price }}0</span>
+              {%else%}
+
+                <span class="fw-semibold fs-5">₹ {{ template.price }}0</span>
+              {%endif%}
+            </h4>
+          </div>
+          <div class="btnsDiv">
+            {% if template.free or bought%}
+              <a href="#downloadBox" class="btn btnDesign3 mx-3 my-1">Download</a> 
+            {%else%} 
+              {% if itemInCart %}
+
+                <a href="/cart/" class="btn btn-warning py-2 mx-3 my-1">Go to cart</a> 
+              {% else %}
+
+                <button class="btn btnDesign2 mx-3 my-1 addToCart">Add to cart</button>
+                <input type="hidden" id="projectId" name="projectId" value="{{template.proj_id}}"/>
+              {% endif %}
+
+              <button class="btn btnDesign3 mx-3 my-1 buyNow" id="{{template.proj_id}}">Buy now</button>
+            {%endif%}
+          </div>
+          <div><p class="text-center mb-0">Full Lifetime Access</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="similarProj p-2 my-3" style="background: var(--dk-gray-100)">
+      <h4 class="my-2">Similar Projects</h4>
+      <div class="container"></div>
+    </div>
+  {% endif %}
+
+
+  <form action="/buy/" method="post" id="buyNowForm">{% comment %} Buy now form {% endcomment %}
+    {% csrf_token %}
+
+    <input type="hidden" name="proj_id" id="proj_idInp" />
+  </form>
+{% endblock body %} 
+
+{% block JS %}
+
+  <script>
+    $('.buyNow').click(function () {
+        proj_id=$(this).attr("id") 
+        console.log(proj_id) 
+        document.getElementById('proj_idInp').value=proj_id 
+        document.getElementById('buyNowForm').submit() 
+    })
+  </script>
+  <script>
+    projImg=document.querySelectorAll(".projImg") 
+    projImg[0].classList.add("bord2px") 
+    projImg.forEach(img=> {img.addEventListener('click', function () {
+        document.getElementById("mainImg").src=img.src 
+        classRemove() 
+        img.classList.add("bord2px")
+      });
+    });
+
+    function classRemove() {
+      projImg.forEach(i=> {
+          i.classList.remove("bord2px")
+        })
+    }
+
+    document.getElementById("hidebtn").addEventListener('click', function () {
+      document.getElementById('more').classList.add("d-none") 
+      document.getElementById('less').classList.remove("d-none")
+    }) 
+    document.getElementById("showbtn").addEventListener('click', function () {
+      document.getElementById('less').classList.add("d-none") 
+      document.getElementById('more').classList.remove("d-none")
+    })
+  </script>
+  <script>
+    const addToCart=document.querySelectorAll(".addToCart")
+    addToCart.forEach(btn=> {
+      btn.addEventListener('click', function () {
+        projectId=document.getElementById("projectId").value 
+        let formData=new FormData();
+        formData.append("csrfmiddlewaretoken", "{{ csrf_token }}") // Assining the price to post data, letter we need to encrypt this transmition
+
+        let postData= {
+          body: formData,
+          method: "post",
+        }
+
+        // Sending request to server
+        {%comment%}
+          document.getElementById("alert-section").innerHTML="" 
+        {%endcomment%}
+
+        fetch("/handleAddToCart/" + projectId, postData).then(res=> res.json()).then(data=> {
+
+          location.reload();
+
+          document.getElementById("cartCount").innerHTML=data.cartCount 
+            setTimeout(()=> {
+              document.getElementById("alert-section").innerHTML=""
+            }, 5000);
+        });
+      })
+    }) 
+      
+    function removeAlert() {
+      document.getElementById("alert-section").innerHTML="";
+    }
+
+
+    {% comment %}
+    $('.buyNow').click(function () {
+        project_id=document.getElementById("projectId").value $.ajax({
+
+          type: "POST",
+          url: "/buy/",
+          data: {
+            proj_id: project_id,
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+          }
+
+          ,
+          success: function (data) {
+            console.log(data)
+          }
+        })
+
+    }) {% endcomment %}
+  </script>
+  <script>
+    window.onload=function () {
+      downloadBox=document.getElementById('downloadBox');
+
+      if (downloadBox !=null) {
+        // timer for download link to be available
+        duration=Math.floor(Math.random() * 20)+20;
+
+        var timer=duration,minutes,seconds;
+
+        var countdownInterval=setInterval(function () {
+            minutes=parseInt(timer / 60, 10);
+            seconds=parseInt(timer % 60, 10);
+
+            time=(minutes * 60) + seconds 
+            downloadBox.innerHTML='<span>Download link will be available in ' + time + ' seconds.</span>';
+
+            if (--timer < 0) {
+              downloadBox.innerHTML='{% if project %}<a target="_blank" href="/download/?id={{project.proj_id}}">Download</a>{%else%}<a target="_blank" href="/download/?id={{template.proj_id}}">Download</a>{% endif %}';
+              clearInterval(countdownInterval);
+            }
+          }, 1000);
+      }
+    }
+  </script>
+{%endblock JS%}

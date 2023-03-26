@@ -1,0 +1,290 @@
+{% extends 'user/basic.html' %}
+{%load static %}
+{%block title%}Project-Hub - Carts Available{%endblock%}
+{%block csslink%}
+<link rel="stylesheet" href="{% static 'user/css/project-cards-cart.css'%}" />
+<link rel="stylesheet" href="{% static 'user/css/cart.css'%}" />
+{%endblock%}
+{%block css%}
+#titleDiv :hover{
+transition:.2s;
+color:#2874f0;
+}
+
+.cartContainer{
+  width:85vw;
+  margin : 0 auto;
+}
+.cartContainer .cartItems{
+  margin-bottom: 1.5rem;
+}
+
+.removeItemBtn:hover{
+  color:#2874f0;
+  cursor: pointer;
+}
+
+.emptyCartDiv{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+.checkoutBtnDiv{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 4rem;
+  position: sticky;
+  bottom: 0;
+  visibility: hidden;
+  background-color: #fffcfc;  
+  border-top:  1px solid rgb(116, 114, 114);
+}
+
+@media screen and (max-width: 970px) {
+  .cartContainer{
+    width: 100vw;
+    margin : 0 auto;
+  }
+  .cartContainer .row{
+    margin: 0;
+  }
+  .cartContainer .cartItems{
+    margin: 1rem 0;
+    width: 100%;
+  }
+    
+  .cartContainer .ordSummary{
+    width: 100%;
+    padding: 0;
+  }
+  .ordSummary .checkout{
+    display: none;
+  }
+  
+  .emptyCartDiv{
+    height: fit-content;
+    padding: 2rem;
+  }
+
+  .checkoutBtnDiv{
+   visibility: visible;
+  }
+
+  .card-pro .photo {
+    height: 11.5rem;
+  }
+
+}
+
+@media screen and (max-width: 600px) {
+  .cartContainer{
+    width: 100vw;
+    margin : 0 auto;
+  }
+  .cartContainer .row{
+    margin: 0;
+  }
+  .cartContainer .cartItems{
+    margin: 1rem 0;
+    width: 100%;
+  }
+  
+  .cartContainer .ordSummary{
+    width: 100%;
+    padding: 0;
+  }
+  .ordSummary .checkout{
+    display: none;
+
+  }
+  
+  .emptyCartDiv{
+    height: fit-content;
+    padding: 2rem;
+  }
+
+  .checkoutBtnDiv{
+    padding: 1rem;
+  }
+  
+  .card-pro .photo {
+    height: 10rem;
+    width: 30%;
+    padding: 0.5rem;
+  }
+  .card-pro .description  {
+    padding: 0.5rem;
+    width: 70%;
+  }
+
+  #go-top{
+    bottom: 4.5rem;
+  }
+
+}
+{%endblock%}
+
+{%block body%}
+
+{% if messages %}
+  {% for message in messages %}
+    <div {%if message.tags%}class="alert m-auto fixed-bottom mb-1 border-{{ message.tags }} alert-dismissible fade show alert-{{ message.tags }} myAlert"{%endif%} role="alert" style="width:fit-content;bottom:10vh;">
+      <b>{{ message}}</b>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<div class="cartContainer">
+  <div class="row ">
+    <div class="col-8 cartItems ">
+      {% if cart %}
+        {% for i in cart %}
+        <div class="card-pro">
+          <div class="photo">
+            <a href="/projects/{{i.project.proj_id}}"><img src="/media/{{i.project.default_image}}"
+                style="width: 100%; height: 100%; border-radius: 10px; cursor:pointer;"></a>
+          </div>
+          <div class="description">
+            <div>
+              <div id="titleDiv">
+                <h5><a href="/projects/{{i.project.proj_id}}">{{i.project.title}} {% if i.project.short_Desc %}<span> ( {{i.project.short_Desc}} )</span>{% endif %}</a></h5>
+              </div>
+              <p>{{i.project.full_Desc|title | truncatewords:15}}</p>
+
+              <h1 class="mb-4 p-0">
+                {% if i.project.free %}
+                <span class="fw-semibold fs-5">Free</span>
+                <span class="text-decoration-line-through"> {{i.project.price}}0</span>
+                <input type="hidden" id="price" value="0" />
+                {% elif i.project.discounted_price %}
+                <span class="fw-semibold fs-5">₹ {{i.project.discounted_price}}0</span>
+                <span class="text-decoration-line-through"> {{i.project.price}}0</span>
+                <input type="hidden" id="price" value="{{i.discounted_price}}" />
+                {%else%}
+                <span class="fw-semibold fs-5"> ₹ {{i.project.price}}0</span>
+                <input type="hidden" id="price" value="{{i.price}}" />
+                {%endif%}
+
+              </h1>
+
+            </div>
+            <div class="card-footer mx-3">
+
+              <!-- Button trigger modal -->
+              <a class="fw-semibold removeItemBtn" data-bs-toggle="modal" data-bs-target="#removeItemModal{{i.cart_id}}" id="removeItemBtn{{i.cart_id}}">REMOVE</a>
+
+              <!-- Modal -->
+              <div class="modal fade" id="removeItemModal{{i.cart_id}}" tabindex="-1" aria-labelledby="removeItemModal{{i.cart_id}}Label"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5 fw-semibold" id="removeItemModalLabel">Remove Item</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      Are you sure you want to remove this item from your cart?
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-outline-dark px-4" data-bs-dismiss="modal">Cancle</button>
+                      <a href="/remove/{{i.cart_id}}">
+                      <button type="button" class="btn btn-outline-success px-4 removeItem"  id="{{i.cart_id}}">Remove</button></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+
+        
+      {% else %}
+        <div class="emptyCartDiv">
+          <h5>Your cart is empty!☹</h5>
+          <p>Explore our wide collection of projects and find something you need😀</p>
+          <a href="/projects/" class="btn btn-outline-dark">Find projects</a>
+        </div>
+      {% endif %}
+    </div>
+    <div class="col-4 ordSummary" style="">
+      <div class="card mb-2 text-center">
+        <div class="card-header py-3">
+          <h5 class="mb-0">Summary</h5>
+        </div>
+        <div class="card-body">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex justify-content-between align-items-center border-0 py-2">
+              Products
+              <span style="letter-spacing: ;">{{cartCount}} Items</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center border-0 py-2">
+              Price
+              <span style="letter-spacing: 1.2px;">₹{{total_original_price}}0</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center py-2">
+              Discount
+              <span class="text-success fw-semibold" style="letter-spacing: 1.2px;">-₹{{discount}}0</span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center border-0 py-2 mb-3 ">
+              <div>
+                <strong>Total amount</strong>
+                <strong>
+                  <p class="mb-0">(including TAX)</p>
+                </strong>
+              </div>
+              <span  id="total_descounted_price"><strong>{{total_descounted_price}}0 INR</strong></span>
+            </li>
+          </ul>
+          {% if not cartCount is 0 %}
+            <button type="button" class="btnDesign2 btn-block checkout">
+            Checkout
+            </button>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="checkoutBtnDiv">
+      <a href="#total_descounted_price"><strong>{{total_descounted_price}}0 INR</strong><br><span class="text-primary"> View price summary</span></a>
+      <button type="button" class=" btnDesign2 mx-2 checkout">
+        Checkout
+      </button>
+    </div>
+  </div>
+</div>
+<form action="/checkout/" method="post" id="checkoutForm">
+  {% csrf_token %}
+  <input type="hidden" name="price" value="{{total_descounted_price}}">  
+</form>
+{%endblock body%}
+
+{% block JS %}
+  <script>
+    checkout=document.querySelectorAll('.checkout')
+    checkout.forEach(btn =>{
+      btn.addEventListener('click', function () {
+        price=document.getElementById("total_descounted_price").value
+        
+          document.getElementById('checkoutForm').submit();
+          
+          {% comment %} $.ajax({
+              type:"POST",
+              url:"/checkout/",
+              data:{
+                  price : price,
+                  csrfmiddlewaretoken:'{{ csrf_token }}',
+              },
+              success: function(data){
+                  console.log(data)
+                  // window.location.href = "/gr";
+              }
+          }) {% endcomment %}
+      })
+    })
+  </script>
+{% endblock JS %}

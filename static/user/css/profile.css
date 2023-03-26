@@ -1,0 +1,163 @@
+.profile_links .card img{
+    height:50px;
+    border-radius:150px;
+}
+.card{
+    margin: 0 10px;
+    box-shadow:0px 0px 4px rgba(64, 64, 64, 0.269);
+}
+
+.profile_info .imgDiv img {
+    height : 30vh;
+    border-radius: 150px;
+}
+
+.profile_info .input,
+.profile_info .textarea {
+    border: 2px solid rgba(45, 44, 44, 0.76);
+    border-radius: 5px;
+    margin:5px;
+    padding: 5px 5px 5px 10px;
+    width: 25vw;
+    font-size:1.2rem;
+    font-weight:400;
+    color:rgb(46, 43, 43);
+    font-family: Roboto,Arial,sans-serif;
+}
+.profile_info .textarea {
+    height: 8rem;
+}
+.profile_info .input:disabled,
+.profile_info textarea:disabled {
+    background-color: #fafafa;
+    font-size:.95rem;
+    color:#878787;
+    cursor: not-allowed;
+    /* pointer-events: none; */
+}
+
+.profile_links {
+    width:30%;
+    height:auto;
+
+}
+
+#order{
+    min-height:78vh;
+}
+.orderCard{
+    display: flex;
+    width: 100%;
+    margin: 10px 0 0 0;
+    padding: .5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(137, 135, 135, 0.683);
+}
+.orderCard .orderImg{
+    width: 40%;
+    height: 12rem;
+}
+.orderCard .orderDetails{
+    width: 60%;
+    margin: 0 1rem;
+}
+.orderCard .orderDetails h5{
+    color: rgba(54, 53, 53, 0.82);
+
+}
+
+.profile-body{
+    width: 75%;
+    padding: 1rem;
+}
+
+@media screen and (max-width: 900px) {
+    .profile{
+        flex-direction: column;
+    }
+    .profile .profile_links{
+        width: 100%;
+    }
+    .profile .profile_links .linkDiv{
+        flex-direction: row;
+        justify-content: space-around;
+        padding: 0 !important;
+        margin: 0;
+        margin-top: .5rem !important;
+    }
+    .profile .profile_links .linkDiv .card-footer{
+        display: none !important;
+    }
+    .profile-body{
+        width: 100%;
+        margin: 0;
+    }
+    .profile_info .input, .profile_info .textarea{
+        width: 30rem;
+    }
+    #order{
+        min-height:70vh;
+    }
+}
+@media screen and (max-width: 600px) {
+    .profile{
+        padding: 0.2rem !important;
+    }
+    .profile_info .imgDiv img{
+        height: 8rem;
+
+    }
+    .profile_info .input, .profile_info .textarea{
+        width: 18rem;
+    }
+    #infoHeading{
+        margin-top: 0.5rem !important;
+    }
+    .profile_links .helloUser div, .profile_links .helloUser div h5{
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    .orderCard{
+        flex-direction: column !important;
+    }
+    .orderCard .orderImg{
+       width: 100%;
+       height: 10rem;
+    }
+    .orderCard .orderDetails{
+       width: 100%;
+       margin: 0;
+       padding: .5rem;
+       display: flex;
+       flex-direction: column;
+    }
+    .orderCard .orderDetails #buydate{
+       margin-top: 0 !important;
+    }
+    .orderCard .orderDetails .btns{
+       margin-top: 0.3rem !important;
+    }
+}
+@media screen and (max-width: 350px) {
+    .profile{
+        padding: 0rem !important;
+    }
+    .profile_info .imgDiv img{
+        height: 5rem;
+
+    }
+    .profile_info .input, .profile_info .textarea{
+        width: 14rem;
+        margin: 0 0.25rem;
+    }
+    #infoHeading{
+        margin-top: 0.5rem !important;
+    }
+    .profile_links .helloUser img{
+        height: 35px;    
+    }
+    .orderCard{
+        padding: 0;
+    }
+}
