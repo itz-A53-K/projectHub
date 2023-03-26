@@ -1,9 +1,4 @@
-import string
-from cryptography.fernet import Fernet
-import string
-import random
 from user.models import Project, Proj_image, Cart, Order, User_detail
-import requests
 from django.shortcuts import render, HttpResponse, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -11,31 +6,31 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse, Http404
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
-import hashlib
 from django.conf import settings
-import time
-import json
 from django.views.static import serve
-import os
 from django.core.mail import send_mail
 
-# Define the payment gateway URLs
-# PAYU_BASE_URL = 'https://secure.payu.in/_payment'
-BASE = 'https://www.healthkindlab.tk'
+import requests
+import random
+import hashlib
+import time
+import json
+import os
+
+BASE = 'https://www.projectcodes.online'
 # BASE = 'http://127.0.0.1:8000'
+
+# Define the payment gateway URLs
 # PAYU_TEST_URL = 'https://test.payu.in/_payment'
 PAYU_PRODUCTION_URL = 'https://secure.payu.in/_payment'
 
-# Define the PayU merchant key and salt
+# PayU Production merchant key and salt
 MERCHANT_KEY = 'CY4YAH'
 SALT = '72toOcfuXCBizlYLEGqvVYeIUnXLOGsY'
 
-# Test merchant keys
+# PayU Test merchant keys
 # MERCHANT_KEY = 'gtKFFx'
 # SALT = '4R38IvwiV57FwVpsgOvTXBdLE4tHUXFW'
-# key is generated
-ENCRYPTION_KEY = b'G8_EGzF4GWlE_O7Z0oMxsRnB_dmXW3zfIzEQf7wrA0I='
-fernet = Fernet(ENCRYPTION_KEY)
 
 
 def cartCount(user_id):
@@ -157,36 +152,41 @@ def handleLogin(request):
                     request, "Error! Invalid username or password")
 
         elif form == "registration":
-            hashed_otp = request.POST.get('technoblog', '')
-            otp = request.POST.get('otp', '')
-            if hashed_otp == '' or otp == '':
-                messages.error(request, "Invalid OTP")
-            else:
-                if validateOtp(hashed_otp, otp):
-                    email_reg = request.POST.get('email_reg')
-                    password = request.POST.get('password')
-                    f_name = request.POST.get('f_name')
-                    l_name = request.POST.get('l_name')
+            inp_otp= request.POST.get('input_otp')
+            generated_otp = request.session['regi_generated_OTP']
 
-                    try:
-                        user = User.objects.create_user(
-                            username=email_reg, email=email_reg, password=password)
-                        user.first_name = f_name
-                        user.last_name = l_name
-                        user.save()
-                        user = User.objects.get(username=email_reg)
-                        name = user.first_name+" " + user.last_name
-                        account = User_detail.objects.create(
-                            user_id=user.id, name=name)
-                        account.save()
-                        messages.success(
-                            request, "Your account has been successfully created. You can login now.")
-                        return redirect('/login/')
-                    except:
-                        messages.error(request, "Email already exists.")
-                else:
-                    messages.error(request, "Invalid OTP")
-                    # return JsonResponse({'technoblog': "Invalid OTP", 'success': False, 'errorType': "otp"})
+            email_reg = request.POST.get('email')
+            session_email = request.session['session_email']
+
+            if int(inp_otp) == generated_otp and email_reg == session_email:
+                password = request.POST.get('password')
+                f_name = request.POST.get('f_name')
+                l_name = request.POST.get('l_name')
+                try:
+                    #deleting sessions
+                    del request.session['regi_generated_OTP']
+                    del request.session['session_email']
+                except:
+                    print("session can't be deleted")
+
+                try:
+                    user = User.objects.create_user( username=email_reg, email=email_reg, password=password)
+                    user.first_name = f_name
+                    user.last_name = l_name
+                    user.save()
+
+                    user = User.objects.get(username=email_reg)
+                    name = user.first_name+" " + user.last_name
+                    account = User_detail.objects.create( user_id=user.id, name=name)
+                    account.save()
+                    messages.success(
+                        request, "Your account has been successfully created. You can login now.")
+                    return JsonResponse({'success': True})
+                except:
+                    messages.error(request, "Email already exists.")
+                    return JsonResponse({'success': False})
+            else:
+                return JsonResponse({'success': False, 'msg': 'Invalid OTP'})
 
     if request.user.is_authenticated:
         return redirect('/')
@@ -194,42 +194,31 @@ def handleLogin(request):
         return render(request, 'user/login.html')
 
 
-@csrf_exempt
 def sendOtp(request):
-    email = request.GET.get('email')
-    user = User.objects.filter(username=email, email=email).exists()
-    if user:
-        messages.error(request, "Email already exists.")
-        return JsonResponse({'technoblog': "Email already exist", 'success': False, 'errorTyoe': "email"})
-    else:
-        # N = 6
-        otp = ''.join(random.choices(
-            string.ascii_uppercase + string.digits, k=6))
-        msg = str(otp)
-        send_mail(
-            'Your OTP for ProjectCodes.online', "Here is your OTP Bro/Girl : "+msg,
-            'projectzcodes@gmail.com',
-            [email],
-            fail_silently=False,
-        )
+    if request.method == "POST":
+        email = request.POST.get('email')
+        user = User.objects.filter(username=email, email=email).exists()
+        if user:
+            messages.success(request, "You are already registered. Please login.")
+            return JsonResponse({'msg': "Email already exist", 'success': False, 'errorTyoe': "email"})
+        else:
+            otp= random.randint(100000 ,999999)
+            msg= f'''Hello Dear,
 
-        encoded_otp = fernet.encrypt(msg.encode("utf-8"))
-        simple_encoded = encoded_otp.decode("utf-8")
-        print(otp)
-        return JsonResponse({'success': True, 'technoblog': simple_encoded})
-
-
-def validateOtp(hashed_otp, normal_otp):
-    res = bytes(hashed_otp, 'utf-8')
-    d = fernet.decrypt(res)
-    str1 = d.decode('UTF-8')
-    print(str1)
-    print(normal_otp)
-
-    if normal_otp == str1:
-        return True
-    else:
-        return False
+    Thank you for signing in with Projectcodes.online. We want to make sure it's really you. Your One-Time Password (OTP) to complete the registration process is {otp} (Valid only for 5 minutes). Please do not share the OTP with anyone.
+    If you don't want to create an account, you can ignore this message.                        
+   '''
+            
+            send_mail(
+                'Projectcodes.online Email Verification',
+                msg,
+                'projectzcodes@gmail.com',
+                [email],
+                fail_silently=False,
+            )
+            request.session['regi_generated_OTP'] = otp
+            request.session['session_email'] = email
+            return JsonResponse({'success': True, 'msg': 'Varification code sent to', 'email' : email})
 
 
 def handleLogout(request):
@@ -336,56 +325,71 @@ def my_order(request):
 
 
 def download(request):
-    print("I am here")
-    if request.user.is_authenticated and request.method == "GET":
-        project_id = request.GET.get("id")
-        print(project_id)
-        project = Project.objects.get(proj_id=project_id)
-        print(project.title)
-        print(project.price)
-        print(project.discounted_price)
-        print(project.free)
 
-        if not project.free:
-            order = Order.objects.filter(
-                project=project, user_id=request.user.id).exists()
-            print(order)
-            if order:
-                source = os.path.dirname(os.path.dirname(
-                    __file__)) + '/media/projectFile/' + project.sourcecode_link
-                return serve(request, os.path.basename(source), os.path.dirname(source))
-            else:
-                raise Http404
-                # return HttpResponse("You have not purchased the product")
+    if request.method =="GET":
+        project_id= request.GET.get("id")
+        project = Project.objects.get(proj_id= project_id)
+        order = Order.objects.filter(project=project, user_id=request.user.id).exists()
+
+        if project.free or order:
+            source = os.path.dirname(os.path.dirname(__file__)) + '/media/projectFile/' + project.sourcecode_link
+            return serve(request, os.path.basename(source), os.path.dirname(source))
         else:
-            headers = {"Accept": "application/json",
-                       "Content-Type": "application/x-www-form-urlencoded"}
-            # alias = "Source_"+randint(1, 10909900)
-            api_url = "https://gplinks.in/api?api=717ef637312487810f5a0efe2d80b127115c0b6a&url=" + BASE + \
-                "/ad_viewed/?id=" + project_id + "&alias=" + \
-                'Source_Code_{}'.format(random.randint(1, 10909900377777))
-            print(api_url)
-            response = requests.request(
-                "GET", api_url)
-            print(response.text)
-            dict = json.loads(response.text)
-            if dict['status'] == "success":
-                return redirect(dict["shortenedUrl"])
+            messages.error(request , "We are sorry. This item is no longer available for free.")
+            if project.category is "Project":
+                redirect_url= "/projects/"+project_id
             else:
-                return redirect("/")
+                redirect_url= "/templates/view/"+project_id
+
+            return redirect(redirect_url)
+    else:
+        return redirect('/')
+
+# not gonna use the following method for now because of bad user experiance as gplink shows too long add
+ 
+    # if request.user.is_authenticated and request.method == "GET":
+    #     project_id = request.GET.get("id")
+    #     project = Project.objects.get(proj_id=project_id)
+
+    #     if not project.free:
+    #         order = Order.objects.filter(project=project, user_id=request.user.id).exists()
+
+    #         if order:
+    #             source = os.path.dirname(os.path.dirname(
+    #                 __file__)) + '/media/projectFile/' + project.sourcecode_link
+    #             return serve(request, os.path.basename(source), os.path.dirname(source))
+    #         else:
+    #             raise Http404('Order do not exists.')
+    #     else:
+    #         headers = {"Accept": "application/json",
+    #                    "Content-Type": "application/x-www-form-urlencoded"}
+    #         # alias = "Source_"+randint(1, 10909900)
+    #         api_url = "https://gplinks.in/api?api=717ef637312487810f5a0efe2d80b127115c0b6a&url=" + BASE + \
+    #             "/ad_viewed/?id=" + project_id + "&alias=" + \
+    #             'Source_Code_{}'.format(random.randint(1, 10909900377777))
+    #         # print(api_url)
+    #         response = requests.request(
+    #             "GET", api_url)
+    #         # print(response.text)
+    #         dict = json.loads(response.text)
+    #         if dict['status'] == "success":
+    #             return redirect(dict["shortenedUrl"])
+    #         else:
+    #             return redirect("/")
 
 
 def ad_viewed(request):
-    if request.user.is_authenticated and request.method == "GET":
-        project_id = request.GET.get("id")
-        project = Project.objects.get(proj_id=project_id)
+    # if request.user.is_authenticated and request.method == "GET":
+    #     project_id = request.GET.get("id")
+    #     project = Project.objects.get(proj_id=project_id)
 
-        if project.free:
-            source = os.path.dirname(os.path.dirname(
-                __file__)) + '/media/projectFile/' + project.sourcecode_link
-            return serve(request, os.path.basename(source), os.path.dirname(source))
-        else:
-            return redirect("/")
+    #     if project.free:
+    #         source = os.path.dirname(os.path.dirname(
+    #             __file__)) + '/media/projectFile/' + project.sourcecode_link
+    #         return serve(request, os.path.basename(source), os.path.dirname(source))
+    #     else:
+    #         return redirect("/")
+    pass
 
 
 def checkout(request):
@@ -534,7 +538,7 @@ def payment(request):
         }
 
         pauyResponse = verify_transaction(track_params)
-        print(pauyResponse)
+        # print(pauyResponse)
         dict = json.loads(pauyResponse)
         # print(dict['response']['status'])
 

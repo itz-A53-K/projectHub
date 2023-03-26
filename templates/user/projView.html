@@ -1,5 +1,11 @@
 {% extends 'user/basic.html' %} 
-{%block title%} Project-Hub {%endblock%} 
+{%block title%} 
+  {% if template %}
+    {{ template.title }} - HTML CSS JavaScript Responsive Template Source Code Download | ProjectCodes
+  {% elif project%}
+    {{ project.title }} - {{project.short_Desc}} | ProjectCodes
+  {% endif %}
+ {%endblock%} 
 
 
 {%block css%}
@@ -430,7 +436,7 @@
           <div class="title">
             <h5> {{ template.title }} {% if template.short_Desc %} <span>({{ template.short_Desc }})</span> {% endif %}</h5>
           </div>
-          <p class="m-0 text-secondary" style="font-family: 'Poppins'">By <span class="fs-6 text-danger-emphasis">{{ template.created_by }}</span>&diams; {{ template.publish_date|date:"F d, Y" }}</p>
+          <p class="m-0 text-secondary" style="font-family: 'Poppins'">By <span class="fs-6 text-danger-emphasis">{{ template.created_by }}</span> &diams; {{ template.publish_date|date:"F d, Y" }}</p>
           <div class="my-3">
             <h4>
               {% if template.free %}

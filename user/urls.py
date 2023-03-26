@@ -33,6 +33,6 @@ urlpatterns = [
 
     path('download/', views.download, name="download"),
     path('ad_viewed/', views.ad_viewed, name="ad_viewed"),
-    path('sendotp/', views.sendOtp, name="sendotp"),
+    path('sendOtp/', views.sendOtp, name="sendOtp"),
     # path('create-paypal-order/', views.createPaypalOrder, name="createPaypalOrder"),
 ]

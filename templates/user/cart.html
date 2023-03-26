@@ -1,130 +1,130 @@
 {% extends 'user/basic.html' %}
 {%load static %}
-{%block title%}Project-Hub - Carts Available{%endblock%}
+{%block title%}Cart | ProjectCodes.online{%endblock%}
 {%block csslink%}
 <link rel="stylesheet" href="{% static 'user/css/project-cards-cart.css'%}" />
 <link rel="stylesheet" href="{% static 'user/css/cart.css'%}" />
 {%endblock%}
 {%block css%}
-#titleDiv :hover{
-transition:.2s;
-color:#2874f0;
-}
-
-.cartContainer{
-  width:85vw;
-  margin : 0 auto;
-}
-.cartContainer .cartItems{
-  margin-bottom: 1.5rem;
-}
-
-.removeItemBtn:hover{
+  #titleDiv :hover{
+  transition:.2s;
   color:#2874f0;
-  cursor: pointer;
-}
+  }
 
-.emptyCartDiv{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-.checkoutBtnDiv{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 4rem;
-  position: sticky;
-  bottom: 0;
-  visibility: hidden;
-  background-color: #fffcfc;  
-  border-top:  1px solid rgb(116, 114, 114);
-}
-
-@media screen and (max-width: 970px) {
   .cartContainer{
-    width: 100vw;
+    width:85vw;
     margin : 0 auto;
   }
-  .cartContainer .row{
-    margin: 0;
-  }
   .cartContainer .cartItems{
-    margin: 1rem 0;
-    width: 100%;
+    margin-bottom: 1.5rem;
   }
+
+  .removeItemBtn:hover{
+    color:#2874f0;
+    cursor: pointer;
+  }
+
+  .emptyCartDiv{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  .checkoutBtnDiv{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 4rem;
+    position: sticky;
+    bottom: 0;
+    visibility: hidden;
+    background-color: #fffcfc;  
+    border-top:  1px solid rgb(116, 114, 114);
+  }
+
+  @media screen and (max-width: 970px) {
+    .cartContainer{
+      width: 100vw;
+      margin : 0 auto;
+    }
+    .cartContainer .row{
+      margin: 0;
+    }
+    .cartContainer .cartItems{
+      margin: 1rem 0;
+      width: 100%;
+    }
+      
+    .cartContainer .ordSummary{
+      width: 100%;
+      padding: 0;
+    }
+    .ordSummary .checkout{
+      display: none;
+    }
     
-  .cartContainer .ordSummary{
-    width: 100%;
-    padding: 0;
-  }
-  .ordSummary .checkout{
-    display: none;
-  }
-  
-  .emptyCartDiv{
-    height: fit-content;
-    padding: 2rem;
-  }
+    .emptyCartDiv{
+      height: fit-content;
+      padding: 2rem;
+    }
 
-  .checkoutBtnDiv{
-   visibility: visible;
-  }
+    .checkoutBtnDiv{
+    visibility: visible;
+    }
 
-  .card-pro .photo {
-    height: 11.5rem;
-  }
-
-}
-
-@media screen and (max-width: 600px) {
-  .cartContainer{
-    width: 100vw;
-    margin : 0 auto;
-  }
-  .cartContainer .row{
-    margin: 0;
-  }
-  .cartContainer .cartItems{
-    margin: 1rem 0;
-    width: 100%;
-  }
-  
-  .cartContainer .ordSummary{
-    width: 100%;
-    padding: 0;
-  }
-  .ordSummary .checkout{
-    display: none;
+    .card-pro .photo {
+      height: 11.5rem;
+    }
 
   }
-  
-  .emptyCartDiv{
-    height: fit-content;
-    padding: 2rem;
-  }
 
-  .checkoutBtnDiv{
-    padding: 1rem;
-  }
-  
-  .card-pro .photo {
-    height: 10rem;
-    width: 30%;
-    padding: 0.5rem;
-  }
-  .card-pro .description  {
-    padding: 0.5rem;
-    width: 70%;
-  }
+  @media screen and (max-width: 600px) {
+    .cartContainer{
+      width: 100vw;
+      margin : 0 auto;
+    }
+    .cartContainer .row{
+      margin: 0;
+    }
+    .cartContainer .cartItems{
+      margin: 1rem 0;
+      width: 100%;
+    }
+    
+    .cartContainer .ordSummary{
+      width: 100%;
+      padding: 0;
+    }
+    .ordSummary .checkout{
+      display: none;
 
-  #go-top{
-    bottom: 4.5rem;
-  }
+    }
+    
+    .emptyCartDiv{
+      height: fit-content;
+      padding: 2rem;
+    }
 
-}
+    .checkoutBtnDiv{
+      padding: 1rem;
+    }
+    
+    .card-pro .photo {
+      height: 10rem;
+      width: 30%;
+      padding: 0.5rem;
+    }
+    .card-pro .description  {
+      padding: 0.5rem;
+      width: 70%;
+    }
+
+    #go-top{
+      bottom: 4.5rem;
+    }
+
+  }
 {%endblock%}
 
 {%block body%}

@@ -1,6 +1,6 @@
 {% extends 'user/basic.html' %}
 {%load static %}
-{%block title%}Project-Hub - Projects Available{%endblock%}
+{%block title%}Latest Responsive Projects on PHP, Java, Python, Django, Android, Node.JS | ProjectCodes{%endblock%}
 {%block csslink%}
 <link rel="stylesheet" href="{% static 'user/css/project-cards.css'%}" />
 {%endblock%}
@@ -79,7 +79,7 @@
                             <div class="description">
                                 <div>
                                     <h2>{{i.title}} {% if i.short_Desc %}<span> ( {{i.short_Desc}} )</span>{% endif %}</h2>
-                                    <p>{{i.full_Desc|title | truncatechars:150}}</p>
+                                    <p>{{i.full_Desc|title | truncatewords:26}}</p>
                                     <h1 class="pt-0">{% if  i.free %}
                                         <span class="fw-semibold fs-5">Free</span>
                                         <span class="text-decoration-line-through"> {{i.price}}0</span>
@@ -118,7 +118,7 @@
                         <div class="description pt-0">
                             <div>
                                 <h2>{{i.title}} {% if i.short_Desc %}<span> ( {{i.short_Desc}} )</span>{% endif %}</h2>
-                                <p>{{i.full_Desc|title | truncatechars:150}}</p>
+                                <p>{{i.full_Desc|title | truncatewords:26}}</p>
                                 
                                 <h1 class="pt-0">{% if  i.free %}
                                     <span class="fw-semibold fs-5">Free</span>
