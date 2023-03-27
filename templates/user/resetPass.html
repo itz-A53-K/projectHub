@@ -1,0 +1,197 @@
+{% extends 'user/basic.html' %}
+
+{% block css %}
+
+    .box{
+        height:88vh;
+        display:flex;
+        flex-direction: column;
+        align-items:center;
+        justify-content:center;
+    }
+    .resetFormBox{
+       background: white;
+       border-radius:10px;
+       width:fit-content;
+       height:fit-content;
+       padding: 1.5rem;
+    }
+    .resetFormBox form div{
+        display:flex;
+        flex-direction: column;
+    }
+    .resetFormBox form div label{
+        font-size:16px;
+        font-weight:700;
+    }
+    .resetFormBox form input{
+        width: 25rem;
+        padding:10px;
+        border-radius: 5px;
+        border: 1px solid #CACACA;
+        background-color: rgb(229 231 235);
+        outline: none;
+        margin: 5px 0;
+    }
+    .btnDiv button, .btnDiv a{
+        font-size: 18px;
+    }
+    .btnDiv button{
+        background-color: rgb(55 65 81);
+        color:white;
+    }
+    .btnDiv button:hover{
+        color:white;
+        background-color: rgb(75 85 99)
+    }
+
+{% endblock css %}
+
+{% block body %}
+
+<div class="box">
+    <div class="resetFormBox">
+        <!-- <div class="border-bottom border-dark-subtle m-3 p-1">
+            <h3 class=" text-center">ProjectCodes.online</h3>
+        </div> -->
+        <div id="customAlert"></div>
+        <div class="" id="em-frm">
+            <form id="resetPassForm" >
+                <h4 class="text-center mb-4">Reset Password</h4>
+                
+                {% csrf_token %}
+                <div class="my-2">
+                    <label for="input">Email:</label>
+                    <input type="email" name="inputEmail" id="inputEmail" placeholder="" required>
+                </div>
+            </form>
+            <div class="d-grid gap-2 my-4 btnDiv">
+                <button class="btn py-2" id="emailSubmit">Submit</button>
+                <a href="/login" class="btn btn-primary py-2 ">Cancel</a>
+            </div>
+        </div>
+
+        <div class="d-none" id="otp-frm">
+            <form id="OTP_form" >
+                <h4 class="text-center">Reset Password</h4>
+                <h6 class="text-center fw-medium my-3">Enter the OTP sent to your email.</h6>
+                <div class="my-2">
+                    <label for="input">OTP:</label>
+                    <input type="number" name="inputOTP" id="inputOTP" placeholder="" required>
+                </div>
+            </form>
+            <div class="d-grid gap-2 my-4 btnDiv">
+                <button class="btn py-2" id="Conf_OTP">Confirm OTP</button>
+                <a href="/login" class="btn btn-primary py-2 ">Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock body %}
+
+{% block JS %}
+<script>
+    customAlert= document.getElementById('customAlert')
+    $('#emailSubmit').click(function() { 
+        submitBtn= document.getElementById('emailSubmit');
+
+        let inputEmail = document.getElementById("inputEmail").value; 
+        if(inputEmail !=""){
+            submitBtn.disabled= true;
+            submitBtn.innerHTML= '<div class="spinner-border " role="status"><span class="visually-hidden">Loading...</span></div>';
+            submitBtn.classList.add('btn-secondary');
+            
+            $.ajax({
+    
+                type: "POST",
+                url: "/resetPass_SandOTP/",
+                data: {
+                    inputEmail : inputEmail,
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                },
+          
+                success: function (data) {
+                  console.log(data)
+                  console.log(data.success)
+                  
+                    if( data.success == false){
+                        
+                        customAlert.innerHTML='<div class="alert m-auto fixed-bottom mb-1 border-danger alert-dismissible fade show alert-danger myAlert"role="alert" style="width:fit-content;bottom:5vh;"><b>'+data.msg+'</b><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+
+                        submitBtn.disabled= false;
+                        submitBtn.innerHTML= 'Submit';
+                        submitBtn.classList.remove('btn-secondary')
+                        autoAlertClose()
+                    }
+                    else if(data.success == true){
+                        $('#em-frm').addClass("d-none")
+                        $('#otp-frm').removeClass("d-none")
+                    }
+                },
+                
+            })
+        }       
+    });
+
+
+    $('#Conf_OTP').click(function() { 
+        let inputEmail = document.getElementById("inputEmail").value; 
+        let inputOTP = document.getElementById("inputOTP").value; 
+
+        
+        $.ajax({
+
+            type: "POST",
+            url: "/resetPass/",
+            data: {
+                inputEmail : inputEmail,
+                inputOTP : inputOTP,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+        
+            success: function (data) {
+                console.log(data)
+                console.log(data.success)
+                
+                if( data.success == false){
+                    
+                    customAlert.innerHTML='<div class="alert m-auto fixed-bottom mb-1 border-danger alert-dismissible fade show alert-danger myAlert"role="alert" style="width:fit-content;bottom:5vh;"><b>'+data.msg+'</b><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>';
+
+                    submitBtn.disabled= false;
+                    submitBtn.innerHTML= 'Submit';
+                    submitBtn.classList.remove('btn-secondary')
+                    autoAlertClose()
+                }
+                else if(data.success == true){
+                    $('#em-frm').addClass("d-none")
+                    $('#otp-frm').removeClass("d-none")
+                }
+            },
+            
+        })
+              
+    });
+
+
+      
+
+
+
+
+    function autoAlertClose(){
+        setTimeout(() => {
+          $('.myAlert').alert('close')
+        }, 4000);
+    }
+
+    $('#inputOTP').keypress(function (e){
+        var otp = $(this).val();
+        
+        if (otp.length >5){
+          e.preventDefault();
+        }
+      })
+</script>
+{% endblock JS %}
