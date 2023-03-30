@@ -53,7 +53,7 @@
         </div>
 
         <div class="form-link">
-          {% comment %} <a href="/resetPass" class="forgot-pass">Forgot password?</a> {% endcomment %}
+          <a href="/resetPass" class="forgot-pass">Forgot password?</a>
         </div>
 
         <div class="field button-field">
@@ -218,8 +218,8 @@
     if (regPass1 != regPass2) {
       alert("Passwords do not match !")
     }
-    else if (regPass1.length < 5) {
-      alert("Password must contain atleast 5 characters !")
+    else if (regPass1.length < 8) {
+      alert("Password must contain atleast 8 characters !")
     }
     else {
       let inpRegi_email = document.getElementById("regi_email").value;
