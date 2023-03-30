@@ -150,6 +150,7 @@ def handleLogin(request):
             else:
                 messages.error(
                     request, "Error! Invalid username or password")
+                return redirect("/login")
 
         elif form == "registration":
             inp_otp= request.POST.get('input_otp')
@@ -188,9 +189,16 @@ def handleLogin(request):
             else:
                 return JsonResponse({'success': False, 'msg': 'Invalid OTP'})
 
-    if request.user.is_authenticated:
+    elif request.user.is_authenticated:
         return redirect('/')
     else:
+        try:
+            #deleting sessions
+            del request.session['regi_generated_OTP']
+            del request.session['session_email']
+        except:
+            print("session can't be deleted")
+
         return render(request, 'user/login.html')
 
 
@@ -206,7 +214,10 @@ def sendOtp(request):
             msg= f'''Hello Dear,
 
     Thank you for signing in with Projectcodes.online. We want to make sure it's really you. Your One-Time Password (OTP) to complete the registration process is {otp} (Valid only for 5 minutes). Please do not share the OTP with anyone.
-    If you don't want to create an account, you can ignore this message.                        
+    If you don't want to create an account, you can ignore this message. 
+
+    Thank you,
+    Team Projectcodes.online                       
    '''
             
             send_mail(
@@ -219,6 +230,8 @@ def sendOtp(request):
             request.session['regi_generated_OTP'] = otp
             request.session['session_email'] = email
             return JsonResponse({'success': True, 'msg': 'Varification code sent to', 'email' : email})
+    else:
+        return redirect("/")
 
 
 def handleLogout(request):
@@ -336,7 +349,7 @@ def download(request):
             return serve(request, os.path.basename(source), os.path.dirname(source))
         else:
             messages.error(request , "We are sorry. This item is no longer available for free.")
-            if project.category is "Project":
+            if project.category == "Project":
                 redirect_url= "/projects/"+project_id
             else:
                 redirect_url= "/templates/view/"+project_id
@@ -389,7 +402,7 @@ def ad_viewed(request):
     #         return serve(request, os.path.basename(source), os.path.dirname(source))
     #     else:
     #         return redirect("/")
-    pass
+    return HttpResponse('Ad Viewed')
 
 
 def checkout(request):
@@ -623,3 +636,99 @@ def orderfailed(request):
     params = {'success': False, "cartCount": cartCount(
         request.POST.get('udf2'))}
     return render(request, 'user/orderStatus.html', params)
+
+
+def resetPass(request):
+    if request.method=="POST" :
+        if not request.user.is_authenticated:
+            newPass= request.POST.get('newPass')
+
+            inputOTP= request.POST.get('inputOTP')
+            resetpass_generated_OTP = request.session['resetpass_generated_OTP']
+
+            inputEmail = request.POST.get('inputEmail')
+            resetpass_email = request.session['resetpass_email']
+            if int(inputOTP) == resetpass_generated_OTP and inputEmail== resetpass_email:
+                try:
+                    user= User.objects.get(username= inputEmail, email= inputEmail)
+                    print(newPass)
+                    user.set_password(newPass)
+                    user.save()
+                    print("pr "+user.password)
+                    try:
+                        del request.session['resetpass_generated_OTP']
+                        del request.session['resetpass_email']
+                        print("session deleted")
+                    except Exception as e:
+                        print(e)
+                    
+                    messages.success(request, 'Password has been changed successfully.' )
+                    return JsonResponse({'success': True, 'msg': 'Password has been changed successfully.'})
+                except:
+                    messages.error(request, 'Internel error. Password can not be changed.' )
+                    return JsonResponse({'success': False, 'msg': 'Internel error. Password can not be changed.'})
+            else:
+                return JsonResponse({'success': False, 'msg': 'Hacked'})
+
+        else:
+            messages.error(request, 'Insecure request !' )
+            return redirect('/')
+    else:
+        return render(request, "user/resetPass.html")
+
+
+
+def resetPass_SandOTP(request):
+    if request.method=="POST" :
+        if not request.user.is_authenticated:
+            inp_email= request.POST.get('inputEmail')
+            user = User.objects.filter(username=inp_email, email=inp_email).exists()
+            if user:
+            
+                reset_otp= random.randint(100000 ,999999)
+                reset_msg= f'''Hello Dear,
+
+    We received a request to reset your account password. Your One-Time Password (OTP) to complete the reset password process is {reset_otp} (Valid only for 5 minutes). Please do not share the OTP with anyone.
+    If you did not initiate this request, you can ignore this message.
+    
+    Thank you,
+    Team Projectcodes.online'''  
+                              
+                send_mail(
+                    'Projectcodes.online Reset Password',
+                    reset_msg,
+                    'projectzcodes@gmail.com',
+                    [inp_email],
+                    fail_silently=False,
+                )
+                request.session['resetpass_generated_OTP']= reset_otp
+                request.session['resetpass_email']=inp_email
+                
+                return JsonResponse({ 'msg': f'An Email with a verification code sent to your email address "{inp_email}"','success': True})
+            else:
+                messages.success(request, "No account found.")
+                return JsonResponse({'msg': f'No account found with the email "{inp_email}".', 'success': False})
+    else:
+        
+        return redirect('/')
+
+def resetPass_verifyOTP(request):
+    if request.method=="POST":
+        if not request.user.is_authenticated:
+
+            inputOTP= request.POST.get('inputOTP')
+            resetpass_generated_OTP = request.session['resetpass_generated_OTP']
+
+            inputEmail = request.POST.get('inputEmail')
+            resetpass_email = request.session['resetpass_email']
+            if int(inputOTP) == resetpass_generated_OTP and inputEmail== resetpass_email:
+                
+                return JsonResponse({'success': True, 'msg': 'OTP verify success.'})
+            else:
+                return JsonResponse({'success': False, 'msg': 'OTP do not match. Please enter valid OTP.'})
+    else:
+        return redirect('/')
+    # else:
+    #     return render(request, "user/resetPass.html")
+
+    
