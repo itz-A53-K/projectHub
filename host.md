@@ -25,19 +25,16 @@ WantedBy=multi-user.target
 ```bash
 server {
     listen 80;
-    server_name IP_ADDRESS;
+    server_name server_domain_or_IP;
 
-    access_log off;
-
+    location = /favicon.ico { access_log off; log_not_found off; }
     location /static/ {
-        alias /var/www/projectcodes/static/;
+        root /root/hosted_porjects/static;
     }
 
     location / {
-        proxy_pass http://127.0.0.1:8000;
-        proxy_set_header X-Forwarded-Host $server_name;
-        proxy_set_header X-Real-IP $remote_addr;
-        add_header P3P 'CP="ALL DSP COR PSAa PSDa OUR NOR ONL UNI COM NAV"';
+        include proxy_params;
+        proxy_pass http://unix:/run/gunicorn.sock;
     }
 }
 ```
