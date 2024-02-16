@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-9l*f490o3ws6izmziqun^%xv&&i@&^vp8*tn08gghllvz6#)$f'
 
 DEBUG = True
-ALLOWED_HOSTS = ['healthkindlab.tk', 'www.healthkindlab.tk', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -82,26 +82,32 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
-# STATIC_ROOT = '/home/ubuntu/projectdir/static/'
+STATIC_ROOT = os.join.path(BASE_DIR, 'static/')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-STATICFILES_DIRS = [
-    BASE_DIR / "static"
-]
+# STATICFILES_DIRS = [
+#     BASE_DIR / "static"
+# ]
 
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
 
 MEDIA_URL = 'media/'
-# MEDIA_ROOT = '/home/ubuntu/projectdir/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = '/projectCodes/media/'
+# MEDIA_ROOT = BASE_DIR / 'media'
 
 # kxdqmdgjqknqpejj
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-# 465
-EMAIL_HOST_USER = 'projectzcodes@gmail.com'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# # 465
+# EMAIL_HOST_USER = 'projectzcodes@gmail.com'
+# EMAIL_HOST_PASSWORD = 'kxdqmdgjqknqpejj'
+# EMAIL_USE_TLS = True
+
+EMAIL_HOST = 'server201.confidential-server.xyz'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'support@projectcodes.online'
 EMAIL_HOST_PASSWORD = 'kxdqmdgjqknqpejj'
-EMAIL_USE_TLS = True
+# EMAIL_USE_TLS = True
