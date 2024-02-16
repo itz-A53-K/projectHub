@@ -9,8 +9,8 @@ After=network.target
 [Service]
 User=root
 Group=www-data
-WorkingDirectory=/root/hosted_porjects
-ExecStart=/root/hosted_porjects/python_virtual_envs/bin/gunicorn \
+WorkingDirectory=/root/hosted_porjects/projectcodes
+ExecStart=/root/hosted_porjects/projectcodes/python_virtual_envs/bin/gunicorn \
           --access-logfile - \
           --workers 3 \
           --bind unix:/run/gunicorn.sock \
@@ -29,7 +29,7 @@ server {
 
     location = /favicon.ico { access_log off; log_not_found off; }
     location /static/ {
-        root /root/hosted_porjects/static;
+        root /root/hosted_porjects/projectcodes/static_cdn;
     }
 
     location / {
