@@ -4,6 +4,8 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+print(BASE_DIR)
+
 SECRET_KEY = 'django-insecure-9l*f490o3ws6izmziqun^%xv&&i@&^vp8*tn08gghllvz6#)$f'
 
 DEBUG = True
@@ -82,21 +84,18 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
-STATIC_ROOT = os.join.path(BASE_DIR, 'static/')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static/'), os.path.join(BASE_DIR, 'static_cdn/')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_cdn/')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# STATICFILES_DIRS = [
-#     BASE_DIR / "static"
-# ]
 
 MESSAGE_TAGS = {
     messages.ERROR: 'danger'
 }
 
 MEDIA_URL = 'media/'
-MEDIA_ROOT = '/projectCodes/media/'
-# MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 # kxdqmdgjqknqpejj
 # EMAIL_HOST = 'smtp.gmail.com'
